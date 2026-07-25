@@ -155,7 +155,7 @@ negative-results-registry/
 
 ## 条目概览
 
-当前已收录 **18 个条目**，覆盖 8 个领域 × 7 种类型，来自 6 个自有公开项目 + 4 个外部来源（3 学术论文 + 1 开源项目）：
+当前已收录 **22 个条目**，覆盖 9 个领域 × 7 种类型，来自 6 个自有公开项目 + 7 个外部来源（学术论文 + 开源项目）：
 
 | ID | 来源 | 领域 | 类型 |
 |----|------|------|------|
@@ -177,6 +177,10 @@ negative-results-registry/
 | NRR-2026-016 | Kuai et al. (2026) | multi-model-collaboration | ceiling-effect |
 | NRR-2026-017 | Nájera et al. (2026) | multi-model-collaboration | null-result |
 | NRR-2026-018 | CrossCheck (sburl) | multi-model-collaboration | methodology-failure |
+| NRR-2026-019 | GitNexus | benchmarking | methodology-failure |
+| NRR-2026-020 | PocketFlow | methodology-extraction | ceiling-effect |
+| NRR-2026-021 | NPGS / ml-quant-trading | methodology-extraction | methodology-failure |
+| NRR-2026-022 | NPGS | methodology-extraction | methodology-failure |
 
 ---
 

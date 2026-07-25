@@ -155,7 +155,7 @@ negative-results-registry/
 
 ## Entry Overview
 
-The registry currently contains **18 entries** spanning 8 domains × 7 types, drawn from 6 of our own public projects + 4 external sources (3 academic papers + 1 open-source project):
+The registry currently contains **22 entries** spanning 9 domains × 7 types, drawn from 6 of our own public projects + 7 external sources (academic papers + open-source projects):
 
 | ID | Source | Domain | Type |
 |----|------|------|------|
@@ -177,6 +177,10 @@ The registry currently contains **18 entries** spanning 8 domains × 7 types, dr
 | NRR-2026-016 | Kuai et al. (2026) | multi-model-collaboration | ceiling-effect |
 | NRR-2026-017 | Nájera et al. (2026) | multi-model-collaboration | null-result |
 | NRR-2026-018 | CrossCheck (sburl) | multi-model-collaboration | methodology-failure |
+| NRR-2026-019 | GitNexus | benchmarking | methodology-failure |
+| NRR-2026-020 | PocketFlow | methodology-extraction | ceiling-effect |
+| NRR-2026-021 | NPGS / ml-quant-trading | methodology-extraction | methodology-failure |
+| NRR-2026-022 | NPGS | methodology-extraction | methodology-failure |
 
 ---
 
