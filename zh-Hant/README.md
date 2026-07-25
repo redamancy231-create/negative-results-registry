@@ -192,6 +192,12 @@ negative-results-registry/
 
 ---
 
+## 📂 Fork 修改指南
+
+**[`docs/fork-modification-directions.md`](../docs/fork-modification-directions.md)** — Fork 後所有可能的修改方向全景分析。含決策樹（3 個問題 30 秒定位起點）、8 個方向排序表（按實作門檻）、和 9 條反模式。
+
+---
+
 ## 相關專案
 
 - [AI 協作專案全生命週期框架](https://github.com/redamancy231-create/ai-collaboration-framework) — 本登記冊的方法論來源

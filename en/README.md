@@ -192,6 +192,12 @@ Key citation: Kohli (2026-05) demonstrated that "a panel of 9 LLMs ≈ 2 effecti
 
 ---
 
+## 📂 Fork Modification Guide
+
+**[`docs/fork-modification-directions.md`](../docs/fork-modification-directions.md)** — A comprehensive guide to all possible modification directions after forking. Includes a decision tree (3 questions to find your starting point in 30 seconds), 8 directions ranked by implementation effort, and 9 anti-patterns learned from real experience.
+
+---
+
 ## Related Projects
 
 - [Full Lifecycle Framework for AI Collaboration Projects](https://github.com/redamancy231-create/ai-collaboration-framework) — The methodological source for this registry

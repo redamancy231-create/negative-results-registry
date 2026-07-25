@@ -192,6 +192,12 @@ negative-results-registry/
 
 ---
 
+## 📂 Fork 修改指南
+
+**[`docs/fork-modification-directions.md`](docs/fork-modification-directions.md)** — Fork 后所有可能的修改方向全景分析。含决策树（3 个问题 30 秒定位起点）、8 个方向排序表（按实现门槛）、和 9 条反模式。
+
+---
+
 ## 相关项目
 
 - [AI 协作项目全生命周期框架](https://github.com/redamancy231-create/ai-collaboration-framework) — 本登记册的方法论来源
