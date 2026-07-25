@@ -1,0 +1,4 @@
+# Override GitHub linguist language detection — this is a documentation/knowledge project
+*.py linguist-detectable=false
+*.json linguist-detectable=false
+*.md linguist-detectable=true
