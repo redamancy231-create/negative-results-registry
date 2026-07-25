@@ -1,0 +1,32 @@
+# Negative Results Registry — .gitignore
+
+# Project status (internal tracking, not published)
+project_status.md
+
+# Review prompts (internal implementation artifacts)
+_reviews/prompts/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Build artifacts
+*.docx
+*.pdf
+*.png
+*.svg

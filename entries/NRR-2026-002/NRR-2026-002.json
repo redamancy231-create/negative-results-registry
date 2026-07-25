@@ -1,0 +1,43 @@
+{
+  "id": "NRR-2026-002",
+  "title": "声明式 action routing 比自然语言 routing 在 agent 路由决策上无优势",
+  "domain": "prompt-engineering",
+  "category": "null-result",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-06-22",
+  "hypothesis": "声明式 action routing（YAML 结构定义 actions → 精确匹配）预期优于自然语言 routing（自然语言描述 actions → 语义匹配），因为声明式格式减少了 LLM 对 action 语义的歧义解读空间。",
+  "method": "Prompt-TDD Pilot 对照实验（Tier 0）：实验组=声明式 YAML routing，对照组=自然语言 routing。任务=Claude Code agent 多步任务中自主选择 action。15 cases Pilot，未进入 Tier 1 推断统计。",
+  "expected_result": "声明式 routing 应减少 action 选择错误率，路由准确率提升 ≥10%。",
+  "actual_result": "Pilot 15 cases 中两组路由准确率和任务完成率无显著差异。效应量不足以支持进入 Tier 1 全规模实验。",
+  "effect_size": "Pilot 阶段差异不显著（未进入推断统计）",
+  "sample_size": "15 cases（Pilot，Tier 0）",
+  "models_used": ["GPT-5.5"],
+  "interpretation": "两个可能解释：(1) LLM 已是足够好的语义路由器——自然语义理解足以消除 action 歧义，声明式精度是冗余的；(2) Pilot 样本太小，但 Pilot 的目标就是在低成本阶段判断是否值得投入全规模——答案是'不值得'。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["prompts", "analysis-script"],
+    "notes": "完整 Pilot 设计和 prompts 在 prompt-tdd-methodology 仓库。复现依赖 GPT-5.5 模型版本，API 升级可能导致路由行为变化。可重跑代码，但未必复现相同结果。"
+  },
+  "related_positive_result": "无直接后续。A3 被用作'如何闭合无信号实验'的教学反例。",
+  "lessons_learned": [
+    "'格式=精度'的直觉假设不全对——LLM 作为语义引擎反而可能消化自然语言更自然",
+    "Pilot 的价值在于止损——15 cases 节省了 ~4h 实验 + ~2h 审查",
+    "阴性 Pilot 也是成功——A3 作为反例案例的教学价值比阳性结果更独特",
+    "A2（n=24对照）和 A3（n=15 Pilot）在各自条件下均未检出差异——形成待检验的元假设：prompt 结构变异效应量可能低于预期；需预注册、多任务、充分功效的汇总研究验证"
+  ],
+  "tags": ["prompt-tdd", "GPT-5.5", "agent-routing", "声明式-vs-NL", "对照实验", "Pilot", "零结果"],
+  "links": [
+    {
+      "label": "Prompt-TDD 方法论仓库",
+      "url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
+    },
+    {
+      "label": "A3 案例数据",
+      "url": "https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a3-action-routing"
+    },
+    {
+      "label": "NRR-2026-001（同项目 A2 阴性结果）",
+      "url": "https://github.com/redamancy231-create/negative-results-registry/entries/NRR-2026-001"
+    }
+  ]
+}

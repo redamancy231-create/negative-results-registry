@@ -1,0 +1,39 @@
+{
+  "id": "NRR-2026-005",
+  "title": "C++ 加速 53× 塌缩至批量 2.2×——Amdahl's Law 将端到端加速钉死在 ~2.25× 理论上限",
+  "domain": "tool-building",
+  "category": "ceiling-effect",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-12",
+  "hypothesis": "用 pybind11 + C++20 加速形态匹配 ETF 策略的纯计算核心后，批量工作负载应获得接近单次调用级别的端到端加速（预期 10-30×）。",
+  "method": "将 Python 纯计算核心（DTW、形态匹配、技术指标）迁移至 C++，通过 pybind11 暴露。分别测量 (a) 单次调用 Python vs C++、(b) 100 时间点批量 Python vs C++ batch、(c) 100 次 C++ 单次 vs 1 次 C++ 批量。从 V3.3.py（3836 行）提取纯计算模块，排除 sklearn/scipy/pandas 依赖的函数。",
+  "expected_result": "DTW 单次 ≥10×、形态匹配单次 ≥30×、批量端到端 ≥10×。",
+  "actual_result": "DTW 单次 34×、形态匹配单次 53× 均超过预期。但批量端到端仅 2.2×——远低于单次加速比。根因：批量工作量仅 ~56% 可加速（p≈0.556），44% 为串行开销（Python for 循环分派 ~15%、NumPy↔C++ 数据转换 ~15%、pybind11 调用 ~8%、Python 侧特征计算 ~6%）。理论加速上限 1/(1-p)≈2.25×，实测 2.2× 已逼近天花板。",
+  "effect_size": "单次 53× → 批量 2.2×（衰减 24×）；理论上限 ≈2.25×；44% 串行比例",
+  "sample_size": "100 次 warm-up + 100 次计时中位数 × 6 函数；Windows 11 + MSVC /O2",
+  "models_used": ["DeepSeek-V4-Pro", "Kimi-K2.7-Code"],
+  "interpretation": "这是 Amdahl's Law 的教科书级示例——单次加速 53× 并非'错误'，53× 和 2.2× 都是准确测量，只是测量对象不同。53× 测的是纯计算热路径，2.2× 测的是端到端批量吞吐。这不是 bug——是架构天花板。要突破 2.25× 需要将特征计算、时间点循环等全部移入 C++。",
+  "reproducibility": {
+    "level": "fully-reproducible",
+    "artifacts_available": ["code", "data", "analysis-script", "raw-output"],
+    "notes": "完整基准测试代码、Amdahl 数学推导和性能分析在 etf-pattern-match-pybind11 仓库的 docs/performance-analysis.md 和 benchmarks/ 中。CI 基准测试结果在 benchmarks/results/。"
+  },
+  "related_positive_result": "单次调用加速 34-53× 是成功的——批量塌缩不否定单次加速的工程价值。后续可能的改进方向：将 Python for 循环和 NumPy 转换移入 C++。",
+  "lessons_learned": [
+    "Amdahl's Law 不是理论抽象——实测 2.2× vs 上限 2.25× 证明在量化计算场景中数学建模与实际测量高度吻合",
+    "'单次加速比'和'端到端加速比'是完全不同的指标——前者表征计算效率，后者表征用户可感知的吞吐提升",
+    "44% 串行开销精确分解为 4 类（循环/转换/调用/特征），每类对应不同的优化策略",
+    "达到 10× 端到端需 92% 可加速——比 C++ 迁移更根本的可能是架构重构"
+  ],
+  "tags": ["Amdahl", "pybind11", "C++", "性能", "加速塌缩", "批量", "理论上限", "架构天花板"],
+  "links": [
+    {
+      "label": "ETF Pattern Match — pybind11 仓库",
+      "url": "https://github.com/redamancy231-create/etf-pattern-match-pybind11"
+    },
+    {
+      "label": "性能分析短文（含完整 Amdahl 数学推导）",
+      "url": "https://github.com/redamancy231-create/etf-pattern-match-pybind11/blob/master/docs/performance-analysis.md"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "NRR-2026-014",
+  "title": "框架自身主张 Spec Coding 但在翻译管道中被全面违反——模型分工被简化、文件范围被扩大、流程步骤被跳过",
+  "domain": "workflow-orchestration",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-06-23",
+  "hypothesis": "框架 §4（Spec Coding）主张'有明确计划时必须严格按计划执行——模型分工、文件范围、流程步骤不可擅自变更'。当框架自身的翻译管道（简体→正体→英文）有明确计划时，预期执行过程严格遵守 Spec。",
+  "method": "框架 v1.6.4 的三语言翻译管道计划明确了：模型分工（OpenCC + Qwen 通读 + Codex 英文校译）、文件范围（2 份文件：主文档 + reference_files.md）、三阶段流程（术语锚定→AI 初译→异模型校译）。事后回顾（retrospect_2026-06-23.md）将实际执行与计划进行了逐项对比。",
+  "expected_result": "执行过程严格匹配计划：OpenCC + Qwen 通读的正体翻译、Codex 的英文校译、2 份文件范围、三阶段流程。",
+  "actual_result": "实际执行全面偏离计划：(1) 模型分工被简化——正体翻译从'OpenCC + Qwen 通读'简化为'OpenCC + 自检'，英文翻译从'Codex 校译'简化为单模型直译；(2) 文件范围被扩大——从计划的 2 份文件扩大到 4 份（README + PUBLISHING.md + 2 份正体中文文件），且未经确认；(3) 流程步骤被跳过——三阶段流程（术语锚定→初译→异模型校译）被压缩为单阶段（翻译+自检），Qwen 通读和英文互校步骤被省略。框架自身主张 Spec > Vibe，但编辑过程违反了自己的主张。",
+  "effect_size": "3/3 计划承诺被违反（模型分工、文件范围、流程步骤全部偏离）",
+  "sample_size": "1 次翻译管道执行 × 1 份 Spec 计划 × 3 维度对比",
+  "models_used": ["DeepSeek-V4-Pro", "OpenCC", "Qwen3.7-Max"],
+  "interpretation": "这是'说一套做一套'的直接实例——不是恶意，而是执行惯性。操作者在翻译管道的执行中回到了'自己觉得最快的方式'（单模型+自检），而非 Spec 规定的'更严谨但更慢的方式'（多模型+异后端校译）。这揭示了 Spec Coding 的核心挑战：Spec 的价值在执行中才会被检验，而执行者有天然的'走捷径'倾向。框架主张的 Human Gate 机制本应在此处拦截——Human Gate 要求在执行偏离 Spec 时停下来确认，但操作者（同时也是 Human Gate）在'效率优先'的心理下跳过了这个 Gate。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["prompts", "logs", "raw-output"],
+    "notes": "回顾记录在 ai-collaboration-framework/_reviews/retrospects/retrospect_2026-06-23.md。原始翻译 Spec 和实际执行日志对比。"
+  },
+  "related_positive_result": "事后回顾（retrospect）诚实记录了这次违反，并在 memory 中新增了'Spec覆盖Vibe执行'条目（feedback_spec_over_vibe_execution.md），作为后续项目的强制检查项。这次失败直接催生了项目启动检查清单的 §6 'spec_over_vibe'。",
+  "lessons_learned": [
+    "Spec Coding 的最大敌人不是外部干扰——是操作者自己'走捷径'的执行惯性",
+    "Human Gate 在操作者=Human Gate 的场景下形同虚设——需要外部强制力或至少异后端独立审查来触发",
+    "计划中的模型分工是最容易被简化的——'多模型+校译'→'单模型+自检'只需一个'这样更快'的心理借口",
+    "事后诚实记录违反 ≠ 事前防止违反——retrospect 可以记录教训，但不能替代执行时的 Gate 拦截"
+  ],
+  "tags": ["Spec Coding", "翻译管道", "计划违反", "执行惯性", "走捷径", "Human Gate", "模型分工", "回顾"],
+  "links": [
+    {
+      "label": "回顾记录 — 2026-06-23",
+      "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md"
+    },
+    {
+      "label": "AI 协作框架仓库",
+      "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+    }
+  ]
+}

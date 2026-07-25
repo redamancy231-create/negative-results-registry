@@ -1,0 +1,43 @@
+{
+  "id": "NRR-2026-001",
+  "title": "Prompt 三段式分段（prep/exec/post）对代码审查质量无显著影响",
+  "domain": "prompt-engineering",
+  "category": "null-result",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-06-22",
+  "hypothesis": "将代码审查 prompt 按 prep（规范加载）/ exec（逐文件审查）/ post（交叉校验）三段结构化分段，预期能提升 GPT-5.5 在多文件代码审查中的发现质量——相比单段基线 prompt。",
+  "method": "Prompt-TDD 对照实验：实验组=prep/exec/post 三段式，对照组=单段综合 prompt。任务=同一代码库多文件审查。n=24/臂，GPT-5.5 主实验 + Qwen3.7-Max 独立复现。双 LLM 异后端盲评。",
+  "expected_result": "三段式 prompt 应产生更多高质量发现、更少误报。预期效应量 d ≥ 0.3。",
+  "actual_result": "两组在发现数量、严重程度分布、误报率上均无显著差异。d ≈ 0.03（trivial）。Qwen 复现 Δ = −0.014，方向一致（均为零）。",
+  "effect_size": "d ≈ 0.03",
+  "sample_size": "n=24/臂 × 2模型复现（GPT-5.5 + Qwen3.7-Max）",
+  "models_used": ["GPT-5.5", "Qwen3.7-Max"],
+  "interpretation": "任务类型决定了 prompt 变异的效应量上限。代码审查是结构化判别任务——当规范足够明确时，prompt 的'包装'（分段 vs 单段）对输出质量的影响远小于任务本身的约束力。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["prompts", "data", "code", "analysis-script", "raw-output"],
+    "notes": "完整实验管线在 prompt-tdd-methodology 仓库。可重跑代码，但复现依赖于 GPT-5.5/Qwen3.7-Max 模型版本——API 模型别名指向的后端可能已升级，结果可能不同。区分 repeatable（代码可重跑）与 reproducible（结果可复现）。"
+  },
+  "related_positive_result": "无直接后续。阴性结果导致了'Prompt-TDD 方法论作为案例手册而非工具库发布'的决策。",
+  "lessons_learned": [
+    "结构化判别任务上 prompt 变异效应近零——规范本身比 prompt 结构更重要",
+    "阴性结果需要跨模型复现——GPT-5.5 零效应经 Qwen 复现确认非单模型噪声",
+    "实验前应做 ceiling probe——如果早知道结构化判别的天花板效应，不会抱太大期望",
+    "工程门/科学门拆分设计即使对阴性结果也有复用价值"
+  ],
+  "tags": ["prompt-tdd", "GPT-5.5", "Qwen3.7-Max", "code-review", "对照实验", "零结果", "prep-exec-post"],
+  "links": [
+    {
+      "label": "Prompt-TDD 方法论仓库",
+      "url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
+    },
+    {
+      "label": "A2 案例数据",
+      "url": "https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a2-prep-exec-post"
+    },
+    {
+      "label": "NRR-2026-002（同项目 A3 阴性结果）",
+      "url": "https://github.com/redamancy231-create/negative-results-registry/entries/NRR-2026-002"
+    }
+  ]
+}

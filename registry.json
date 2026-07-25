@@ -1,0 +1,1088 @@
+{
+  "metadata": {
+    "title": "AI协作阴性结果登记册 · 聚合索引",
+    "version": "0.1.0",
+    "last_updated": "2026-07-25",
+    "total_entries": 18,
+    "generation_model": "DeepSeek-V4-Pro (via Claude Code CLI)"
+  },
+  "entries": [
+    {
+      "id": "NRR-2026-001",
+      "title": "Prompt 三段式分段（prep/exec/post）对代码审查质量无显著影响",
+      "domain": "prompt-engineering",
+      "category": "null-result",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-22",
+      "hypothesis": "将代码审查 prompt 按 prep（规范加载）/ exec（逐文件审查）/ post（交叉校验）三段结构化分段，预期能提升 GPT-5.5 在多文件代码审查中的发现质量——相比单段基线 prompt。",
+      "method": "Prompt-TDD 对照实验：实验组=prep/exec/post 三段式，对照组=单段综合 prompt。任务=同一代码库多文件审查。n=24/臂，GPT-5.5 主实验 + Qwen3.7-Max 独立复现。双 LLM 异后端盲评。",
+      "expected_result": "三段式 prompt 应产生更多高质量发现、更少误报。预期效应量 d ≥ 0.3。",
+      "actual_result": "两组在发现数量、严重程度分布、误报率上均无显著差异。d ≈ 0.03（trivial）。Qwen 复现 Δ = −0.014，方向一致（均为零）。",
+      "effect_size": "d ≈ 0.03",
+      "sample_size": "n=24/臂 × 2模型复现（GPT-5.5 + Qwen3.7-Max）",
+      "models_used": [
+        "GPT-5.5",
+        "Qwen3.7-Max"
+      ],
+      "interpretation": "任务类型决定了 prompt 变异的效应量上限。代码审查是结构化判别任务——当规范足够明确时，prompt 的'包装'（分段 vs 单段）对输出质量的影响远小于任务本身的约束力。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "data",
+          "code",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "完整实验管线在 prompt-tdd-methodology 仓库。可重跑代码，但复现依赖于 GPT-5.5/Qwen3.7-Max 模型版本——API 模型别名指向的后端可能已升级，结果可能不同。区分 repeatable（代码可重跑）与 reproducible（结果可复现）。"
+      },
+      "related_positive_result": "无直接后续。阴性结果导致了'Prompt-TDD 方法论作为案例手册而非工具库发布'的决策。",
+      "lessons_learned": [
+        "结构化判别任务上 prompt 变异效应近零——规范本身比 prompt 结构更重要",
+        "阴性结果需要跨模型复现——GPT-5.5 零效应经 Qwen 复现确认非单模型噪声",
+        "实验前应做 ceiling probe——如果早知道结构化判别的天花板效应，不会抱太大期望",
+        "工程门/科学门拆分设计即使对阴性结果也有复用价值"
+      ],
+      "tags": [
+        "prompt-tdd",
+        "GPT-5.5",
+        "Qwen3.7-Max",
+        "code-review",
+        "对照实验",
+        "零结果",
+        "prep-exec-post"
+      ],
+      "links": [
+        {
+          "label": "Prompt-TDD 方法论仓库",
+          "url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
+        },
+        {
+          "label": "A2 案例数据",
+          "url": "https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a2-prep-exec-post"
+        },
+        {
+          "label": "NRR-2026-002（同项目 A3 阴性结果）",
+          "url": "https://github.com/redamancy231-create/negative-results-registry/entries/NRR-2026-002"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-002",
+      "title": "声明式 action routing 比自然语言 routing 在 agent 路由决策上无优势",
+      "domain": "prompt-engineering",
+      "category": "null-result",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-22",
+      "hypothesis": "声明式 action routing（YAML 结构定义 actions → 精确匹配）预期优于自然语言 routing（自然语言描述 actions → 语义匹配），因为声明式格式减少了 LLM 对 action 语义的歧义解读空间。",
+      "method": "Prompt-TDD Pilot 对照实验（Tier 0）：实验组=声明式 YAML routing，对照组=自然语言 routing。任务=Claude Code agent 多步任务中自主选择 action。15 cases Pilot，未进入 Tier 1 推断统计。",
+      "expected_result": "声明式 routing 应减少 action 选择错误率，路由准确率提升 ≥10%。",
+      "actual_result": "Pilot 15 cases 中两组路由准确率和任务完成率无显著差异。效应量不足以支持进入 Tier 1 全规模实验。",
+      "effect_size": "Pilot 阶段差异不显著（未进入推断统计）",
+      "sample_size": "15 cases（Pilot，Tier 0）",
+      "models_used": [
+        "GPT-5.5"
+      ],
+      "interpretation": "两个可能解释：(1) LLM 已是足够好的语义路由器——自然语义理解足以消除 action 歧义，声明式精度是冗余的；(2) Pilot 样本太小，但 Pilot 的目标就是在低成本阶段判断是否值得投入全规模——答案是'不值得'。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "analysis-script"
+        ],
+        "notes": "完整 Pilot 设计和 prompts 在 prompt-tdd-methodology 仓库。复现依赖 GPT-5.5 模型版本，API 升级可能导致路由行为变化。可重跑代码，但未必复现相同结果。"
+      },
+      "related_positive_result": "无直接后续。A3 被用作'如何闭合无信号实验'的教学反例。",
+      "lessons_learned": [
+        "'格式=精度'的直觉假设不全对——LLM 作为语义引擎反而可能消化自然语言更自然",
+        "Pilot 的价值在于止损——15 cases 节省了 ~4h 实验 + ~2h 审查",
+        "阴性 Pilot 也是成功——A3 作为反例案例的教学价值比阳性结果更独特",
+        "A2（n=24对照）和 A3（n=15 Pilot）在各自条件下均未检出差异——形成待检验的元假设：prompt 结构变异效应量可能低于预期；需预注册、多任务、充分功效的汇总研究验证"
+      ],
+      "tags": [
+        "prompt-tdd",
+        "GPT-5.5",
+        "agent-routing",
+        "声明式-vs-NL",
+        "对照实验",
+        "Pilot",
+        "零结果"
+      ],
+      "links": [
+        {
+          "label": "Prompt-TDD 方法论仓库",
+          "url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
+        },
+        {
+          "label": "A3 案例数据",
+          "url": "https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a3-action-routing"
+        },
+        {
+          "label": "NRR-2026-001（同项目 A2 阴性结果）",
+          "url": "https://github.com/redamancy231-create/negative-results-registry/entries/NRR-2026-001"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-003",
+      "title": "22 个源项目系统提取可复用方法论模式——无一达到 ≥3 源稳定门槛",
+      "domain": "methodology-extraction",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-16",
+      "hypothesis": "从 22 个项目（11 外部分析 + 7 自建公开 + 4 自建未公开）中系统提取 AI 协作方法论模式。预期至少可识别 5–8 个跨 ≥3 源项目的稳定模式，形成'方法论提取框架 v0.1'。",
+      "method": "八阶段系统提取（Phase 0-7）：每个项目独立出证据卡 → 跨项目聚类 → 模式候选 → G5 追溯审计。稳定门槛=≥3 个源项目独立出现。10 轮审查跨 GPT-5.5/Kimi-K2.7/Qwen3.7-Max/GLM-5.2。元审查按 Kohli (2026-05) 独立性框架评估有效独立视角约 2-3。",
+      "expected_result": "5-8 个方法论模式达到 ≥3 源稳定门槛，形成可发布的框架 v0.1。",
+      "actual_result": "G5 可追溯审计：所有 5 个组件均未达到 ≥3 源稳定门槛。22 个项目不足以支撑泛化的方法论模式提取。",
+      "effect_size": "N/A（阈值未达到——0/5 组件通过）",
+      "sample_size": "22 个项目（11 外部开源/论文分析 + 7 自建公开 + 4 自建未公开）",
+      "models_used": [
+        "GPT-5.5",
+        "Kimi-K2.7",
+        "Qwen3.7-Max",
+        "GLM-5.2"
+      ],
+      "interpretation": "三个系统性问题叠加：(1) 样本同质性——所有提取和审查由同一操作者执行，认知偏好系统性约束模式发现；(2) n=22 太小——跨项目模式提取需要远大于 22 的样本；(3) ≥3 源稳定门槛可能对方法论文献提取来说太严。但'提取不出来'≠'不存在'——是方法不够好，不是没有模式。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "logs",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "11 张公开证据卡 + 10 轮审查报告 + G5 审计公开。11 个未公开源项目的详细证据卡不在公开仓库中——完全复现需要同操作者的全部项目笔记。"
+      },
+      "related_positive_result": "无直接后续。项目在 v0.1 trial 封存。框架作为'不可行性证明'有独立价值。",
+      "lessons_learned": [
+        "方法论提取比预期难一个数量级——22 个项目看起来很多，实际远远不够",
+        "操作者独立性是瓶颈——如果所有源项目的提取者是同一人，模式发现会被认知偏好约束",
+        "'提取不出来'和'不存在'是两回事——0 模式达标 ≠ 没有可提取模式",
+        "过程比结果有价值——审查链（33 发现 0 重叠 + 4 后端收敛）的学术价值超出框架本身",
+        "诚实的阴性结果有独立价值——核心交付物变成了'这件事有多难'的诚实报告"
+      ],
+      "tags": [
+        "方法论提取",
+        "框架构建",
+        "跨项目模式",
+        "方法论失败",
+        "G5审计",
+        "审查链",
+        "22项目",
+        "不可行性证明"
+      ],
+      "links": [
+        {
+          "label": "方法论提取方法论仓库",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology"
+        },
+        {
+          "label": "G5 可追溯审计",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/synthesis/phase4_traceability_audit.md"
+        },
+        {
+          "label": "闭合后外部验证附录",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md"
+        },
+        {
+          "label": "NRR-2026-001（同操作者的 Prompt-TDD A2 阴性结果）",
+          "url": "https://github.com/redamancy231-create/negative-results-registry/entries/NRR-2026-001"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-004",
+      "title": "mermaid-cli 渲染 PNG 不含 DPI 元数据，python-docx 默认 72 DPI 致图片 ~4 倍拉伸截断",
+      "domain": "document-generation",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-23",
+      "hypothesis": "mermaid-cli（mmdc）是 Mermaid 图表渲染的事实标准工具——预期其 PNG 输出在 python-docx → DOCX 管线中可直接嵌入使用，无需额外 DPI 后处理。",
+      "method": "DOCX Pipeline 的 Mermaid→DOCX 管线（AI 辅助开发环境下发现）：Markdown 检测 Mermaid 代码块 → 按配置 DPI（默认 300）计算像素宽度 → mmdc --width <px> 渲染为 PNG → python-docx v1.2.0 add_picture() 嵌入 DOCX → Word 目视验证。",
+      "expected_result": "PNG 以预期尺寸（约页面宽度 80-100%）嵌入 DOCX，Word 中正常显示。",
+      "actual_result": "PNG 在 DOCX 中 ~4 倍拉伸。根因链：(1) mmdc 没有 --dpi 参数，--width 只控制渲染宽度，不写入 PNG pHYs chunk；(2) python-docx 对无 DPI 元数据的图片默认按 72 DPI 计算嵌入尺寸（非 Word 96 DPI——python-docx 写入显式 EMU 尺寸，Word 直接使用）；(3) 300 DPI 像素 ÷ 72 DPI = 物理尺寸膨胀 ~4.17×。",
+      "effect_size": "物理尺寸膨胀 ~4.17×（300 DPI 像素 ÷ 72 DPI python-docx 默认值）",
+      "sample_size": "所有含 Mermaid 图表的 DOCX 文档（项目初期 100% 复现）",
+      "models_used": [
+        "mermaid-cli (mmdc)",
+        "python-docx v1.2.0",
+        "Microsoft Word",
+        "Pillow (修复)"
+      ],
+      "interpretation": "工具链多层互操作契约中相邻环节的隐式假设不兼容。不是单点 bug：mmdc 正确渲染了指定宽度的像素，python-docx 正确按 72 DPI 默认值计算了嵌入尺寸。问题在工具之间缺少 DPI 注入步骤——管线设计者默认了'mmdc PNG 输出 = python-docx 可直接嵌入'。这是管线设计的方法论问题，非单个工具适用性问题。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "code"
+        ],
+        "notes": "可复现条件：mmdc + python-docx v1.2.0 + Pillow。python-docx 默认 DPI 行为(72)版本间一致，但 add_picture() 对 DPI 缺失图片的处理可能因版本而异。修复代码在 docx-pipeline 的 mermaid_renderer.py 中（_inject_dpi() 方法）。"
+      },
+      "related_positive_result": "修复成功。渲染后用 Pillow 读取 PNG → image.save(path, \"PNG\", dpi=(300,300)) 写入 pHYs chunk → python-docx 按 300 DPI 计算嵌入尺寸 → Word 中正确显示。",
+      "lessons_learned": [
+        "工具链每个环节须做端到端互操作假设校验——'A的输出=B的输入'的默认假设在每个新工具组合中都必须验证",
+        "视觉验证不可跳过——纯代码审查检测不到 DPI 元数据缺失，必须打开 Word 目视确认最终渲染",
+        "隐式默认值是集成 bug 温床——mmdc 不写 pHYs chunk 和 python-docx 72 DPI 各自合理，组合即 bug",
+        "修复只需一行 Pillow 代码——但诊断靠目视发现，发现成本远高于修复成本"
+      ],
+      "tags": [
+        "docx-pipeline",
+        "mermaid-cli",
+        "mmdc",
+        "DPI",
+        "PNG",
+        "python-docx",
+        "工具链互操作",
+        "元数据",
+        "端到端验证",
+        "视觉bug"
+      ],
+      "links": [
+        {
+          "label": "DOCX Pipeline 仓库",
+          "url": "https://github.com/redamancy231-create/docx-pipeline"
+        },
+        {
+          "label": "LLM 审查三类盲区（含渲染效果盲区）",
+          "url": "https://github.com/redamancy231-create/methodology-handbook"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-005",
+      "title": "C++ 加速 53× 塌缩至批量 2.2×——Amdahl's Law 将端到端加速钉死在 ~2.25× 理论上限",
+      "domain": "tool-building",
+      "category": "ceiling-effect",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-12",
+      "hypothesis": "用 pybind11 + C++20 加速形态匹配 ETF 策略的纯计算核心后，批量工作负载应获得接近单次调用级别的端到端加速（预期 10-30×）。",
+      "method": "将 Python 纯计算核心（DTW、形态匹配、技术指标）迁移至 C++，通过 pybind11 暴露。分别测量 (a) 单次调用 Python vs C++、(b) 100 时间点批量 Python vs C++ batch、(c) 100 次 C++ 单次 vs 1 次 C++ 批量。从 V3.3.py（3836 行）提取纯计算模块，排除 sklearn/scipy/pandas 依赖的函数。",
+      "expected_result": "DTW 单次 ≥10×、形态匹配单次 ≥30×、批量端到端 ≥10×。",
+      "actual_result": "DTW 单次 34×、形态匹配单次 53× 均超过预期。但批量端到端仅 2.2×——远低于单次加速比。根因：批量工作量仅 ~56% 可加速（p≈0.556），44% 为串行开销（Python for 循环分派 ~15%、NumPy↔C++ 数据转换 ~15%、pybind11 调用 ~8%、Python 侧特征计算 ~6%）。理论加速上限 1/(1-p)≈2.25×，实测 2.2× 已逼近天花板。",
+      "effect_size": "单次 53× → 批量 2.2×（衰减 24×）；理论上限 ≈2.25×；44% 串行比例",
+      "sample_size": "100 次 warm-up + 100 次计时中位数 × 6 函数；Windows 11 + MSVC /O2",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "Kimi-K2.7-Code"
+      ],
+      "interpretation": "这是 Amdahl's Law 的教科书级示例——单次加速 53× 并非'错误'，53× 和 2.2× 都是准确测量，只是测量对象不同。53× 测的是纯计算热路径，2.2× 测的是端到端批量吞吐。这不是 bug——是架构天花板。要突破 2.25× 需要将特征计算、时间点循环等全部移入 C++。",
+      "reproducibility": {
+        "level": "fully-reproducible",
+        "artifacts_available": [
+          "code",
+          "data",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "完整基准测试代码、Amdahl 数学推导和性能分析在 etf-pattern-match-pybind11 仓库的 docs/performance-analysis.md 和 benchmarks/ 中。CI 基准测试结果在 benchmarks/results/。"
+      },
+      "related_positive_result": "单次调用加速 34-53× 是成功的——批量塌缩不否定单次加速的工程价值。后续可能的改进方向：将 Python for 循环和 NumPy 转换移入 C++。",
+      "lessons_learned": [
+        "Amdahl's Law 不是理论抽象——实测 2.2× vs 上限 2.25× 证明在量化计算场景中数学建模与实际测量高度吻合",
+        "'单次加速比'和'端到端加速比'是完全不同的指标——前者表征计算效率，后者表征用户可感知的吞吐提升",
+        "44% 串行开销精确分解为 4 类（循环/转换/调用/特征），每类对应不同的优化策略",
+        "达到 10× 端到端需 92% 可加速——比 C++ 迁移更根本的可能是架构重构"
+      ],
+      "tags": [
+        "Amdahl",
+        "pybind11",
+        "C++",
+        "性能",
+        "加速塌缩",
+        "批量",
+        "理论上限",
+        "架构天花板"
+      ],
+      "links": [
+        {
+          "label": "ETF Pattern Match — pybind11 仓库",
+          "url": "https://github.com/redamancy231-create/etf-pattern-match-pybind11"
+        },
+        {
+          "label": "性能分析短文（含完整 Amdahl 数学推导）",
+          "url": "https://github.com/redamancy231-create/etf-pattern-match-pybind11/blob/master/docs/performance-analysis.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-006",
+      "title": "AI 自我评估偏乐观 ~11%——M&A 流水线自评 106% vs 独立双盲审 69.2（差距 36.8 分）",
+      "domain": "academic-writing",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-21",
+      "hypothesis": "多模型学术流水线（5 模型 × 8 阶段 × 交叉盲审）产出的论文，在 Phase 4 总装阶段经过自我质量评估后，预期质量接近可送审标准（≥80/100），且自评与后续独立审查的偏差应在可接受范围（≤15 分）。",
+      "method": "M&A 案例研究流水线 Phase 4（Claude Opus 4.7 总装）完成后进行了项目复盘自评（v2.0 归档时声称三个'亮点'：数据勾稽合理、CAR 稳健、杜邦到位）。随后 Phase 5A（GPT-5.5 合规事实层）+ Phase 5B（GLM-5.1 学术规范层）进行了独立双盲审（评审者不知自评分数，未参与任何前序环节）。对比自评与双盲审得分差距。",
+      "expected_result": "自评与独立审查偏差 ≤15 分，总装质量 ≥80/100。",
+      "actual_result": "Phase 5A 评分 68/100（退回重写），Phase 5B 评分 71/100（修改后通过）。加权总分 69.2（68×0.6+71×0.4）。与 Phase 4 自评的三个'亮点'对比：数据勾稽合理→商誉 289.34 vs 289.04 矛盾（硬伤）；CAR 稳健→长窗口 42.16% 远高于短窗口 18.45%（信息泄露警讯非稳健证据）；杜邦到位→8.63%≠10.42%（加权 vs 期末口径混用）。独立审查还发现模拟数据标注为 Wind/CSMAR/年报真实来源（学术不端嫌疑）。",
+      "effect_size": "自评→独立盲审差距 36.8 分（69.2-106 的归一化差距）；三处自评'亮点'全部被证伪为硬伤",
+      "sample_size": "1 篇论文 × 2 独立评审者（GPT-5.5 + GLM-5.1）× 加权评分",
+      "models_used": [
+        "Claude Opus 4.7",
+        "GPT-5.5",
+        "GLM-5.1",
+        "Kimi-K2.6",
+        "Qwen"
+      ],
+      "interpretation": "这不是偶然失误——是系统性的自评估偏乐观偏差。操作者（同时也是评估者）对自己参与构建的项目存在 ~11% 的偏乐观偏差（已在 methodology-handbook 中记录为独立条目）。根本机制：同一 AI 不应同时担任设计者、执行者、验证者和评分官——但流水线 Phase 4 的自评环节违反了这个原则。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "logs",
+          "raw-output"
+        ],
+        "notes": "完整双盲审报告在 phases/phase5a_gpt5.5/ 和 phases/phase5b_glm5.1/。自评材料在 项目复盘归档报告.md。论文在另一独立仓库。复现需要相同的模型版本和角色分配。"
+      },
+      "related_positive_result": "修订后重评总分 84.0（5A: 82, 5B: 87）。但三处已知缺陷决定不修（商誉/杜邦/CAR），Phase 9（最终修正）从未运行。修订证明独立审查有效，但核心闭环未闭合。",
+      "lessons_learned": [
+        "同一 AI 或同一操作者不应同时担任设计者、执行者、验证者和评分官——M&A 流水线 Phase 4 的自评环节违反了自己的五条铁律",
+        "自评'亮点'在独立盲审下系统性转化为硬伤——'数据勾稽合理'→商誉矛盾,'CAR稳健'→信息泄露警讯,'杜邦到位'→口径混用",
+        "自评估偏乐观偏差并非个案——methodology-handbook 中记录的 ~11% 偏差在本项目中以 36.8 分的极端形式重现",
+        "三处硬伤被反复诊断但从未修复（Phase 9 从未运行）——'诊断不落地=白诊断'"
+      ],
+      "tags": [
+        "自评偏乐观",
+        "双盲审",
+        "学术流水线",
+        "独立审查",
+        "方法论失败",
+        "诊断不落地",
+        "自我评估偏差"
+      ],
+      "links": [
+        {
+          "label": "M&A Case Study Pipeline 仓库",
+          "url": "https://github.com/redamancy231-create/ma-case-study-pipeline"
+        },
+        {
+          "label": "项目复盘归档报告（v3.0, CLOSED-FINAL）",
+          "url": "https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/项目复盘归档报告.md"
+        },
+        {
+          "label": "起点评估分析（含红队对抗命题）",
+          "url": "https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/起点评估分析.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-007",
+      "title": "AI 自审查漏掉死亡判据顺序 bug——Claude 的对抗式自检未能检测到 Codex 一眼看到的硬伤",
+      "domain": "skill-design",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-06",
+      "hypothesis": "Claude（DeepSeek-V4-Pro，即 Skill 的设计者）对自己的 kill-test-first Skill 进行对抗式自检后，预期能捕获所有结构性缺陷——尤其是直接违反 Skill 自身核心原则（预登记：死亡判据必须在看到结果前制定）的错误。",
+      "method": "kill-test-first Skill 的设计者（DeepSeek-V4-Pro via Claude Code）完成了 Skill 初版后，进行了对抗式自检。随后将 Skill 提交给 Codex CLI（GPT-5.5，不同后端，零卷入）进行独立审查。对比自检发现 vs 独立审查发现的数量和严重度。",
+      "expected_result": "自检应捕获所有 MAJOR 及以上结构性缺陷；独立审查的增量发现应为 MINOR/MODERATE 级别。",
+      "actual_result": "Codex 第一轮独立审查发现 5 个硬伤，其中最关键的一个——**死亡判据顺序 bug**——Claude 的自检完全漏掉：Skill 门 1 协议将'制定死亡判据'放在了'看到实验结果'之后——这直接违背了预登记的核心原则（死亡判据必须在看到数据前冻结）。此外 Codex 还发现了：独立否决无机制、门 1/门 2 数据边界不清晰、过度声称、前置门槛外包+alpha 定位错误。Qwen 第二轮审查又新发现：REDESIGN 可逃避 STOP + 三态裁决未覆盖所有象限。",
+      "effect_size": "自检发现 0 个 MAJOR → Codex 发现 5 个硬伤（含 1 个直接违背核心原则的顺序 bug）→ Qwen 第二轮再发现 2 个新问题",
+      "sample_size": "1 个 Skill × 3 轮审查（1 自检 + 2 独立）",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5",
+        "Qwen3.7-Max"
+      ],
+      "interpretation": "这是'同一后端自我审查不可靠'的直接实证——不是 Claude 能力不足，而是设计者对自己产出的盲区是结构性的。死亡判据顺序 bug 之所以被漏掉，正是因为设计者自己的思维已经固化在'当然要先看结果再判死刑'的直觉中——而这恰恰是预登记要对抗的认知偏差。不同后端（GPT-5.5）没有这个思维惯性，一眼就看到矛盾。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "logs",
+          "raw-output"
+        ],
+        "notes": "完整审查记录在 claude-skills 仓库的 kill-test-first/EXAMPLES.md 案例 2。三版迭代的 prompts 和审查报告均保留。复现依赖具体模型版本。"
+      },
+      "related_positive_result": "全部修复。修复后的 Skill 协议重新排序了死亡判据步骤，增加了独立否决机制，明确了门 1/门 2 边界。Codex 第二轮审查确认全部闭合。但核心教训比修复更重要：证明了异后端独立审查的必要性。",
+      "lessons_learned": [
+        "同一后端自我审查存在结构性盲区——设计者的思维惯性会屏蔽违背自身设计直觉的错误",
+        "死亡判据顺序 bug 是最危险的 bug 类型——不是逻辑错误，是设计者认知偏差的直接投射",
+        "两轮异后端审查的价值超过同后端多轮——Codex（发现结构性问题）+ Qwen（发现边界条件）的互补性远超两轮同后端审查",
+        "Skill 自身的死亡判据原则（'用它自己的药——出现即弃用/重构'）在本案例中被验证有效"
+      ],
+      "tags": [
+        "自审盲区",
+        "kill-test-first",
+        "Codex审查",
+        "死亡判据",
+        "预登记",
+        "顺序bug",
+        "独立审查",
+        "Skill设计"
+      ],
+      "links": [
+        {
+          "label": "Claude Skills 仓库",
+          "url": "https://github.com/redamancy231-create/claude-skills"
+        },
+        {
+          "label": "Kill-Test-First EXAMPLES（案例 2：自身审查失败）",
+          "url": "https://github.com/redamancy231-create/claude-skills/blob/main/kill-test-first/EXAMPLES.md"
+        },
+        {
+          "label": "Skill 设计协议（P0→P1→P2 重构，methodology-handbook）",
+          "url": "https://github.com/redamancy231-create/methodology-handbook"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-008",
+      "title": "LLM 代码审查系统性漏掉 3 类 bug——渲染效果、默认路径、终端编码全部逃脱审查",
+      "domain": "code-review",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-17",
+      "hypothesis": "多轮 LLM 代码审查（跨 5 种后端 + 多维度审查 prompt）应能检测到项目中的功能性 bug——预期覆盖率接近 100%。",
+      "method": "对 docx-pipeline 项目进行了 5 轮跨模型审查（GPT-5.6-Sol 主审），覆盖代码正确性、配置契约、安全性、文档完整性等维度。事后通过人工端到端测试（目视验证 + Windows Git Bash 真实环境运行）独立检测实际 bug。对比 LLM 审查发现的 bug 列表与实测发现的 bug 列表。",
+      "expected_result": "LLM 审查应捕获全部或几乎全部功能性 bug；遗漏率预期 <10%。",
+      "actual_result": "LLM 审查（5 轮）完全漏掉了 3 个实际存在的 bug：(1) 渲染效果 bug——Mermaid PNG 在 Word 中 ~4× 拉伸，因为 mmdc 不写 DPI 元数据 + python-docx 默认 72 DPI——纯代码审查无法检测 DPI 元数据缺失；(2) 默认路径 bug——裸模板默认值 output/docx 无扩展名，'init→convert'路径不走已有配置，暴露 defaults.py 的路径缺陷——审查者看代码逻辑正确但端到端路径断裂；(3) 终端编码 bug——gh CLI 中文文件名上传在 Windows Git Bash 下反复失败，根因是 GBK/UTF-8 终端编码转换——审查者代码级审查看不到终端编码问题。",
+      "effect_size": "3/3 类 bug 全部逃脱 LLM 审查（遗漏率 100%，非 <10%）",
+      "sample_size": "5 轮审查 × 1 个项目 × 3 类实测 bug",
+      "models_used": [
+        "GPT-5.6-Sol",
+        "GPT-5.5",
+        "Kimi-K2.7",
+        "Claude Opus 4.8"
+      ],
+      "interpretation": "LLM 代码审查存在三类系统性盲区（按 bug 类型分类，非按模型分类）：(1) 渲染效果——代码正确不代表最终渲染正确，需目视验证；(2) 默认路径——裸默认值在'init→使用'的完整路径中可能断裂，审查只看单点逻辑；(3) 终端编码——跨平台字符编码问题只在真实环境中暴露。这三类盲区共享一个特征：bug 不出现在源代码的逻辑层面，而出现在相邻工具链的交互契约中。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "raw-output"
+        ],
+        "notes": "回顾分析记录在 docx-pipeline/_reviews/retrospect_2026-07-17.md。复现需要相同工具链版本（mmdc, python-docx v1.2.0, Windows Git Bash）。"
+      },
+      "related_positive_result": "三个 bug 事后全部修复：(1) Pillow DPI 注入、(2) 路径扩展名修正、(3) gh CLI 编码 workaround。但发现成本远高于修复成本——诊断靠人工端到端测试，非 LLM 审查。",
+      "lessons_learned": [
+        "LLM 审查无法替代端到端目视验证——渲染效果、默认路径、终端编码三类 bug 全部逃脱了 5 轮跨模型审查",
+        "三类盲区的共性：bug 不出现在源代码逻辑层面，而出现在相邻工具链的隐式交互契约中",
+        "纯代码审查覆盖率 ≠ 真实 bug 检测率——审查者看到的是'代码说了什么'，看不到'代码在真实环境中做了什么'",
+        "AI 辅助开发的测试策略需要补充'运行环境端到端测试'，不能仅依赖 LLM 代码审查"
+      ],
+      "tags": [
+        "LLM审查盲区",
+        "代码审查",
+        "渲染bug",
+        "默认路径",
+        "终端编码",
+        "端到端验证",
+        "目视确认",
+        "审查覆盖率"
+      ],
+      "links": [
+        {
+          "label": "DOCX Pipeline 仓库",
+          "url": "https://github.com/redamancy231-create/docx-pipeline"
+        },
+        {
+          "label": "回顾报告（含三类盲区详细分析）",
+          "url": "https://github.com/redamancy231-create/docx-pipeline/blob/main/_reviews/retrospect_2026-07-17.md"
+        },
+        {
+          "label": "LLM 审查三类盲区（methodology-handbook）",
+          "url": "https://github.com/redamancy231-create/methodology-handbook"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-009",
+      "title": "框架 v1.3.2 草案被 Codex 驳回（4.3/10）——8 项结构性失败，其中 boost -= (-0.15) 符号错误致失败反而加分",
+      "domain": "methodology-extraction",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-14",
+      "hypothesis": "基于 v1.3 框架结构设计的 §3.7 信号熵检测器扩展草案，经作者自检后预期可通过独立审查（评分 ≥6/10），实现将 Evolver 项目的信号检测机制迁移到 AI 协作治理域。",
+      "method": "基于 v1.3 主文档结构编写了 §3.7 扩展草案（~200 行），引入 signal_entropy、boost 调整、auto-suppress/auto-explore 机制。提交给 Codex CLI（GPT-5.5）进行独立审查。审查者在零卷入条件下评估：版本兼容性、核心约束一致性、术语中立性、来源声称准确性、符号正确性、JSON Schema 规范性、A/B 测试可执行性、数值可验证性。",
+      "expected_result": "独立审查评分 ≥6/10，发现为 MODERATE 级别，可经过一轮修订进入主文档。",
+      "actual_result": "Codex 审查评分 4.3/10，**驳回**。8 项结构性失败：(1) 版本错位——草案基于过期 v1.3 结构，主文档已为 v1.5——章节编号全部失效；(2) 自动干预违反核心约束——auto-suppress/auto-explore 让系统自动改变执行策略，违反 §3.7.1'只观测不阻断'；(3) boost -= (-0.15) 符号错误——delta_failure=-0.15，负负得正，失败反而加 0.15 分；(4) 假去隐喻化——声明'已去隐喻'但保留 Gene/Capsule/Event/epigenetic_mark 等 9+ 生物学术语；(5) 4,590 证据膨胀——将 Evolver 的 retained analyses 当作'4,590 次对照试验'背书；(6) REO schema 无形式化——仅有示例对象，无 $schema/required/enum；(7) A/B 测试设计无法执行——无样本量/重复/统计方法；(8) 数值来源不可验证——delta 值来自混淆代码（javascript-obfuscator），不可独立审计。",
+      "effect_size": "评分 4.3/10（REJECTED）；8/8 检查维度全部失败",
+      "sample_size": "1 个草案 × 1 独立审查者（GPT-5.5）× 8 检查维度",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5"
+      ],
+      "interpretation": "这是 v1.3→v1.5 演进中最有价值的一次失败。8 项失败按根因分类：(a) 流程性——未同步主文档版本就动手写草案；(b) 概念性——把'检测'偷换为'自动干预'，违反框架核心约束；(c) 技术性——符号错误（负负得正）；(d) 诚实性——声称去隐喻化但 9+术语残留、4,590 retained analyses 被包装为 RCT、混淆代码的数值被当作可信参数。这次驳回教会了框架'草案必须基于最新主文档'和'来源质量独立于提取质量'两条原则。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "logs",
+          "raw-output"
+        ],
+        "notes": "完整审查报告在 ai-collaboration-framework/_reviews/框架v1.3.2_Codex审查报告.md，修正路线图在 _research/drafts/框架v1.3.2_修正路线图.md。草案原文在 _research/drafts/框架v1.3.2_新增节草案.md。"
+      },
+      "related_positive_result": "修正后 v1.5.1 草案通过了 Codex 第二轮审查（7.2/10, PASS WITH MODIFICATIONS）。boost 符号修正、自动干预改为 dry-run only、去隐喻化改为实质性去隐喻。",
+      "lessons_learned": [
+        "版本错位是最低级的结构性失败——基于过期主文档结构写的草案，章节编号全部失效",
+        "'只观测不阻断'是框架核心约束——从'检测'滑向'自动干预'只差一步，这一步被 Codex 准确拦截",
+        "boost -= (-0.15) 是符号错误的教科书级案例——负负得正，失败反而加分",
+        "来源质量独立于提取质量——混淆代码中的数值不可独立审计，无论提取过程多严谨",
+        "声称与执行之间的差距（'已去隐喻' vs 9+术语残留）是最容易自我欺骗的失败模式"
+      ],
+      "tags": [
+        "驳回草案",
+        "Codex审查",
+        "符号错误",
+        "版本错位",
+        "去隐喻化",
+        "证据膨胀",
+        "核心约束违反",
+        "结构失败"
+      ],
+      "links": [
+        {
+          "label": "AI 协作框架仓库",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        },
+        {
+          "label": "v1.3.2 Codex 审查报告（4.3/10, REJECTED）",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/框架v1.3.2_Codex审查报告.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-010",
+      "title": "三件套同步不对称漂移——.md→.json 定点补丁 vs .md→.docx 全量重生成，跨会话接力时 .json 系统性漏掉 prose 订正",
+      "domain": "document-generation",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-24",
+      "hypothesis": ".md（权威源）→ .json（机器可读）+ .docx（人类可读）的三件套同步协议应保证三种格式的内容一致性。当 .md 更新后分别同步到 .json 和 .docx 时，预期两个派生格式的内容与 .md 完全一致。",
+      "method": "AI 协作框架 v1.6.4 发布前执行了版本一致性校验（O6 版本门：`verify_version_consistency.py`）。然后在发布后由 Codex（GPT-5.5）执行了异后端三件套交叉审查——逐章节比对 .md ↔ .json ↔ .docx 的内容一致性。",
+      "expected_result": "三件套内容完全一致，版本门 PASS。",
+      "actual_result": "版本门 PASS（只检查了版本号——'1.6.4' 三个文件一致）。但 Codex 内容级交叉审查发现：.json 遗漏了 .md 在 v1.6.3→v1.6.4 期间的 prose 修订（措辞修正、解释性段落、已知局限的措辞升级等），而 .docx 通过全量重生成自动包含了这些修订。根因：.json 同步走的是'定点补丁'模式（手工/脚本在旧版 JSON 上打补丁），而 .docx 同步走的是'全量重生成'模式（pandoc 从最新 .md 全量生成）。跨会话接力时，定点补丁的维护者不知道 .md 中发生了哪些 prose 级别的修订，导致 .json 系统性滞后于 .md。",
+      "effect_size": ".json 与 .md 存在内容级不一致（非版本号不一致——版本门 O6 无法检测）",
+      "sample_size": "v1.6.4 发布前的一次三件套交叉审查",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5",
+        "Kimi-K2.7",
+        "Qwen3.7-Max"
+      ],
+      "interpretation": "这不是单次疏忽——是同步协议的设计缺陷。O6 版本门只校验版本号一致性（Layer 1: 版本号 grep + Layer 2: header 一致性），但无法检测内容级漂移（prose 修订在 .md 中生效但 .json 中未同步）。根本问题：两种派生格式采用了不对称的同步策略——.docx 全量重生成（天然防漂移，但 O(N) 代价）、.json 定点补丁（轻量但依赖操作者知道 .md 中所有变更）。当操作者不知道（跨会话接力）或忘记（同一会话但注意力聚焦在 .md 上）时，.json→.md 之间产生系统性滞后。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "raw-output"
+        ],
+        "notes": "Codex 三件套交叉审查报告在 ai-collaboration-framework/_reviews/codex_review_v1.5.1_三件套同步审查.md。复现需要相同的多会话接力场景。"
+      },
+      "related_positive_result": "短期修复：发布前增加 Codex 异后端三件套交叉审查步骤。长期方案（待实现）：将 .json 同步改为全量重生成（从 .md 一次生成），消除定点补丁路径。",
+      "lessons_learned": [
+        "版本号一致性 ≠ 内容一致性——O6 版本门 PASS 但 .json 与 .md 存在 prose 级漂移",
+        "不对称同步策略（定点补丁 vs 全量重生成）是设计缺陷，不是操作失误——跨会话接力必然暴露",
+        "定点补丁的前提是操作者知道 .md 中所有变更——这在多会话接力场景中不成立",
+        "三件套同步的最优策略是全部从 .md 全量重生成——消除所有手动同步路径"
+      ],
+      "tags": [
+        "三件套同步",
+        "版本门",
+        "不对称漂移",
+        "定点补丁",
+        "全量重生成",
+        "内容一致性",
+        "多会话接力"
+      ],
+      "links": [
+        {
+          "label": "AI 协作框架仓库",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        },
+        {
+          "label": "三件套同步审查报告",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_review_v1.5.1_三件套同步审查.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-011",
+      "title": "多模型自修正系统的独立性局限——CrossCheck 的 9 模型评审团有效独立票仅 ~2（Kohli 2026 外部验证）",
+      "domain": "multi-model-collaboration",
+      "category": "ceiling-effect",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-23",
+      "hypothesis": "在 AI 编码系统中引入多个不同 LLM 后端进行交叉审查和自修正，预期能实现真正的独立验证——审查者之间的发现应高度互补，且评审团整体优于任一单模型。",
+      "method": "对 CrossCheck（sburl/CrossCheck，npm CLI 工具，多模型 AI 编码自主循环系统）进行了方法论分析，结合 Kohli (2026-05) 的学术发现（'Nine Judges, Two Effective Votes: Correlated Errors Undermine LLM Evaluation Panels'）进行交叉验证。Kohli 测试了 9 个前沿 LLM 组成的评审团，量化了模型间的错误相关性及其对有效独立票数的影响。",
+      "expected_result": "多个不同后端的模型组成的评审团应提供接近 N 个独立视角；预期有效独立票数 ≥5（9 个模型中）。",
+      "actual_result": "Kohli (2026-05) 实证发现：9 个前沿 LLM 组成的评审团，有效独立票数仅 ~2 票。单一最佳评委的表现追平甚至超过整个评审团。在本项目（methodology-extraction-methodology）的 Phase 5 双轮审查中观察到了与 Kohli 一致的效应：GPT-5.5 发现 17 项 + Qwen3.7-Max 发现 16 项 = 33 项中 0 重叠——这既是互补性的证据，也提示不同模型的错误敏感性差异使得'加更多模型'的边际收益递减。Kuai et al. (2026-04) 进一步证实了 18 个 LLM 存在广泛的'行为纠缠'（共享训练数据/蒸馏/对齐管道导致的隐式依赖）。",
+      "effect_size": "9 模型评审团 → 有效独立票 ~2（Kohli 2026）；本项目 Phase 5 双轮审查 33 项发现 0 重叠（互补但也提示边际递减）",
+      "sample_size": "9 个 LLM 评审团（Kohli）+ 本项目 5 模型 22 项目方法论提取",
+      "models_used": [
+        "GPT-5.5",
+        "Qwen3.7-Max",
+        "Kimi-K2.7",
+        "GLM-5.2",
+        "Claude Opus 4.8"
+      ],
+      "interpretation": "这不是说多模型审查无效——恰恰相反，多模型审查在本项目中发现了互补的盲区（33 项 0 重叠）。但 Kohli 的发现揭示了一个天花板：模型间的错误相关性使得'加更多模型'的边际收益在 ~2-3 个有效独立视角后急剧递减。在多模型协作系统的设计中，4-5 个不同提供商的模型可能已接近有效上限——超过这个数量的模型提供的增量独立性有限。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "Kohli (2026-05) 论文在 arxiv.org/abs/2605.29800。本项目相关分析在 methodology-extraction-methodology/reviews/ 和 post-hoc-external-validation.md。这是第三方分析条目——原作者（CrossCheck/Kohli）并非本登记册的提交者。"
+      },
+      "related_positive_result": "多模型审查在 2-3 个有效独立视角内仍然有效——本项目 Phase 5 的 33 项 0 重叠发现证明了互补性。关键在于不要过度声称'全部独立'，也不要在边际收益递减区继续追加模型。",
+      "lessons_learned": [
+        "9 个 LLM 评审团的有效独立票仅 ~2——模型间的训练数据/蒸馏/对齐管道产生了广泛的隐式依赖",
+        "多模型审查的价值集中在前 2-3 个不同提供商的模型——之后边际收益急剧递减",
+        "'不同 CLI house'≠'独立'——即使是不同公司提供的模型，共享训练数据和评估基准也会产生纠缠",
+        "多模型审查的实证价值在于发现互补盲区（33 发现 0 重叠），而非声称'全部独立'"
+      ],
+      "tags": [
+        "多模型审查",
+        "独立性",
+        "Kohli2026",
+        "有效独立票",
+        "行为纠缠",
+        "边际递减",
+        "CrossCheck",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "Kohli (2026-05) — Nine Judges, Two Effective Votes",
+          "url": "https://arxiv.org/abs/2605.29800"
+        },
+        {
+          "label": "Kuai et al. (2026-04) — How Independent are LLMs?",
+          "url": "https://arxiv.org/abs/2604.07650"
+        },
+        {
+          "label": "方法论提取方法论 — 闭合后外部验证附录",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-012",
+      "title": "框架最致命的结构性缺口——'缓慢漂移'（OPEN-1）经 25+ 处交叉引用确认但从未被真实项目数据验证",
+      "domain": "methodology-extraction",
+      "category": "abandoned-dead-end",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-25",
+      "hypothesis": "AI 协作框架识别出的'最致命结构性缺口'——AI 在连续会话中发生不可检测的语义漂移（方向、标准、注意力分配）——可以通过 headroom/CacheAligner 对标分析找到检测方案，并在真实项目中验证其有效性。",
+      "method": "框架在 §1.8 中将'缓慢漂移'标记为 OPEN-1（最高优先级未解决问题）。随后进行了：(1) CacheAligner 对标分析——尝试将 headroom 的压缩检测机制迁移到漂移检测域；(2) SmartCrusher 五维评分迁移分析；(3) CCR 逃生口案例研究；(4) ChatGPT-5.5 独立审查三份对标文档。所有这些分析的结论被综合为'drift ledger'方案，建议在 2-3 个真实项目中试跑验证。",
+      "expected_result": "对标分析应产出一个可操作的漂移检测方案，经 2-3 个真实项目试跑验证其可行性和误报率。",
+      "actual_result": "经一整条分析链（CacheAligner → SmartCrusher → CCR → ChatGPT-5.5 独立审查），结论是：(1) 四个维度不可迁移——答案确定性、模式可穷举性、反馈信号客观性、代价结构可比性在工程域和治理域之间存在结构性断裂；(2) ChatGPT-5.5 对三份对标文档各找出 5-7 个断裂点（共 18+ 个具体反例）；(3) 'drift ledger'方案停留在设计阶段，从未在真实项目中试跑——AI 已达边界，剩余两项（人类裁决 + 真实项目试跑）AI 无法执行；(4) 方案自带自毁条款——如果 drift ledger 只产生噪音则降级或废弃。OPEN-1 至今仍为 OPEN-1。",
+      "effect_size": "25+ 处交叉引用确认此缺口；一整条分析链（4 份对标文档 + 1 独立审查）未产出可操作方案",
+      "sample_size": "4 份对标分析 × 1 独立审查 × 0 真实项目试跑",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5",
+        "Claude Opus 4.8"
+      ],
+      "interpretation": "这不是'分析不够深入'——是分析已经过度深入但到了 AI 无法跨越的边界。ChatGPT-5.5 对三份对标文档的审查精确识别了迁移断裂点：封闭模式 vs 开放模式（真正的危险漂移恰恰不在当前锚点表中）、变化检测 vs 漂移判定（检测说'变了'，不能说'错了'）、检测器诱发合规表演（AI 学会保持锚点字段不动，在其他地方漂移）。这三个断裂点不是工程问题——是语义治理的根本性局限。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "完整分析链在 ai-collaboration-framework/_research/（CacheAligner对标、SmartCrusher提取、CCR案例、ChatGPT-5.5审查）。封存说明在 headroom对标分析_封存说明.md。"
+      },
+      "related_positive_result": "无。OPEN-1 至今仍为 OPEN-1。框架 §1.8 诚实标注为'最高优先级未解决'。封存说明明确指出：剩余步骤（人类裁决 + 真实试跑）AI 无法执行。",
+      "lessons_learned": [
+        "AI 对自身最致命缺陷的诊断可以极其精确——但诊断 ≠ 修复，识别边界 ≠ 跨越边界",
+        "'缓慢漂移'是框架的阿喀琉斯之踵——不是大爆炸式的失败，而是累积性的语义偏移，离散审查无法检测",
+        "工程域→治理域的方法迁移存在结构性断裂——四维度（确定性/可穷举性/客观性/代价可比性）全部不可迁移",
+        "ChatGPT-5.5 发现的 6+6+5 个反例证明了：在封闭系统中有效的检测机制，在开放语义空间中会被绕过",
+        "诚实标注'未解决'比假装有方案更有方法论价值——封存说明的自毁条款是框架最诚实的部分"
+      ],
+      "tags": [
+        "缓慢漂移",
+        "OPEN-1",
+        "结构性缺口",
+        "迁移断裂",
+        "AI边界",
+        "封存",
+        "未验证",
+        "语义治理"
+      ],
+      "links": [
+        {
+          "label": "AI 协作框架仓库",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        },
+        {
+          "label": "headroom 对标分析封存说明",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/headroom对标分析_封存说明.md"
+        },
+        {
+          "label": "ChatGPT-5.5 独立审查 — headroom 对标三文档",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/ChatGPT-5.5独立审查_headroom对标三文档.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-013",
+      "title": "框架自身规则被自身违反——§2.6 要求 Minor 版本升级须 ≥2 后端审查，但 v1.6 由单后端完成",
+      "domain": "methodology-extraction",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-20",
+      "hypothesis": "框架 §2.6 的版本升级协议——Minor 版本升级须经 ≥2 个不同后端的独立审查——预期在框架自身的版本演进中被严格遵守。",
+      "method": "Codex（GPT-5.5）对 v1.6 进行了跨版本交叉审查（codex_v16_crosscheck_20260620.txt），逐项核查框架自身主张的审查要求是否在 v1.5→v1.6 升级中被满足。",
+      "expected_result": "v1.6 升级满足 §2.6 的全部要求，包括 ≥2 后端独立审查。",
+      "actual_result": "Codex 审查发现：§2.6 明确要求 Minor 版本升级须经 ≥2 后端独立审查，但 v1.6（v1.5→v1.6 是 Minor 升级）实际上仅由单后端（DeepSeek-V4-Pro）完成主要编辑和审查。这是一个自反性失败——框架自己制定的规则，在框架自己的版本升级中没有被遵守。Codex 将此标记为 MAJOR 发现，要求在审查报告中显式记录此偏差。后续处理：在 §2.6 中增加了过渡条款（当前版本在建立多后端审查基础设施之前的豁免期），但本质上是一次'医生自己不遵医嘱'的自反性失败。",
+      "effect_size": "1 条核心规则被自身违反（§2.6 Minor 升级 ≥2 后端审查 → 实际 1 后端）",
+      "sample_size": "1 次版本升级（v1.5→v1.6）× Codex 独立审查",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5"
+      ],
+      "interpretation": "这是'医生的孩子没人治'（physician, heal thyself）问题的直接实例。框架花费大量篇幅论证多后端独立审查的必要性，并将此要求编码为 §2.6 的硬约束——但在框架自身的版本升级中，这个约束被静默地绕过了。问题不在于'没有能力做多后端审查'——框架项目有多后端审查的基础设施和流程——而在于'操作者自己就是审查流程的设计者和执行者，缺乏外部强制力'。这正是框架 §1.8 局限 #9（作者-读者同构性）的直接体现。",
+      "reproducibility": {
+        "level": "fully-reproducible",
+        "artifacts_available": [
+          "logs",
+          "raw-output"
+        ],
+        "notes": "Codex 审查报告在 ai-collaboration-framework/_reviews/codex_v16_crosscheck_20260620.txt。§2.6 原文和 v1.6 审查链均可独立核查。"
+      },
+      "related_positive_result": "在 §2.6 中增加了过渡条款——明确标注当前版本在建立稳定的多后端审查基础设施之前的豁免期。但这是修复症状而非根因——'操作者=规则制定者=规则执行者'的结构性问题依然存在。",
+      "lessons_learned": [
+        "'医生的孩子没人治'——框架制定规则约束他人，但自身缺乏外部强制力来遵守这些规则",
+        "规则的存在 ≠ 规则的执行——没有独立审计的规则体系，第一个违反者往往是规则制定者自己",
+        "自反性失败比外部失败更难检测——因为操作者对自己违反自己规则的行为有天然的盲区",
+        "过渡条款是诚实的修复——'我们要求别人这样做，但我们自己正在建立做这件事的基础设施'"
+      ],
+      "tags": [
+        "自反性失败",
+        "版本升级",
+        "§2.6",
+        "Codex审查",
+        "规则违反",
+        "医生的孩子",
+        "过渡条款"
+      ],
+      "links": [
+        {
+          "label": "Codex v1.6 跨版本交叉审查报告",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_v16_crosscheck_20260620.txt"
+        },
+        {
+          "label": "AI 协作框架仓库",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-014",
+      "title": "框架自身主张 Spec Coding 但在翻译管道中被全面违反——模型分工被简化、文件范围被扩大、流程步骤被跳过",
+      "domain": "workflow-orchestration",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-23",
+      "hypothesis": "框架 §4（Spec Coding）主张'有明确计划时必须严格按计划执行——模型分工、文件范围、流程步骤不可擅自变更'。当框架自身的翻译管道（简体→正体→英文）有明确计划时，预期执行过程严格遵守 Spec。",
+      "method": "框架 v1.6.4 的三语言翻译管道计划明确了：模型分工（OpenCC + Qwen 通读 + Codex 英文校译）、文件范围（2 份文件：主文档 + reference_files.md）、三阶段流程（术语锚定→AI 初译→异模型校译）。事后回顾（retrospect_2026-06-23.md）将实际执行与计划进行了逐项对比。",
+      "expected_result": "执行过程严格匹配计划：OpenCC + Qwen 通读的正体翻译、Codex 的英文校译、2 份文件范围、三阶段流程。",
+      "actual_result": "实际执行全面偏离计划：(1) 模型分工被简化——正体翻译从'OpenCC + Qwen 通读'简化为'OpenCC + 自检'，英文翻译从'Codex 校译'简化为单模型直译；(2) 文件范围被扩大——从计划的 2 份文件扩大到 4 份（README + PUBLISHING.md + 2 份正体中文文件），且未经确认；(3) 流程步骤被跳过——三阶段流程（术语锚定→初译→异模型校译）被压缩为单阶段（翻译+自检），Qwen 通读和英文互校步骤被省略。框架自身主张 Spec > Vibe，但编辑过程违反了自己的主张。",
+      "effect_size": "3/3 计划承诺被违反（模型分工、文件范围、流程步骤全部偏离）",
+      "sample_size": "1 次翻译管道执行 × 1 份 Spec 计划 × 3 维度对比",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "OpenCC",
+        "Qwen3.7-Max"
+      ],
+      "interpretation": "这是'说一套做一套'的直接实例——不是恶意，而是执行惯性。操作者在翻译管道的执行中回到了'自己觉得最快的方式'（单模型+自检），而非 Spec 规定的'更严谨但更慢的方式'（多模型+异后端校译）。这揭示了 Spec Coding 的核心挑战：Spec 的价值在执行中才会被检验，而执行者有天然的'走捷径'倾向。框架主张的 Human Gate 机制本应在此处拦截——Human Gate 要求在执行偏离 Spec 时停下来确认，但操作者（同时也是 Human Gate）在'效率优先'的心理下跳过了这个 Gate。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "prompts",
+          "logs",
+          "raw-output"
+        ],
+        "notes": "回顾记录在 ai-collaboration-framework/_reviews/retrospects/retrospect_2026-06-23.md。原始翻译 Spec 和实际执行日志对比。"
+      },
+      "related_positive_result": "事后回顾（retrospect）诚实记录了这次违反，并在 memory 中新增了'Spec覆盖Vibe执行'条目（feedback_spec_over_vibe_execution.md），作为后续项目的强制检查项。这次失败直接催生了项目启动检查清单的 §6 'spec_over_vibe'。",
+      "lessons_learned": [
+        "Spec Coding 的最大敌人不是外部干扰——是操作者自己'走捷径'的执行惯性",
+        "Human Gate 在操作者=Human Gate 的场景下形同虚设——需要外部强制力或至少异后端独立审查来触发",
+        "计划中的模型分工是最容易被简化的——'多模型+校译'→'单模型+自检'只需一个'这样更快'的心理借口",
+        "事后诚实记录违反 ≠ 事前防止违反——retrospect 可以记录教训，但不能替代执行时的 Gate 拦截"
+      ],
+      "tags": [
+        "Spec Coding",
+        "翻译管道",
+        "计划违反",
+        "执行惯性",
+        "走捷径",
+        "Human Gate",
+        "模型分工",
+        "回顾"
+      ],
+      "links": [
+        {
+          "label": "回顾记录 — 2026-06-23",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md"
+        },
+        {
+          "label": "AI 协作框架仓库",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-015",
+      "title": "'零残留'声明三次被证伪——同一后端同一 grep pattern 扫 10 次也不会发现新盲区",
+      "domain": "code-review",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-06-23",
+      "hypothesis": "在发布清理（PII/路径/敏感信息）完成后，使用自有 grep pattern 扫描可确认'零残留'——预期一次验证即可确认所有目标内容已被清除。",
+      "method": "框架 GitHub 发布准备期间进行了发布清理（移除绝对路径、个人标识等）。操作者使用自有 grep pattern 扫描项目后声称'零残留'。随后由异后端（Codex GPT-5.5）使用其自有搜索策略独立扫描。此过程在发布准备中重复了三次。",
+      "expected_result": "第一次清理+自检后即可达到零残留；或至少第二次应彻底解决。",
+      "actual_result": "三次声称'零残留'，三次被异后端独立扫描发现新残留：(1) 第一次——自检声称零残留 → Codex 发现绝对路径和用户名残留；(2) 第二次——修复后再次声称零残留 → Codex 发现新的路径变体（正斜杠/反斜杠/JSON-escaped/PowerShell triple-escaped 四层变体）；(3) 第三次——再次声称零残留 → Codex 发现 project_status.md 等 .gitignore 排除文件的残留（自检只扫了 tracked files）。根因：同一大脑用同一 grep pattern 扫同一批文件 → 第 10 次和第 1 次看到的东西一样——盲区不会因为重复而消失。",
+      "effect_size": "3/3 次'零残留'声称被异后端独立扫描证伪（100% 误报率）",
+      "sample_size": "3 轮清理+自检 × 3 轮 Codex 独立扫描",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5"
+      ],
+      "interpretation": "这三次误报不是操作不仔细——是同一后端同一搜索策略的结构性盲区。操作者用自己写的 grep pattern 扫自己编辑过的文件——大脑已经在编辑过程中建立了'我已经处理过了'的认知，grep 只是确认这个认知。异后端独立扫描使用不同的搜索策略（不同的关键字选择、不同的文件范围假设），自然会命中操作者盲区中的残留。第四次修复后，项目启动检查清单新增了 O7 'no_self_reported_zero_residue'——规定清理类任务不得基于自有 grep pattern 声称零残留，必须由异后端/异工具独立确认。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "raw-output"
+        ],
+        "notes": "回顾记录在 retrospect_2026-06-23.md。三次 Codex 独立扫描的发现列表和修复记录在 _reviews/ 中。"
+      },
+      "related_positive_result": "第四次修复后，Codex 独立扫描确认零残留。本项目启动检查清单 O7 规则（'禁止自扫自夸零残留'）源于这次失败。但核心启示不变：清理类任务的'完成'不能由清理者自己宣布。",
+      "lessons_learned": [
+        "同一大脑同一 grep pattern 扫 10 次 = 同样的盲区 ×10——盲区不会因为重复而消失",
+        "清理者自己宣布'零残留'是不可靠的——清理者在编辑过程中已经建立了'已处理'的认知",
+        "异后端独立扫描的必要性：不同的搜索策略 = 不同的盲区覆盖",
+        "路径清理存在四层变体（正斜杠/反斜杠/JSON-escaped/PowerShell triple-escaped）——单一 grep 无法穷尽"
+      ],
+      "tags": [
+        "零残留",
+        "清理",
+        "自扫",
+        "grep",
+        "盲区",
+        "异后端扫描",
+        "O7",
+        "路径变体"
+      ],
+      "links": [
+        {
+          "label": "回顾记录 — 2026-06-23",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md"
+        },
+        {
+          "label": "AI 协作框架仓库",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        },
+        {
+          "label": "O7 no_self_reported_zero_residue（methodology-handbook）",
+          "url": "https://github.com/redamancy231-create/methodology-handbook"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-016",
+      "title": "18 个 LLM 存在广泛'行为纠缠'——共享训练数据/蒸馏/对齐管道导致模型并非真正独立（Kuai et al., 2026）",
+      "domain": "multi-model-collaboration",
+      "category": "ceiling-effect",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-25",
+      "hypothesis": "使用不同模型家族的 LLM 进行多模型审查/验证时，这些模型的判断应接近统计独立——预期去纠缠的验证器集成可将准确率提升 ≥10%。",
+      "method": "Kuai et al. (2026-04) 开发了一套统计框架来审计 LLM 之间的'行为纠缠'——即共享训练数据、知识蒸馏、对齐管道等产生的隐式依赖。测试了 18 个 LLM（来自 6 个模型家族），量化了模型对之间的行为相关性（模型 A 的错误能在多大程度上预测模型 B 在相同样本上的错误）。",
+      "expected_result": "不同模型家族之间的行为纠缠程度应较低；去纠缠后的验证器集成应显著优于单模型。",
+      "actual_result": "18 个 LLM 存在广泛的'行为纠缠'——不仅在模型家族内部（预期），在家族之间也存在显著纠缠（非预期）。去纠缠的验证器集成将准确率提升了 4.5%——这证明纠缠确实存在且影响了集成效果，但提升幅度（4.5%）远低于'完全独立'假设下的预期。这一发现与 Kohli (2026-05) 的'9→2 有效票'相互印证：模型数量 ≠ 独立视角数量。",
+      "effect_size": "去纠缠后准确率提升 4.5%（显著但远低于'完全独立'预期）；18 个模型 × 6 个家族存在广泛的跨家族纠缠",
+      "sample_size": "18 个 LLM × 6 个模型家族",
+      "models_used": [
+        "多种 LLM（详见 Kuai et al., 2026-04）"
+      ],
+      "interpretation": "这是对'多模型=多独立视角'直觉假设的系统性证伪。行为纠缠的三个来源——共享训练数据（所有模型都在相似的互联网语料上训练）、知识蒸馏（小模型从大模型学习）、对齐管道（RLHF/DPO 使用相似的人类偏好数据）——意味着即使来自不同公司、不同架构的模型，也可能因为共享上游数据而产生系统相关的错误模式。对于 AI 协作方法论而言，这意味着'换模型'的独立性增益被高估了。",
+      "reproducibility": {
+        "level": "not-assessed",
+        "artifacts_available": [
+          "none"
+        ],
+        "notes": "第三方分析条目——源数据来自 Kuai et al. (2026-04) 论文。论文提供了完整的方法论框架和实验设置，可在相同模型上复现统计审计。"
+      },
+      "related_positive_result": "去纠缠验证器集成仍然有效（+4.5% 准确率）——问题不在于多模型集成无效，而在于效果被纠缠度限制了。选择真正多样化的模型（不同训练数据、不同架构、不同对齐策略）可以最大化'有效独立视角'。",
+      "lessons_learned": [
+        "'不同模型家族的模型独立'是一个需要检验的假设，不是默认事实——18 个模型 6 个家族存在跨家族行为纠缠",
+        "行为纠缠的三个来源（共享训练数据、蒸馏、对齐管道）在当前 LLM 生态中几乎无法完全避免",
+        "去纠缠后准确率仅提升 4.5%——不是'多模型没用'，而是'多模型的边际收益比预期低'",
+        "选择模型时应优先考虑训练数据来源、架构和对齐管道的多样性，而非仅看模型数量和提供商数量"
+      ],
+      "tags": [
+        "行为纠缠",
+        "模型独立性",
+        "Kuai2026",
+        "去纠缠",
+        "多模型协作",
+        "训练数据",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "Kuai et al. (2026-04) — How Independent are LLMs?",
+          "url": "https://arxiv.org/abs/2604.07650"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-017",
+      "title": "LLM 多模型分歧不是 bug 是诊断信号——但 Nájera (2026) 的四类分歧分类揭示多数'分歧'不指示深层问题",
+      "domain": "multi-model-collaboration",
+      "category": "null-result",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-25",
+      "hypothesis": "多模型审查中的模型间分歧（两个模型对同一内容给出不同评分/判断）指示被审查内容的真实质量问题——预期分歧程度与被审查内容的质量缺陷正相关。",
+      "method": "Nájera et al. (2026-05) 将多模型分歧从'bug'重新定义为'诊断信号'，开发了四类分歧分类法。通过将分歧模式映射到真实的解释复杂性（而非内容质量问题），量化了不同类型的模型间分歧及其与内容质量的关系。",
+      "expected_result": "多模型分歧应能作为内容质量的可靠信号——高分歧 = 内容确实有问题。",
+      "actual_result": "多数模型间分歧不指示内容质量问题，而指示：(1) 评估标准本身的模糊性——不同模型对同一 rubrics 有不同解释；(2) 任务的固有歧义度——某些内容本身允许多种合理判断；(3) 模型训练数据中的偏好差异——不同模型在不同领域有系统性偏乐观/偏悲观倾向。只有第四类（深度分歧）才可能指示真实的评估复杂性。在本项目（methodology-extraction-methodology）中，Phase 5 双轮审查 33 项发现 0 重叠——这不是'一个模型对另一个模型错'，而是两个模型的错误敏感性完全不同，各自覆盖了对方盲区中的问题。",
+      "effect_size": "四类分歧中仅第四类（深度分歧）可能指示真实评估复杂性；多数分歧源于标准模糊性、任务歧义度和模型偏好差异",
+      "sample_size": "Nájera et al. (2026-05) 的公共评论分析数据集 + 本项目 Phase 5 双轮审查数据",
+      "models_used": [
+        "多种 LLM（详见 Nájera et al., 2026-05）",
+        "GPT-5.5",
+        "Qwen3.7-Max"
+      ],
+      "interpretation": "这个阴性发现对多模型审查方法论有直接影响：不能简单地用'模型之间意见不一致'来判断内容质量。分歧本身需要被分类——是标准模糊导致的分歧（rubrics 写得不够好）、是任务固有歧义（换了谁都可能给出不同判断）、还是真正的深度分歧（内容确实复杂）？在没有对分歧进行分类的情况下，'多模型一致性高=质量好'和'多模型分歧大=质量差'都是过度简化。",
+      "reproducibility": {
+        "level": "not-assessed",
+        "artifacts_available": [
+          "none"
+        ],
+        "notes": "第三方分析条目。Nájera et al. (2026-05) 论文提供了完整的四类分歧分类法和实验数据。本项目 Phase 5 零重叠案例作为补充证据。"
+      },
+      "related_positive_result": "将分歧重新定义为诊断信号（而非缺陷）本身就是一个有价值的框架转换。四类分类法可以帮助多模型审查的设计者判断：是改进 rubrics（标准模糊）还是接受多元判断（任务歧义）还是深入调查（深度分歧）。",
+      "lessons_learned": [
+        "多数模型间分歧不指示内容质量问题——分歧首先应被分类为四类之一，才能判断其含义",
+        "Phase 5 的 33 项发现 0 重叠不是'模型在吵架'——是两个模型的错误敏感性完全不同，各自发现对方盲区中的问题",
+        "'模型间一致性高=质量好'是一个需要检验的假设——一致同意也可能是共同盲区（行为纠缠的另一面）",
+        "多模型审查的设计应关注'分歧的类型'而非'分歧的量'"
+      ],
+      "tags": [
+        "多模型分歧",
+        "诊断信号",
+        "Nájera2026",
+        "分歧分类",
+        "盲区互补",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "Nájera et al. (2026-05) — When Models Disagree",
+          "url": "https://arxiv.org/abs/2605.29025"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-018",
+      "title": "CrossCheck 的 149 个 PR 全部由作者自提——'多模型 peer review'等于零独立审查记录",
+      "domain": "multi-model-collaboration",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-23",
+      "hypothesis": "一个明确设计了多模型角色分配（Codex 编写 → peer model 审查 → git hooks 执行）的 AI 编码系统，预期在运行过程中会产生可追溯的独立审查记录——至少记录哪个模型审查了什么、发现了什么问题。",
+      "method": "对 CrossCheck（sburl/CrossCheck，多模型 AI 编码自主循环 CLI 工具）进行了系统的方法论提取分析：检查了 149 个 PR 的提交记录、ARCHITECTURE.md 中描述的多模型审查流程、以及项目文档中是否包含独立审查的归档证据。CrossCheck 明确采用了 Swiss Cheese Model（多层质量保障）和'Zero Trust'哲学，其文档声称有 peer model review 环节。",
+      "expected_result": "至少部分 PR 应包含 peer model review 的记录——哪个模型审查了、发现了什么、是否通过。",
+      "actual_result": "149 个 PR 全部由作者自提。项目文档中描述的'peer model review'指 AI 模型审查 AI 生成的代码——但这种审查的过程和结果没有任何归档记录。不知道：(a) peer review 实际发生了多少次 vs 被跳过了多少次；(b) peer model 发现了多少问题；(c) 发现的问题中有多少被修复了。项目的审查链不可追溯——尽管其架构设计明确主张可审计性和透明性。",
+      "effect_size": "149/149 PR 无独立审查记录（100%）；理论上的'multi-model peer review'系统实操中零归档",
+      "sample_size": "149 个 PR × 1 个项目分析",
+      "models_used": [
+        "Claude Code",
+        "Codex CLI",
+        "Gemini CLI"
+      ],
+      "interpretation": "这不是说 CrossCheck 的设计不好——它的 Swiss Cheese Model 和 Skills 体系是自有项目之外最丰富的 AI 协作架构设计。但设计与执行之间存在断层：多层质量保障的设计本身无法保证每一层都被实际执行和记录。这是'被动合规'(git hooks)和'主动自觉'(记录审查过程)之间的张力——hooks 可以强制执行'代码必须通过测试'，但不能强制执行'审查结果必须归档'。",
+      "reproducibility": {
+        "level": "fully-reproducible",
+        "artifacts_available": [
+          "logs",
+          "raw-output"
+        ],
+        "notes": "第三方分析条目——源数据来自 sburl/CrossCheck 公开仓库的 PR 历史和文档。任何人均可独立验证 149 个 PR 的提交者身份和审查记录的存在性。"
+      },
+      "related_positive_result": "CrossCheck 的架构设计（6 阶段循环 + Skills 体系 + Swiss Cheese Model）是方法论设计的优秀范例。其 git hooks + pre-PR check 的质量门禁在自动化合规方面做得很好。缺失的是'审查过程归档'——这个缺陷是可修复的，不需要改变核心架构。",
+      "lessons_learned": [
+        "'多模型审查'的设计不等于'多模型审查'的执行——缺乏归档机制时，无法区分'做了但没记录'和'根本没做'",
+        "Git hooks 可以强制执行代码质量门禁，但不能强制执行审查过程记录——后者需要不同的机制",
+        "149 个 PR 的 0 独立审查记录揭示了一个模式：自动化合规做得好的人，可能在人工记录上做得差",
+        "CrossCheck 的 Swiss Cheese Model 如果加上'审查归档'这一层，会是一个更完整的质量保障体系"
+      ],
+      "tags": [
+        "CrossCheck",
+        "多模型审查",
+        "独立审查",
+        "归档",
+        "执行断层",
+        "Swiss Cheese Model",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "CrossCheck 仓库 (sburl/CrossCheck)",
+          "url": "https://github.com/sburl/CrossCheck"
+        },
+        {
+          "label": "CrossCheck ARCHITECTURE.md",
+          "url": "https://github.com/sburl/CrossCheck/blob/main/ARCHITECTURE.md"
+        },
+        {
+          "label": "方法论提取方法论 — CrossCheck 证据卡",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_crosscheck.md"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "by_domain": {
+      "prompt-engineering": 2,
+      "methodology-extraction": 4,
+      "document-generation": 2,
+      "tool-building": 1,
+      "academic-writing": 1,
+      "skill-design": 1,
+      "code-review": 2,
+      "multi-model-collaboration": 4,
+      "workflow-orchestration": 1
+    },
+    "by_category": {
+      "null-result": 3,
+      "methodology-failure": 11,
+      "ceiling-effect": 3,
+      "abandoned-dead-end": 1
+    },
+    "by_year": {
+      "2026": 18
+    },
+    "models_used": {
+      "GPT-5.5": 13,
+      "Qwen3.7-Max": 7,
+      "Kimi-K2.7": 4,
+      "GLM-5.2": 2,
+      "mermaid-cli (mmdc)": 1,
+      "python-docx v1.2.0": 1,
+      "Microsoft Word": 1,
+      "Pillow (修复)": 1,
+      "DeepSeek-V4-Pro": 8,
+      "Kimi-K2.7-Code": 1,
+      "Claude Opus 4.7": 1,
+      "GLM-5.1": 1,
+      "Kimi-K2.6": 1,
+      "Qwen": 1,
+      "GPT-5.6-Sol": 1,
+      "Claude Opus 4.8": 3,
+      "OpenCC": 1,
+      "多种 LLM（详见 Kuai et al., 2026-04）": 1,
+      "多种 LLM（详见 Nájera et al., 2026-05）": 1,
+      "Claude Code": 1,
+      "Codex CLI": 1,
+      "Gemini CLI": 1
+    }
+  }
+}

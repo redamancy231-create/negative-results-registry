@@ -1,0 +1,48 @@
+{
+  "id": "NRR-2026-003",
+  "title": "22 个源项目系统提取可复用方法论模式——无一达到 ≥3 源稳定门槛",
+  "domain": "methodology-extraction",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-06-16",
+  "hypothesis": "从 22 个项目（11 外部分析 + 7 自建公开 + 4 自建未公开）中系统提取 AI 协作方法论模式。预期至少可识别 5–8 个跨 ≥3 源项目的稳定模式，形成'方法论提取框架 v0.1'。",
+  "method": "八阶段系统提取（Phase 0-7）：每个项目独立出证据卡 → 跨项目聚类 → 模式候选 → G5 追溯审计。稳定门槛=≥3 个源项目独立出现。10 轮审查跨 GPT-5.5/Kimi-K2.7/Qwen3.7-Max/GLM-5.2。元审查按 Kohli (2026-05) 独立性框架评估有效独立视角约 2-3。",
+  "expected_result": "5-8 个方法论模式达到 ≥3 源稳定门槛，形成可发布的框架 v0.1。",
+  "actual_result": "G5 可追溯审计：所有 5 个组件均未达到 ≥3 源稳定门槛。22 个项目不足以支撑泛化的方法论模式提取。",
+  "effect_size": "N/A（阈值未达到——0/5 组件通过）",
+  "sample_size": "22 个项目（11 外部开源/论文分析 + 7 自建公开 + 4 自建未公开）",
+  "models_used": ["GPT-5.5", "Kimi-K2.7", "Qwen3.7-Max", "GLM-5.2"],
+  "interpretation": "三个系统性问题叠加：(1) 样本同质性——所有提取和审查由同一操作者执行，认知偏好系统性约束模式发现；(2) n=22 太小——跨项目模式提取需要远大于 22 的样本；(3) ≥3 源稳定门槛可能对方法论文献提取来说太严。但'提取不出来'≠'不存在'——是方法不够好，不是没有模式。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["prompts", "logs", "analysis-script", "raw-output"],
+    "notes": "11 张公开证据卡 + 10 轮审查报告 + G5 审计公开。11 个未公开源项目的详细证据卡不在公开仓库中——完全复现需要同操作者的全部项目笔记。"
+  },
+  "related_positive_result": "无直接后续。项目在 v0.1 trial 封存。框架作为'不可行性证明'有独立价值。",
+  "lessons_learned": [
+    "方法论提取比预期难一个数量级——22 个项目看起来很多，实际远远不够",
+    "操作者独立性是瓶颈——如果所有源项目的提取者是同一人，模式发现会被认知偏好约束",
+    "'提取不出来'和'不存在'是两回事——0 模式达标 ≠ 没有可提取模式",
+    "过程比结果有价值——审查链（33 发现 0 重叠 + 4 后端收敛）的学术价值超出框架本身",
+    "诚实的阴性结果有独立价值——核心交付物变成了'这件事有多难'的诚实报告"
+  ],
+  "tags": ["方法论提取", "框架构建", "跨项目模式", "方法论失败", "G5审计", "审查链", "22项目", "不可行性证明"],
+  "links": [
+    {
+      "label": "方法论提取方法论仓库",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology"
+    },
+    {
+      "label": "G5 可追溯审计",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/synthesis/phase4_traceability_audit.md"
+    },
+    {
+      "label": "闭合后外部验证附录",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md"
+    },
+    {
+      "label": "NRR-2026-001（同操作者的 Prompt-TDD A2 阴性结果）",
+      "url": "https://github.com/redamancy231-create/negative-results-registry/entries/NRR-2026-001"
+    }
+  ]
+}

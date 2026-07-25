@@ -1,0 +1,43 @@
+{
+  "id": "NRR-2026-008",
+  "title": "LLM 代码审查系统性漏掉 3 类 bug——渲染效果、默认路径、终端编码全部逃脱审查",
+  "domain": "code-review",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-17",
+  "hypothesis": "多轮 LLM 代码审查（跨 5 种后端 + 多维度审查 prompt）应能检测到项目中的功能性 bug——预期覆盖率接近 100%。",
+  "method": "对 docx-pipeline 项目进行了 5 轮跨模型审查（GPT-5.6-Sol 主审），覆盖代码正确性、配置契约、安全性、文档完整性等维度。事后通过人工端到端测试（目视验证 + Windows Git Bash 真实环境运行）独立检测实际 bug。对比 LLM 审查发现的 bug 列表与实测发现的 bug 列表。",
+  "expected_result": "LLM 审查应捕获全部或几乎全部功能性 bug；遗漏率预期 <10%。",
+  "actual_result": "LLM 审查（5 轮）完全漏掉了 3 个实际存在的 bug：(1) 渲染效果 bug——Mermaid PNG 在 Word 中 ~4× 拉伸，因为 mmdc 不写 DPI 元数据 + python-docx 默认 72 DPI——纯代码审查无法检测 DPI 元数据缺失；(2) 默认路径 bug——裸模板默认值 output/docx 无扩展名，'init→convert'路径不走已有配置，暴露 defaults.py 的路径缺陷——审查者看代码逻辑正确但端到端路径断裂；(3) 终端编码 bug——gh CLI 中文文件名上传在 Windows Git Bash 下反复失败，根因是 GBK/UTF-8 终端编码转换——审查者代码级审查看不到终端编码问题。",
+  "effect_size": "3/3 类 bug 全部逃脱 LLM 审查（遗漏率 100%，非 <10%）",
+  "sample_size": "5 轮审查 × 1 个项目 × 3 类实测 bug",
+  "models_used": ["GPT-5.6-Sol", "GPT-5.5", "Kimi-K2.7", "Claude Opus 4.8"],
+  "interpretation": "LLM 代码审查存在三类系统性盲区（按 bug 类型分类，非按模型分类）：(1) 渲染效果——代码正确不代表最终渲染正确，需目视验证；(2) 默认路径——裸默认值在'init→使用'的完整路径中可能断裂，审查只看单点逻辑；(3) 终端编码——跨平台字符编码问题只在真实环境中暴露。这三类盲区共享一个特征：bug 不出现在源代码的逻辑层面，而出现在相邻工具链的交互契约中。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["logs", "raw-output"],
+    "notes": "回顾分析记录在 docx-pipeline/_reviews/retrospect_2026-07-17.md。复现需要相同工具链版本（mmdc, python-docx v1.2.0, Windows Git Bash）。"
+  },
+  "related_positive_result": "三个 bug 事后全部修复：(1) Pillow DPI 注入、(2) 路径扩展名修正、(3) gh CLI 编码 workaround。但发现成本远高于修复成本——诊断靠人工端到端测试，非 LLM 审查。",
+  "lessons_learned": [
+    "LLM 审查无法替代端到端目视验证——渲染效果、默认路径、终端编码三类 bug 全部逃脱了 5 轮跨模型审查",
+    "三类盲区的共性：bug 不出现在源代码逻辑层面，而出现在相邻工具链的隐式交互契约中",
+    "纯代码审查覆盖率 ≠ 真实 bug 检测率——审查者看到的是'代码说了什么'，看不到'代码在真实环境中做了什么'",
+    "AI 辅助开发的测试策略需要补充'运行环境端到端测试'，不能仅依赖 LLM 代码审查"
+  ],
+  "tags": ["LLM审查盲区", "代码审查", "渲染bug", "默认路径", "终端编码", "端到端验证", "目视确认", "审查覆盖率"],
+  "links": [
+    {
+      "label": "DOCX Pipeline 仓库",
+      "url": "https://github.com/redamancy231-create/docx-pipeline"
+    },
+    {
+      "label": "回顾报告（含三类盲区详细分析）",
+      "url": "https://github.com/redamancy231-create/docx-pipeline/blob/main/_reviews/retrospect_2026-07-17.md"
+    },
+    {
+      "label": "LLM 审查三类盲区（methodology-handbook）",
+      "url": "https://github.com/redamancy231-create/methodology-handbook"
+    }
+  ]
+}

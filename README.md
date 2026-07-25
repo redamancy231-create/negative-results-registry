@@ -1,0 +1,188 @@
+# AI 协作阴性结果登记册
+
+> **Negative Results Registry for AI Collaboration** — 一个结构化的、可检索的"AI 实验失败了"公开登记系统。
+
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-18-brightgreen.svg)]()
+
+[简体中文](README.md) · English（待翻译）
+
+> **知道什么不 work 和知道什么 work 同等重要。**
+
+---
+
+## 这是什么
+
+科学界有一个"文件抽屉问题"（file drawer problem）：阳性结果发表，阴性结果塞进抽屉。AI 协作领域同样如此——GitHub 上充斥着"我用 AI 做了 X"的展示，但几乎没有人记录"我试了 X，失败了"。
+
+**这个登记册旨在对抗"文件抽屉问题"。** 它是一个结构化的、可通过 `registry.json` 机器查询的公开数据库，专门记录 AI 协作中的阴性/诚实结果。当前为维护者个人失败日志的结构化原型，外部条目接入后方可声称社区价值。
+
+### 核心信念
+
+- **阴性结果不是失败——是数据**
+- **诚实建立信任**——一个说自己"所有实验都成功"的人要么没做过实验，要么在撒谎
+- **知道死胡同的位置，后来人就不会撞墙**
+- **精确的失败条件比模糊的成功宣言更有信息量**
+- **目前为维护者个人失败日志的结构化原型**——4 条目、同一提交者、同一生态，尚不能声称已"对抗文件抽屉问题"；需外部提交和独立条目后才能作为社区登记册
+
+---
+
+```mermaid
+flowchart TB
+    SUBMIT["📝 <b>提交者</b><br/>实验失败后<br/>填写提交模板"]
+
+    subgraph REGISTRY["<b>登记册</b>"]
+        SCHEMA["📋 <b>JSON Schema 校验</b><br/>结构完整性 + 分类一致性"]
+        STORE["🗄 <b>条目存储</b><br/>.md（人读）+ .json（机读）<br/>NRR-YYYY-NNN"]
+        INDEX["📊 <b>聚合索引</b><br/>registry.json<br/>按领域/类型/模型可检索"]
+    end
+
+    CONSUME["🔍 <b>消费者</b><br/>启动实验前搜索<br/>'有人试过这个方向吗？'"]
+
+    SUBMIT --> SCHEMA --> STORE --> INDEX --> CONSUME
+    CONSUME -.->|"发现前人失败<br/>调整方向"| SUBMIT
+```
+
+---
+
+## 分类体系
+
+### 按领域（12类）
+
+| 代码 | 领域 |
+|------|------|
+| prompt-engineering | Prompt 工程 |
+| code-review | 代码审查 |
+| methodology-extraction | 方法论提取 |
+| workflow-orchestration | 工作流编排 |
+| document-generation | 文档生成 |
+| multi-model-collaboration | 多模型协作 |
+| quantitative-research | 量化研究 |
+| academic-writing | 学术写作 |
+| tool-building | 工具开发 |
+| skill-design | Skill 设计 |
+| benchmarking | 基准测试 |
+| other | 其他 |
+
+### 按阴性结果类型（9类）
+
+| 代码 | 类型 | 说明 |
+|------|------|------|
+| null-result | 零结果 | 实验组和对照组无显著差异 |
+| ceiling-effect | 天花板效应 | 基线已很好，改进空间为零 |
+| worse-than-baseline | 劣于基线 | 新方法比基线还差 |
+| failed-to-replicate | 复现失败 | 无法复现之前有效的发现 |
+| methodology-failure | 方法失败 | 实验设计/执行本身出问题 |
+| abandoned-dead-end | 死胡同 | 方向本身不可行 |
+| hypothesis-falsified | 假设被证伪 | 明确推翻了原有假设 |
+| tool-unfit-for-purpose | 工具不适用 | 选的工具/模型不适合任务 |
+| other | 其他 | |
+
+---
+
+## 目录结构
+
+```
+negative-results-registry/
+├── README.md                    ← 你在这里
+├── CLAUDE.md                    ← AI 助手项目指令
+├── LICENSE                      ← CC BY 4.0
+├── .gitignore
+├── methodology.md               ← 为什么记录阴性结果 + 分类详解
+├── registry.json                ← 聚合索引（机器可读）
+│
+├── schema/
+│   └── entry.schema.json        ← 条目 JSON Schema (Draft 2020-12)
+│
+├── templates/
+│   └── submission.md            ← 提交模板（复制即用）
+│
+├── entries/                     ← 条目目录
+│   └── NRR-YYYY-NNN/            ← 每条目独立目录
+│       ├── NRR-YYYY-NNN.md      ← 人读报告
+│       └── NRR-YYYY-NNN.json    ← 机读数据
+│
+├── scripts/
+│   └── generate_registry.py     ← 从 entries/ 生成 registry.json
+│
+└── docs/
+    └── existing-negative-results.md  ← 自有阴性结果盘点
+```
+
+---
+
+## 提交一条阴性结果
+
+### 5 分钟流程
+
+1. 复制 `templates/submission.md`
+2. 按模板填写你的阴性结果
+3. 创建 `entries/NRR-YYYY-NNN/` 目录
+4. 放入 `.md` + `.json` 双件（JSON 按 `schema/entry.schema.json` 校验）
+5. 提 Pull Request
+
+### 什么可以提交？
+
+| ✅ 欢迎 | ❌ 不适合 |
+|---------|----------|
+| Prompt 对照实验中无显著差异 | "我随便试了一下不行"（缺方法描述） |
+| 方法论文献提取未达稳定门槛 | 不涉及 AI 协作的纯技术 bug |
+| 某工具/模型在特定任务上失败 | 没有记录实验条件的印象式判断 |
+| 策略回测中某因子无预测力 | 保密/未公开项目的结果 |
+| Workflow 编排中某模式反效果 | |
+
+### 不需要
+
+- ❌ 学术论文格式
+- ❌ 统计显著性（单案例诚实报告也欢迎）
+- ❌ "大失败"——小到"换了个 prompt 反而更差"也可以
+
+---
+
+## 条目概览
+
+当前已收录 **11 个条目**，覆盖 7 个领域 × 5 种类型，来自 6 个自有项目 + 1 个外部学术来源：
+
+| ID | 来源 | 领域 | 类型 |
+|----|------|------|------|
+| NRR-2026-001 | prompt-tdd-methodology | prompt-engineering | null-result |
+| NRR-2026-002 | prompt-tdd-methodology | prompt-engineering | null-result |
+| NRR-2026-003 | methodology-extraction-methodology | methodology-extraction | methodology-failure |
+| NRR-2026-004 | docx-pipeline | document-generation | methodology-failure |
+| NRR-2026-005 | etf-pattern-match-pybind11 | tool-building | ceiling-effect |
+| NRR-2026-006 | ma-case-study-pipeline | academic-writing | methodology-failure |
+| NRR-2026-007 | claude-skills | skill-design | methodology-failure |
+| NRR-2026-008 | docx-pipeline | code-review | methodology-failure |
+| NRR-2026-009 | ai-collaboration-framework | methodology-extraction | methodology-failure |
+| NRR-2026-010 | ai-collaboration-framework | document-generation | methodology-failure |
+| NRR-2026-011 | Kohli 2026 / CrossCheck | multi-model-collaboration | ceiling-effect |
+
+---
+
+## 与学术文献的关系
+
+2026 年已有论文为阴性结果的学术价值提供了外部支持。详见 [`methodology.md`](methodology.md) §与学术文献的关系。
+
+关键引用：Kohli (2026-05) 证明了"9 个 LLM 评审团 ≈ 2 个有效独立票"——这本身就是一个有量化证据的阴性结果。
+
+---
+
+## 相关项目
+
+- [AI 协作项目全生命周期框架](https://github.com/redamancy231-create/ai-collaboration-framework) — 本登记册的方法论来源
+- [Prompt-TDD 方法论](https://github.com/redamancy231-create/prompt-tdd-methodology) — 初始条目来源（A2/A3 阴性结果）
+- [方法论提取方法论](https://github.com/redamancy231-create/methodology-extraction-methodology) — 初始条目来源（22 项目 0 模式达标）
+- [方法论与经验教训手册](https://github.com/redamancy231-create/methodology-handbook) — 50 条错题本
+
+更多项目请见 [个人主页](https://github.com/redamancy231-create/redamancy231-create)
+
+---
+
+## 许可
+
+CC BY 4.0。条目内容版权归提交者所有，提交即同意以 CC BY 4.0 发布。
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*

@@ -1,0 +1,43 @@
+{
+  "id": "NRR-2026-018",
+  "title": "CrossCheck 的 149 个 PR 全部由作者自提——'多模型 peer review'等于零独立审查记录",
+  "domain": "multi-model-collaboration",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-23",
+  "hypothesis": "一个明确设计了多模型角色分配（Codex 编写 → peer model 审查 → git hooks 执行）的 AI 编码系统，预期在运行过程中会产生可追溯的独立审查记录——至少记录哪个模型审查了什么、发现了什么问题。",
+  "method": "对 CrossCheck（sburl/CrossCheck，多模型 AI 编码自主循环 CLI 工具）进行了系统的方法论提取分析：检查了 149 个 PR 的提交记录、ARCHITECTURE.md 中描述的多模型审查流程、以及项目文档中是否包含独立审查的归档证据。CrossCheck 明确采用了 Swiss Cheese Model（多层质量保障）和'Zero Trust'哲学，其文档声称有 peer model review 环节。",
+  "expected_result": "至少部分 PR 应包含 peer model review 的记录——哪个模型审查了、发现了什么、是否通过。",
+  "actual_result": "149 个 PR 全部由作者自提。项目文档中描述的'peer model review'指 AI 模型审查 AI 生成的代码——但这种审查的过程和结果没有任何归档记录。不知道：(a) peer review 实际发生了多少次 vs 被跳过了多少次；(b) peer model 发现了多少问题；(c) 发现的问题中有多少被修复了。项目的审查链不可追溯——尽管其架构设计明确主张可审计性和透明性。",
+  "effect_size": "149/149 PR 无独立审查记录（100%）；理论上的'multi-model peer review'系统实操中零归档",
+  "sample_size": "149 个 PR × 1 个项目分析",
+  "models_used": ["Claude Code", "Codex CLI", "Gemini CLI"],
+  "interpretation": "这不是说 CrossCheck 的设计不好——它的 Swiss Cheese Model 和 Skills 体系是自有项目之外最丰富的 AI 协作架构设计。但设计与执行之间存在断层：多层质量保障的设计本身无法保证每一层都被实际执行和记录。这是'被动合规'(git hooks)和'主动自觉'(记录审查过程)之间的张力——hooks 可以强制执行'代码必须通过测试'，但不能强制执行'审查结果必须归档'。",
+  "reproducibility": {
+    "level": "fully-reproducible",
+    "artifacts_available": ["logs", "raw-output"],
+    "notes": "第三方分析条目——源数据来自 sburl/CrossCheck 公开仓库的 PR 历史和文档。任何人均可独立验证 149 个 PR 的提交者身份和审查记录的存在性。"
+  },
+  "related_positive_result": "CrossCheck 的架构设计（6 阶段循环 + Skills 体系 + Swiss Cheese Model）是方法论设计的优秀范例。其 git hooks + pre-PR check 的质量门禁在自动化合规方面做得很好。缺失的是'审查过程归档'——这个缺陷是可修复的，不需要改变核心架构。",
+  "lessons_learned": [
+    "'多模型审查'的设计不等于'多模型审查'的执行——缺乏归档机制时，无法区分'做了但没记录'和'根本没做'",
+    "Git hooks 可以强制执行代码质量门禁，但不能强制执行审查过程记录——后者需要不同的机制",
+    "149 个 PR 的 0 独立审查记录揭示了一个模式：自动化合规做得好的人，可能在人工记录上做得差",
+    "CrossCheck 的 Swiss Cheese Model 如果加上'审查归档'这一层，会是一个更完整的质量保障体系"
+  ],
+  "tags": ["CrossCheck", "多模型审查", "独立审查", "归档", "执行断层", "Swiss Cheese Model", "第三方分析"],
+  "links": [
+    {
+      "label": "CrossCheck 仓库 (sburl/CrossCheck)",
+      "url": "https://github.com/sburl/CrossCheck"
+    },
+    {
+      "label": "CrossCheck ARCHITECTURE.md",
+      "url": "https://github.com/sburl/CrossCheck/blob/main/ARCHITECTURE.md"
+    },
+    {
+      "label": "方法论提取方法论 — CrossCheck 证据卡",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_crosscheck.md"
+    }
+  ]
+}

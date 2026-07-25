@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/redamancy231-create/negative-results-registry/schema/entry.schema.json",
+  "title": "Negative Results Registry Entry",
+  "description": "Schema for a single negative/honest result entry in the AI Collaboration Negative Results Registry.",
+  "type": "object",
+  "required": ["id", "title", "domain", "category", "submitted_by", "date", "hypothesis", "method", "expected_result", "actual_result", "interpretation"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique entry ID, format: NRR-YYYY-NNN (e.g., NRR-2026-001)",
+      "pattern": "^NRR-\\d{4}-\\d{3}$"
+    },
+    "title": {
+      "type": "string",
+      "description": "One-line summary of the negative result (≤120 chars)",
+      "maxLength": 120
+    },
+    "domain": {
+      "type": "string",
+      "description": "Primary domain of the experiment",
+      "enum": [
+        "prompt-engineering",
+        "code-review",
+        "methodology-extraction",
+        "workflow-orchestration",
+        "document-generation",
+        "multi-model-collaboration",
+        "quantitative-research",
+        "academic-writing",
+        "tool-building",
+        "skill-design",
+        "benchmarking",
+        "other"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "description": "Type of negative result",
+      "enum": [
+        "null-result",
+        "ceiling-effect",
+        "worse-than-baseline",
+        "failed-to-replicate",
+        "methodology-failure",
+        "abandoned-dead-end",
+        "hypothesis-falsified",
+        "tool-unfit-for-purpose",
+        "other"
+      ]
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "GitHub username or real name of submitter"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the experiment concluded (YYYY-MM-DD)"
+    },
+    "hypothesis": {
+      "type": "string",
+      "description": "The original hypothesis tested (what did you expect to work?)",
+      "maxLength": 500
+    },
+    "method": {
+      "type": "string",
+      "description": "Brief description of experimental method, sample size, and models/tools used",
+      "maxLength": 1000
+    },
+    "expected_result": {
+      "type": "string",
+      "description": "What you expected to observe if the hypothesis were true",
+      "maxLength": 500
+    },
+    "actual_result": {
+      "type": "string",
+      "description": "What actually happened — the negative result",
+      "maxLength": 1000
+    },
+    "effect_size": {
+      "type": "string",
+      "description": "Quantitative measure if applicable (e.g., 'd=0.03', 'ΔRankIC=-0.01')",
+      "maxLength": 100
+    },
+    "sample_size": {
+      "type": "string",
+      "description": "Description of sample (e.g., 'n=24 prompts, 2 conditions')",
+      "maxLength": 200
+    },
+    "models_used": {
+      "type": "array",
+      "description": "LLM backends or tools involved",
+      "items": {
+        "type": "string"
+      }
+    },
+    "interpretation": {
+      "type": "string",
+      "description": "Why did it fail? What did you learn? (≤1000 chars)",
+      "maxLength": 1000
+    },
+    "reproducibility": {
+      "type": "object",
+      "description": "Reproducibility assessment",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["fully-reproducible", "partially-reproducible", "not-reproducible", "not-assessed"]
+        },
+        "artifacts_available": {
+          "type": "array",
+          "description": "Available artifacts (prompts, data, code, logs)",
+          "items": {
+            "type": "string",
+            "enum": ["prompts", "data", "code", "logs", "analysis-script", "raw-output", "none"]
+          }
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "related_positive_result": {
+      "type": "string",
+      "description": "If a later attempt succeeded, link or reference (optional)",
+      "maxLength": 500
+    },
+    "lessons_learned": {
+      "type": "array",
+      "description": "Key lessons extracted from this failure (1-5 items)",
+      "items": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "maxItems": 5
+    },
+    "tags": {
+      "type": "array",
+      "description": "Free-form tags for discovery",
+      "items": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "maxItems": 10
+    },
+    "links": {
+      "type": "array",
+      "description": "Related URLs (repos, papers, reports)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {"type": "string"},
+          "url": {"type": "string", "format": "uri"}
+        }
+      }
+    }
+  }
+}

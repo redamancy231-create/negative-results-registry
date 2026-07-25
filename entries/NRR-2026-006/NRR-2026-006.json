@@ -1,0 +1,43 @@
+{
+  "id": "NRR-2026-006",
+  "title": "AI 自我评估偏乐观 ~11%——M&A 流水线自评 106% vs 独立双盲审 69.2（差距 36.8 分）",
+  "domain": "academic-writing",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-21",
+  "hypothesis": "多模型学术流水线（5 模型 × 8 阶段 × 交叉盲审）产出的论文，在 Phase 4 总装阶段经过自我质量评估后，预期质量接近可送审标准（≥80/100），且自评与后续独立审查的偏差应在可接受范围（≤15 分）。",
+  "method": "M&A 案例研究流水线 Phase 4（Claude Opus 4.7 总装）完成后进行了项目复盘自评（v2.0 归档时声称三个'亮点'：数据勾稽合理、CAR 稳健、杜邦到位）。随后 Phase 5A（GPT-5.5 合规事实层）+ Phase 5B（GLM-5.1 学术规范层）进行了独立双盲审（评审者不知自评分数，未参与任何前序环节）。对比自评与双盲审得分差距。",
+  "expected_result": "自评与独立审查偏差 ≤15 分，总装质量 ≥80/100。",
+  "actual_result": "Phase 5A 评分 68/100（退回重写），Phase 5B 评分 71/100（修改后通过）。加权总分 69.2（68×0.6+71×0.4）。与 Phase 4 自评的三个'亮点'对比：数据勾稽合理→商誉 289.34 vs 289.04 矛盾（硬伤）；CAR 稳健→长窗口 42.16% 远高于短窗口 18.45%（信息泄露警讯非稳健证据）；杜邦到位→8.63%≠10.42%（加权 vs 期末口径混用）。独立审查还发现模拟数据标注为 Wind/CSMAR/年报真实来源（学术不端嫌疑）。",
+  "effect_size": "自评→独立盲审差距 36.8 分（69.2-106 的归一化差距）；三处自评'亮点'全部被证伪为硬伤",
+  "sample_size": "1 篇论文 × 2 独立评审者（GPT-5.5 + GLM-5.1）× 加权评分",
+  "models_used": ["Claude Opus 4.7", "GPT-5.5", "GLM-5.1", "Kimi-K2.6", "Qwen"],
+  "interpretation": "这不是偶然失误——是系统性的自评估偏乐观偏差。操作者（同时也是评估者）对自己参与构建的项目存在 ~11% 的偏乐观偏差（已在 methodology-handbook 中记录为独立条目）。根本机制：同一 AI 不应同时担任设计者、执行者、验证者和评分官——但流水线 Phase 4 的自评环节违反了这个原则。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["prompts", "logs", "raw-output"],
+    "notes": "完整双盲审报告在 phases/phase5a_gpt5.5/ 和 phases/phase5b_glm5.1/。自评材料在 项目复盘归档报告.md。论文在另一独立仓库。复现需要相同的模型版本和角色分配。"
+  },
+  "related_positive_result": "修订后重评总分 84.0（5A: 82, 5B: 87）。但三处已知缺陷决定不修（商誉/杜邦/CAR），Phase 9（最终修正）从未运行。修订证明独立审查有效，但核心闭环未闭合。",
+  "lessons_learned": [
+    "同一 AI 或同一操作者不应同时担任设计者、执行者、验证者和评分官——M&A 流水线 Phase 4 的自评环节违反了自己的五条铁律",
+    "自评'亮点'在独立盲审下系统性转化为硬伤——'数据勾稽合理'→商誉矛盾,'CAR稳健'→信息泄露警讯,'杜邦到位'→口径混用",
+    "自评估偏乐观偏差并非个案——methodology-handbook 中记录的 ~11% 偏差在本项目中以 36.8 分的极端形式重现",
+    "三处硬伤被反复诊断但从未修复（Phase 9 从未运行）——'诊断不落地=白诊断'"
+  ],
+  "tags": ["自评偏乐观", "双盲审", "学术流水线", "独立审查", "方法论失败", "诊断不落地", "自我评估偏差"],
+  "links": [
+    {
+      "label": "M&A Case Study Pipeline 仓库",
+      "url": "https://github.com/redamancy231-create/ma-case-study-pipeline"
+    },
+    {
+      "label": "项目复盘归档报告（v3.0, CLOSED-FINAL）",
+      "url": "https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/项目复盘归档报告.md"
+    },
+    {
+      "label": "起点评估分析（含红队对抗命题）",
+      "url": "https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/起点评估分析.md"
+    }
+  ]
+}
