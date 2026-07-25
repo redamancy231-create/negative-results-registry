@@ -10,6 +10,8 @@
 [![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
 [![正體中文](https://img.shields.io/badge/lang-正體中文-green)](../zh-Hant/README.md)
 
+**Language**：English · [简体中文](../README.md) · [正體中文](../zh-Hant/README.md)
+
 > **Knowing what doesn't work is just as important as knowing what does.** · [Browse online](https://redamancy231-create.github.io/negative-results-registry/)
 
 ---
