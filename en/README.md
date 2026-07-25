@@ -4,7 +4,7 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
-[![Entries](https://img.shields.io/badge/Entries-18-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
 [![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
@@ -26,7 +26,7 @@ The scientific community has a "file drawer problem": positive results get publi
 - **Honesty builds trust**—someone who says "all my experiments succeeded" either has never run an experiment or is lying
 - **When dead ends are mapped, those who follow will not run into the same wall**
 - **Precise failure conditions are more informative than vague declarations of success**
-- **This is currently a structured prototype of the maintainer's personal failure log**—18 entries, one submitter, and one ecosystem. It cannot yet claim to have "combated the file drawer problem"; it needs external submissions and independent entries before it can serve as a community registry
+- **This is currently a structured prototype of the maintainer's personal failure log**—22 entries, one submitter, and one ecosystem. It cannot yet claim to have "combated the file drawer problem"; it needs external submissions and independent entries before it can serve as a community registry
 
 ---
 
@@ -34,7 +34,7 @@ The scientific community has a "file drawer problem": positive results get publi
 
 There are 18 million AI-related repositories on GitHub, the vast majority of which are code projects—showcases proclaiming "I used AI to do X." If you want to build a new tool, framework, or model, a quick search will turn up dozens of competitors.
 
-**But this registry is not a code project.** It is a structured set of methodological data—18 entries backed by independent review experience spanning 5 LLM backends and multiple public projects. A single project (the AI Collaboration Framework) alone accumulated 50+ rounds of independent review; add the review chains from the other projects, and the total—never tallied—far exceeds that. Every concrete number in these entries (d=0.03, n=24 per arm, 33 findings with zero overlap) is traceable to a source file and review chain. None of it was fabricated in a vacuum.
+**But this registry is not a code project.** It is a structured set of methodological data—22 entries backed by independent review experience spanning 5 LLM backends and multiple public projects. A single project (the AI Collaboration Framework) alone accumulated 50+ rounds of independent review; add the review chains from the other projects, and the total—never tallied—far exceeds that. Every concrete number in these entries (d=0.03, n=24 per arm, 33 findings with zero overlap) is traceable to a source file and review chain. None of it was fabricated in a vacuum.
 
 **The differentiation is not in the code—it is in the density of experience.** Someone can fork this repository, copy the schema, change the name, and ship it—but they cannot write the data that fills the entries. Code can be copied. Experience cannot.
 
@@ -155,7 +155,7 @@ negative-results-registry/
 
 ## Entry Overview
 
-The registry currently contains **22 entries** spanning 9 domains × 7 types, drawn from 6 of our own public projects + 7 external sources (academic papers + open-source projects):
+The registry currently contains **22 entries** spanning 10 domains × 4 types (out of a 12-domain × 9-type schema), drawn from 6 of our own public projects + 7 external sources (academic papers + open-source projects):
 
 | ID | Source | Domain | Type |
 |----|------|------|------|

@@ -21,8 +21,8 @@
 ### 步骤
 
 1. **Fork** 本仓库
-2. 复制 `templates/submission.md` → 按模板填写
-3. 创建 `entries/NRR-YYYY-NNN/` 目录（ID 用当前最大编号 +1，如现有最大为 NRR-2026-018，则用 NRR-2026-019）
+2. 复制 `templates/submission-v2.md` → 按模板填写
+3. 创建 `entries/NRR-YYYY-NNN/` 目录（ID 用当前最大编号 +1，如现有最大为 NRR-2026-022，则用 NRR-2026-023）；ID 由维护者在合并 PR 时分配，请先用临时 slug
 4. 放入 `.md`（人读）+ `.json`（机读，按 `schema/entry.schema.json` 校验）
 5. JSON 校验：
    ```bash

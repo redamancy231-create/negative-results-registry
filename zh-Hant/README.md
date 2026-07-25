@@ -4,7 +4,7 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
-[![Entries](https://img.shields.io/badge/Entries-18-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
 [![English](https://img.shields.io/badge/lang-English-blue)](../en/README.md)
@@ -26,7 +26,7 @@
 - **誠實建立信任**——一個說自己「所有實驗都成功」的人，要麼沒做過實驗，要麼在說謊
 - **知道死胡同的位置，後來的人就不會撞牆**
 - **精確的失敗條件比模糊的成功宣言更有資訊量**
-- **目前為維護者個人失敗日誌的結構化原型**——18 個條目、同一提交者、同一生態系，尚不能聲稱已「對抗檔案抽屜問題」；需要外部提交和獨立條目後才能成為社群登記冊
+- **目前為維護者個人失敗日誌的結構化原型**——22 個條目、同一提交者、同一生態系，尚不能聲稱已「對抗檔案抽屜問題」；需要外部提交和獨立條目後才能成為社群登記冊
 
 ---
 
@@ -34,7 +34,7 @@
 
 GitHub 上有 1,800 萬個 AI 相關倉庫，其中絕大多數是程式碼專案——「我用 AI 做了 X」的展示。製作一個新工具、新框架、新模型，你一搜尋就能找到數十個競品。
 
-**但這個登記冊不是程式碼專案。** 它是一套結構化的方法論資料——18 個條目背後是跨 5 種 LLM 後端、涵蓋多個公開專案的獨立審查經驗。僅 AI 協作框架這一個專案就累積了 50+ 輪獨立審查，加上其他專案的審查鏈，總輪次從未統計，但遠超此數。每個條目中的具體數字（d=0.03, n=24/臂, 33 項發現 0 重疊）都有來源檔案和審查鏈可追溯，不是在真空中編造的。
+**但這個登記冊不是程式碼專案。** 它是一套結構化的方法論資料——22 個條目背後是跨 5 種 LLM 後端、涵蓋多個公開專案的獨立審查經驗。僅 AI 協作框架這一個專案就累積了 50+ 輪獨立審查，加上其他專案的審查鏈，總輪次從未統計，但遠超此數。每個條目中的具體數字（d=0.03, n=24/臂, 33 項發現 0 重疊）都有來源檔案和審查鏈可追溯，不是在真空中編造的。
 
 **差異化不在程式碼，而在經驗密度。** 別人可以 fork 這個倉庫、複製 Schema、改個名稱發布——但寫不出條目裡的資料。程式碼可以複製，經驗不能。
 
@@ -155,7 +155,7 @@ negative-results-registry/
 
 ## 條目概覽
 
-目前已收錄 **22 個條目**，涵蓋 9 個領域 × 7 種類型，來自 6 個自有公開專案 + 7 個外部來源（學術論文 + 開源專案）：
+目前已收錄 **22 個條目**，涵蓋 10 個領域 × 4 種類型（Schema 共 12 領域 × 9 類型），來自 6 個自有公開專案 + 7 個外部來源（學術論文 + 開源專案）：
 
 | ID | 來源 | 領域 | 類型 |
 |----|------|------|------|
