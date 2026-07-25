@@ -221,6 +221,15 @@ For more projects, see the [personal homepage](https://github.com/redamancy231-c
 
 ---
 
+## Known Limitations
+
+- **Single submitter**: All 22 entries come from the same maintainer — exercise caution before drawing cross-submitter conclusions from the registry data.
+- **External link checks**: GitHub and arXiv domain links are skipped in CI due to platform rate limiting — evidence links on these domains require manual verification.
+- **Search capabilities**: The current site supports filtering by domain, category, and keyword (via GitHub Pages), but does not offer advanced full-text search or API export.
+- **Submission contract pending**: ID allocation, evidence thresholds, and review SLAs will be designed when real external contributions arise — the current submission process is a baseline version.
+
+---
+
 ## License
 
 CC BY 4.0. Entry content remains copyrighted by its submitter; submission constitutes agreement to publish it under CC BY 4.0.
