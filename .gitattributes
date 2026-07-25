@@ -1,4 +1,3 @@
-# Override GitHub linguist language detection — this is a documentation/knowledge project
+# Override GitHub linguist language detection — this is a documentation/knowledge project.
+# Only exclude the lone Python utility script; keep .json (machine-readable registry data).
 *.py linguist-detectable=false
-*.json linguist-detectable=false
-*.md linguist-detectable=true
