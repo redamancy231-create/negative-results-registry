@@ -11,10 +11,12 @@
 ## 项目性质
 
 这是一个**文档/知识类项目**，非软件项目。核心交付物：
-- `registry.json` — 机器可读登记册（权威数据源）
-- `entries/` — 按条目ID组织的独立阴性结果报告（人读 .md + 机读 .json）
-- `methodology.md` — 分类体系与价值论述
-- `templates/submission.md` — 标准化提交模板
+- `registry.json` — 机器可读登记册（权威数据源，脚本自动生成）
+- `entries/` — 22 条目，.md（人读）+ .json（机读）双件
+- `methodology.md` — 分类体系与价值论述（三语）
+- `templates/submission-v2.md` — 标准化提交模板
+- `docs/index.html` — GitHub Pages 可浏览页面
+- `.github/workflows/ci.yml` — CI 自动校验
 
 ## 关键约束
 
@@ -36,34 +38,42 @@
 
 ```
 negative-results-registry/
-├── README.md                    # 项目概览（中英双语）
+├── README.md                    # 项目概览（三语：中文 / EN / zh-Hant）
+├── CONTRIBUTING.md              # 贡献指南（三语）
 ├── CLAUDE.md                    # 本文件
 ├── LICENSE                      # CC BY 4.0
-├── .gitignore                   # 排除 project_status.md
-├── methodology.md               # 为什么 + 分类体系
-├── registry.json                # 聚合索引（从条目生成）
+├── .gitignore · .gitattributes
+├── methodology.md               # 分类体系 + 价值论述（三语）
+├── registry.json                # 聚合索引（脚本生成，禁止手工维护）
+│
+├── .github/workflows/
+│   └── ci.yml                   # CI：Schema 校验 + 链接检查
 │
 ├── schema/
 │   └── entry.schema.json        # JSON Schema (Draft 2020-12)
 │
 ├── templates/
-│   └── submission.md            # 提交模板（复制此模板填写）
+│   ├── submission-v2.md         # 提交模板（推荐使用）
+│   └── submission.md            # 旧版模板（保留参考）
 │
-├── entries/                     # 条目目录
-│   ├── NRR-2026-001/
-│   │   ├── NRR-2026-001.md
-│   │   └── NRR-2026-001.json
-│   └── ...
+├── entries/                     # 22 条目（NRR-2026-001 ~ 022）
+│   └── NRR-YYYY-NNN/            # 每条目独立目录
+│       ├── NRR-YYYY-NNN.md      # 人读报告
+│       └── NRR-YYYY-NNN.json    # 机读数据（权威源）
 │
-├── scripts/                     # 工具脚本
-│   └── generate_registry.py     # 从 entries/ 生成 registry.json
+├── scripts/
+│   ├── generate_registry.py     # entries/ → registry.json
+│   ├── validate_ci.py           # Schema + 链接 + 一致性校验
+│   └── check_external_links.py  # 外部链接检查
 │
-├── _reviews/                    # 审查材料（prompts + 报告）
-│   ├── prompts/
-│   └── gpt56-sol-review-report-*.md
+├── docs/
+│   ├── index.html               # GitHub Pages 可浏览页面
+│   ├── fork-modification-directions.md
+│   └── existing-negative-results.md
 │
-└── docs/                        # 补充文档
-    └── existing-negative-results.md  # 自有阴性结果盘点
+├── en/                          # English translation
+├── zh-Hant/                     # 正體中文翻譯
+└── _reviews/                    # 独立审查报告（R1 + R2, prompts/ 已 gitignored）
 ```
 
 ## 命名约定

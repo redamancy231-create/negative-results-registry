@@ -97,30 +97,42 @@ flowchart TB
 
 ```
 negative-results-registry/
-├── README.md                    ← You are here
-├── CONTRIBUTING.md               ← Contribution guide
+├── README.md                    ← You are here (trilingual: 中文 / EN / zh-Hant)
+├── CONTRIBUTING.md               ← Contribution guide (trilingual)
 ├── CLAUDE.md                    ← AI assistant project instructions
 ├── LICENSE                      ← CC BY 4.0
-├── .gitignore
-├── methodology.md               ← Why document negative results + detailed taxonomy
-├── registry.json                ← Aggregate index (machine-readable)
+├── .gitignore · .gitattributes
+├── methodology.md               ← Taxonomy + rationale (trilingual)
+├── registry.json                ← Aggregate index (script-generated, no manual edits)
+│
+├── .github/workflows/
+│   └── ci.yml                   ← CI: Schema validation + link checks
 │
 ├── schema/
 │   └── entry.schema.json        ← Entry JSON Schema (Draft 2020-12)
 │
 ├── templates/
-│   └── submission.md            ← Submission template (copy and use)
+│   ├── submission-v2.md         ← Submission template (recommended)
+│   └── submission.md            ← Legacy template (kept for reference)
 │
-├── entries/                     ← Entry directory
-│   └── NRR-YYYY-NNN/            ← Separate directory for each entry
+├── entries/                     ← 22 entries (NRR-2026-001 ~ 022)
+│   └── NRR-YYYY-NNN/
 │       ├── NRR-YYYY-NNN.md      ← Human-readable report
-│       └── NRR-YYYY-NNN.json    ← Machine-readable data
+│       └── NRR-YYYY-NNN.json    ← Machine-readable data (authoritative)
 │
 ├── scripts/
-│   └── generate_registry.py     ← Generate registry.json from entries/
+│   ├── generate_registry.py     ← entries/ → registry.json
+│   ├── validate_ci.py           ← Schema + link + consistency checks
+│   └── check_external_links.py  ← External link verification
 │
-└── docs/
-    └── existing-negative-results.md  ← Inventory of our own negative results
+├── docs/
+│   ├── index.html               ← GitHub Pages browsable site
+│   ├── fork-modification-directions.md
+│   └── existing-negative-results.md
+│
+├── en/                          ← English translation
+├── zh-Hant/                     ← Traditional Chinese translation
+└── _reviews/                    ← Independent review reports (R1 + R2)
 ```
 
 ---

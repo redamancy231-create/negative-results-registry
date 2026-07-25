@@ -97,30 +97,42 @@ flowchart TB
 
 ```
 negative-results-registry/
-├── README.md                    ← 你在这里
-├── CONTRIBUTING.md               ← 贡献指南
+├── README.md                    ← 你在这里（三语：EN / zh-Hant）
+├── CONTRIBUTING.md               ← 贡献指南（三语）
 ├── CLAUDE.md                    ← AI 助手项目指令
 ├── LICENSE                      ← CC BY 4.0
-├── .gitignore
-├── methodology.md               ← 为什么记录阴性结果 + 分类详解
-├── registry.json                ← 聚合索引（机器可读）
+├── .gitignore · .gitattributes
+├── methodology.md               ← 分类体系 + 价值论述（三语）
+├── registry.json                ← 聚合索引（脚本生成，禁止手工维护）
+│
+├── .github/workflows/
+│   └── ci.yml                   ← CI：Schema 校验 + 链接检查
 │
 ├── schema/
 │   └── entry.schema.json        ← 条目 JSON Schema (Draft 2020-12)
 │
 ├── templates/
-│   └── submission.md            ← 提交模板（复制即用）
+│   ├── submission-v2.md         ← 提交模板（推荐）
+│   └── submission.md            ← 旧版模板（保留参考）
 │
-├── entries/                     ← 条目目录
-│   └── NRR-YYYY-NNN/            ← 每条目独立目录
+├── entries/                     ← 22 条目（NRR-2026-001 ~ 022）
+│   └── NRR-YYYY-NNN/
 │       ├── NRR-YYYY-NNN.md      ← 人读报告
-│       └── NRR-YYYY-NNN.json    ← 机读数据
+│       └── NRR-YYYY-NNN.json    ← 机读数据（权威源）
 │
 ├── scripts/
-│   └── generate_registry.py     ← 从 entries/ 生成 registry.json
+│   ├── generate_registry.py     ← entries/ → registry.json
+│   ├── validate_ci.py           ← Schema + 链接 + 一致性校验
+│   └── check_external_links.py  ← 外部链接检查
 │
-└── docs/
-    └── existing-negative-results.md  ← 自有阴性结果盘点
+├── docs/
+│   ├── index.html               ← GitHub Pages 可浏览页面
+│   ├── fork-modification-directions.md
+│   └── existing-negative-results.md
+│
+├── en/                          ← English translation
+├── zh-Hant/                     ← 正體中文翻譯
+└── _reviews/                    ← 独立审查报告（R1 + R2）
 ```
 
 ---
