@@ -3,10 +3,11 @@
 > **Negative Results Registry for AI Collaboration** — A structured, searchable public registry for "AI experiments that failed."
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
+[![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 [![Entries](https://img.shields.io/badge/Entries-18-brightgreen.svg)]()
 
-[English](en/README.md) · [简体中文](../README.md)
+[![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
+[![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
 
 > **Knowing what doesn't work is just as important as knowing what does.**
 

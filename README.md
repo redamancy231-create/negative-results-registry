@@ -3,10 +3,11 @@
 > **Negative Results Registry for AI Collaboration** — 一个结构化的、可检索的"AI 实验失败了"公开登记系统。
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
+[![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 [![Entries](https://img.shields.io/badge/Entries-18-brightgreen.svg)]()
 
-[简体中文](README.md) · English（待翻译）
+[![中文](https://img.shields.io/badge/lang-中文-red)]()
+[![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
 
 > **知道什么不 work 和知道什么 work 同等重要。**
 

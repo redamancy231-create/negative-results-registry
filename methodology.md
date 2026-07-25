@@ -1,5 +1,8 @@
 # 为什么要记录阴性结果？
 
+[![中文](https://img.shields.io/badge/lang-中文-red)]()
+[![English](https://img.shields.io/badge/lang-English-blue)](en/methodology.md)
+
 > 科学界有一个"文件抽屉问题"（file drawer problem）：阳性结果发表，阴性结果塞进抽屉。结果是发表偏倚——我们从文献中看到的永远是"什么有效"，很少看到"什么无效"。
 >
 > AI协作领域同样如此。GitHub上充斥着"我用AI做了X"的展示，但几乎没有人记录"我试了X，失败了"。
