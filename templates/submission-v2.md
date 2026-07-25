@@ -1,8 +1,21 @@
 # 阴性结果提交模板（v2）
 > **v2 变更**：对齐 `schema/entry.schema.json` 的全部字段；补充提交来源、hypothesis、domain/category 与可复现性选择指南；明确指标表到 `effect_size` / `sample_size` / `models_used` 的映射；新增第三方分析要求、字段限制和提交前检查清单。
-> 复制后填写，并删除所有说明、示例和未使用的占位内容。创建 `entries/NRR-YYYY-NNN/`，保存同名的 `NRR-YYYY-NNN.md` 与 `NRR-YYYY-NNN.json`；ID 由维护者分配，JSON 按 `schema/entry.schema.json` 校验。
+> 复制后填写，并删除所有说明、示例和未使用的占位内容。
+
 ---
-## 提交类型与第三方分析专区（填写说明，不新增 JSON 字段）
+
+## 提交步骤
+
+1. **Fork** 本仓库
+2. 复制本模板，按下方各节填写
+3. 创建 `entries/NRR-YYYY-NNN/` 目录（ID 用当前最大编号 +1，分配后告知维护者）
+4. 保存为 `NRR-YYYY-NNN.md`，并创建对应的 `NRR-YYYY-NNN.json`（按 `schema/entry.schema.json` 校验）
+5. 运行 `python scripts/generate_registry.py` 更新 `registry.json`
+6. 提 **Pull Request**
+
+---
+
+## 提交类型（填写说明，不新增 JSON 字段）
 - **第一方报告**：你参与了实验或执行过程。应报告实际配置、基线、样本、停止规则、原始产物及已知偏差。
 - **第三方分析**：你分析他人的论文、仓库、日志或公开记录。`submitted_by` 填本条目提交者，不填原作者；`hypothesis` 写你所检验的主张；`date` 填本次分析完成日期。
 - **第三方提交必须做到**：在 `method` 写明来源版本/提交号、访问日期、纳入范围与核查步骤；在 `actual_result` 区分“来源明确报告”与“你的观察”；在 `interpretation` 标注推断和局限；在 `links` 至少提供一个一手来源。没有公开证据只能写“未发现公开记录”，不能写“从未发生”。
@@ -76,9 +89,9 @@ _（填写）_
 ---
 ## 相关信息
 ### 后续正结果 `related_positive_result`（可选，≤500 字符）
-> 后来是否用其他方法成功？写简短说明及链接/条目 ID；没有则写“无”（JSON 可省略该字段）。
+> 后来是否用其他方法成功？写简短说明及链接/条目 ID；没有则在 .md 中写”无”，.json 中省略该字段。
 
-_（填写或“无”）_
+_（填写或”无”）_
 ### 相关链接 `links`（可选）
 > 每项使用 `[标签](绝对 URL)`；JSON 中转换为 `{"label": "...", "url": "https://..."}`。优先放原始数据、代码、论文、报告或相关 NRR 条目。无链接时 JSON 写 `[]` 或省略。
 
@@ -99,5 +112,5 @@ _例如：`prompt-tdd`, `GPT-5.5`, `code-review`, `第三方分析`_
 - [ ] 可复现性级别与实际可用产物相符；`none` 未与其他产物并列。
 - [ ] 已删除全部示例、说明和 `_（填写）_` 占位符，并使用 `schema/entry.schema.json` 校验 JSON。
 ---
-*如使用 AI 协助生成或编辑，请按项目约定在此注明生成模型；该说明当前不写入 JSON。*
+*如使用 AI 协助生成或编辑，请在 `.md` footer 注明生成模型（如 `*生成模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-25*`）；该说明不写入 `.json`。*
 
