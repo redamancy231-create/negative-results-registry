@@ -16,7 +16,7 @@
   "reproducibility": {
     "level": "partially-reproducible",
     "artifacts_available": ["code", "logs"],
-    "notes": "第三方分析条目。复现条件：需固定 GitNexus 版本和索引配置、docx-pipeline 仓库 commit、以及手工 grep 的完整调用清单（当前条目未固定精确版本和 commit——复现可能受工具版本差异影响）。实证数据记录在 methodology-extraction-methodology 项目记忆文件中。"
+    "notes": "第三方分析条目。分析日期：2026-07-22。源快照：docx-pipeline commit a9ccd2a（2026-07-25 为最新）。复现需固定 GitNexus 版本和索引配置、手工 grep 的完整调用清单。实证数据记录在 methodology-extraction-methodology 项目记忆文件中。"
   },
   "related_positive_result": "跨文件 IMPORT/EXTENDS 边置信度高于同文件 CALLS 边——GitNexus 在跨模块分析中仍然可靠。应对策略：跨文件用 GitNexus，同文件用源码 grep。",
   "lessons_learned": [

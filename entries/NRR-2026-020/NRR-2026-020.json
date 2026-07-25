@@ -16,7 +16,7 @@
   "reproducibility": {
     "level": "partially-reproducible",
     "artifacts_available": ["logs", "analysis-script", "raw-output"],
-    "notes": "第三方分析条目。PocketFlow 为外部开源项目。框架从 PocketFlow 提取的方法论资产及证据等级标注在 ai-collaboration-framework 主文档 §B1/B2/附录 H 中。"
+    "notes": "第三方分析条目。分析日期：2026-06（三轮分析）。PocketFlow 源仓库（github.com/typicalpenguin/PocketFlow）截至 2026-07-25 已不可公开访问——无法固定源快照 commit。框架从 PocketFlow 提取的方法论资产及证据等级标注在 ai-collaboration-framework 主文档 §B1/B2/附录 H 中。此条目基于分析时的仓库状态，当前不可独立复核源仓库。"
   },
   "related_positive_result": "B1 的 N=2 方向一致——虽然不足以达到 [E]，但为后续大样本验证提供了方向。C1-C3 反模式满足'≥2 独立后端审查确认可迁移性'的收录标准。",
   "lessons_learned": [

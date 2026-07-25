@@ -16,7 +16,7 @@
   "reproducibility": {
     "level": "partially-reproducible",
     "artifacts_available": ["logs", "analysis-script", "raw-output"],
-    "notes": "第三方分析条目。NPGS 证据卡在 methodology-extraction-methodology/explorations/evidence_card_npgs_external.md。ml-quant-trading 证据卡在 explorations/evidence_card_ml_quant_trading.md。"
+    "notes": "第三方分析条目。分析日期：2026-07-23。源快照：NPGS upstream commit 30d1c58（2026-07-25 最新），fork commit d0407f2（2026-07-22）。ml-quant-trading 源仓库为 initial-d/ml-quant-trading。证据卡在 methodology-extraction-methodology/explorations/。"
   },
   "related_positive_result": "框架在自有项目群（方法论自觉 ★★★★★）中可提取率接近 100%——证明框架本身设计有效，只是适用范围比初始假设窄。",
   "lessons_learned": [

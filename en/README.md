@@ -223,7 +223,7 @@ For more projects, see the [personal homepage](https://github.com/redamancy231-c
 
 ## Known Limitations
 
-- **Single submitter**: All 22 entries come from the same maintainer — exercise caution before drawing cross-submitter conclusions from the registry data.
+- **Single submitter**: All 22 entries come from the same maintainer. The term "third-party analysis" in entries means the analyst is a third party **relative to the source project** (analyzing someone else's project), not that the analyst is independent of the registry maintainer — currently the analyst and submitter are the same person. Schema V2 will distinguish "source author / analyst / entry submitter" as separate roles.
 - **External link checks**: GitHub and arXiv domain links are skipped in CI due to platform rate limiting — evidence links on these domains require manual verification.
 - **Search capabilities**: The current site supports filtering by domain, category, and keyword (via GitHub Pages), but does not offer advanced full-text search or API export.
 - **Submission contract pending**: ID allocation, evidence thresholds, and review SLAs will be designed when real external contributions arise — the current submission process is a baseline version.

@@ -16,7 +16,7 @@
   "reproducibility": {
     "level": "partially-reproducible",
     "artifacts_available": ["logs", "analysis-script"],
-    "notes": "第三方分析条目。NPGS 源仓库（baopinshui/NPGS）和 fork 仓库（redamancy231-create/NPGS）的差异可独立核查。提取者附加的 CLAUDE.md 和 GitNexus 索引在 fork 仓库中。"
+    "notes": "第三方分析条目。分析日期：2026-07-23。源快照：NPGS upstream commit 30d1c58（2026-07-25 最新），fork commit d0407f2（2026-07-22）。源仓库（baopinshui/NPGS）在 commit 30d1c58 的根目录经核查无 README、CLAUDE.md 或分析报告——所有方法论文档由 fork 后续提交加入。compare URL: github.com/baopinshui/NPGS/compare/30d1c58...redamancy231-create/NPGS:d0407f2。"
   },
   "related_positive_result": "框架在 Phase 0 增加'提取者污染'判别后可避免此问题——检查方法论文档作者身份即可过滤。这不是框架结构性失败，是可修复的设计缺陷。",
   "lessons_learned": [
