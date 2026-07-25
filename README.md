@@ -86,6 +86,7 @@ flowchart TB
 ```
 negative-results-registry/
 ├── README.md                    ← 你在这里
+├── CONTRIBUTING.md               ← 贡献指南
 ├── CLAUDE.md                    ← AI 助手项目指令
 ├── LICENSE                      ← CC BY 4.0
 ├── .gitignore
