@@ -29,6 +29,16 @@ The scientific community has a "file drawer problem": positive results get publi
 
 ---
 
+## Why Me
+
+There are 18 million AI-related repositories on GitHub, the vast majority of which are code projects—showcases proclaiming "I used AI to do X." If you want to build a new tool, framework, or model, a quick search will turn up dozens of competitors.
+
+**But this registry is not a code project.** It is a structured set of methodological data—18 entries backed by independent review experience spanning 5 LLM backends and multiple public projects. A single project (the AI Collaboration Framework) alone accumulated 50+ rounds of independent review; add the review chains from the other projects, and the total—never tallied—far exceeds that. Every concrete number in these entries (d=0.03, n=24 per arm, 33 findings with zero overlap) is traceable to a source file and review chain. None of it was fabricated in a vacuum.
+
+**The differentiation is not in the code—it is in the density of experience.** Someone can fork this repository, copy the schema, change the name, and ship it—but they cannot write the data that fills the entries. Code can be copied. Experience cannot.
+
+---
+
 ```mermaid
 flowchart TB
     SUBMIT["📝 <b>Submitter</b><br/>After an experiment fails<br/>Complete the submission template"]
