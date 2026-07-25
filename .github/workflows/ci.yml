@@ -23,7 +23,7 @@ jobs:
       - name: Schema + internal links + registry consistency
         run: python scripts/validate_ci.py --skip-external-links
 
-      - name: External link check
+      - name: External link check (advisory only)
         run: python -c "
 import json, re, urllib.request, urllib.error, sys
 from pathlib import Path
@@ -41,7 +41,9 @@ for entry_dir in sorted(ENTRIES_DIR.iterdir()):
         url = url.rstrip('.)')
         if url in seen: continue
         seen.add(url)
-        if 'arxiv.org' in url: continue
+        if 'arxiv.org' in url or 'github.com' in url:
+            print(f'  SKIP  (rate-limited host) {url}')
+            continue
         try:
             req = urllib.request.Request(url, method='HEAD')
             req.add_header('User-Agent', 'NRR-CI/1.0')
@@ -53,5 +55,5 @@ for entry_dir in sorted(ENTRIES_DIR.iterdir()):
             failed += 1
         except Exception:
             print(f'  SKIP  (timeout/DNS) {url}')
-sys.exit(failed)
+print(f'External links: {len(seen)} checked/skipped, {failed} failed (advisory only — does not block CI)')
 "

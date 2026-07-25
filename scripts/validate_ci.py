@@ -184,8 +184,8 @@ def check_external_links():
                 continue
             seen_urls.add(url)
 
-            # Skip arxiv.org — rate-limited for automated checks
-            if "arxiv.org" in url:
+            # Skip arxiv.org and github.com — rate-limited for automated HEAD requests
+            if "arxiv.org" in url or "github.com" in url:
                 skipped += 1
                 continue
 
