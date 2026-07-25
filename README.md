@@ -24,7 +24,7 @@
 - **诚实建立信任**——一个说自己"所有实验都成功"的人要么没做过实验，要么在撒谎
 - **知道死胡同的位置，后来人就不会撞墙**
 - **精确的失败条件比模糊的成功宣言更有信息量**
-- **目前为维护者个人失败日志的结构化原型**——4 条目、同一提交者、同一生态，尚不能声称已"对抗文件抽屉问题"；需外部提交和独立条目后才能作为社区登记册
+- **目前为维护者个人失败日志的结构化原型**——18 条目、同一提交者、同一生态，尚不能声称已"对抗文件抽屉问题"；需外部提交和独立条目后才能作为社区登记册
 
 ---
 
@@ -143,7 +143,7 @@ negative-results-registry/
 
 ## 条目概览
 
-当前已收录 **11 个条目**，覆盖 7 个领域 × 5 种类型，来自 6 个自有项目 + 1 个外部学术来源：
+当前已收录 **18 个条目**，覆盖 8 个领域 × 7 种类型，来自 6 个自有公开项目 + 4 个外部来源（3 学术论文 + 1 开源项目）：
 
 | ID | 来源 | 领域 | 类型 |
 |----|------|------|------|
@@ -158,6 +158,13 @@ negative-results-registry/
 | NRR-2026-009 | ai-collaboration-framework | methodology-extraction | methodology-failure |
 | NRR-2026-010 | ai-collaboration-framework | document-generation | methodology-failure |
 | NRR-2026-011 | Kohli 2026 / CrossCheck | multi-model-collaboration | ceiling-effect |
+| NRR-2026-012 | ai-collaboration-framework | methodology-extraction | abandoned-dead-end |
+| NRR-2026-013 | ai-collaboration-framework | methodology-extraction | methodology-failure |
+| NRR-2026-014 | ai-collaboration-framework | workflow-orchestration | methodology-failure |
+| NRR-2026-015 | ai-collaboration-framework | code-review | methodology-failure |
+| NRR-2026-016 | Kuai et al. (2026) | multi-model-collaboration | ceiling-effect |
+| NRR-2026-017 | Nájera et al. (2026) | multi-model-collaboration | null-result |
+| NRR-2026-018 | CrossCheck (sburl) | multi-model-collaboration | methodology-failure |
 
 ---
 
