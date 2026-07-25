@@ -1,3 +1,7 @@
 # Override GitHub linguist language detection — this is a documentation/knowledge project.
-# Only exclude the lone Python utility script; keep .json (machine-readable registry data).
+# Exclude the lone Python utility script from language stats.
 *.py linguist-detectable=false
+# Ensure JSON and Markdown are counted (JSON is sometimes classified as "generated" data).
+*.json linguist-detectable=true
+*.json linguist-generated=false
+*.md linguist-detectable=true

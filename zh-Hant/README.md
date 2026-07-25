@@ -8,8 +8,9 @@
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
 [![English](https://img.shields.io/badge/lang-English-blue)](../en/README.md)
+[![正體中文](https://img.shields.io/badge/lang-正體中文-green)](zh-Hant/README.md)
 
-> **知道什麼不 work 和知道什麼 work 同等重要。**
+> **知道什麼不 work 和知道什麼 work 同等重要。** · [線上瀏覽](https://redamancy231-create.github.io/negative-results-registry/)
 
 ---
 
