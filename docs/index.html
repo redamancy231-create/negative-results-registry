@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI 协作阴性结果登记册：公开、结构化、可检索的 AI 实验失败与诚实结果数据库。">
+  <meta name="color-scheme" content="light">
+  <title>AI 协作阴性结果登记册</title>
+  <style>
+    :root {
+      --paper: #f5f7f4; --surface: #fff; --soft: #eef2ef; --ink: #18211e;
+      --muted: #62716b; --line: #d8e0dc; --line-strong: #b7c4be;
+      --accent: #1f6352; --accent-dark: #15483c; --accent-soft: #e2f0ea;
+      --focus: #1677c8; --shadow: 0 12px 34px rgba(31,58,49,.08); --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--ink); line-height: 1.65;
+      background: linear-gradient(rgba(30,70,57,.025) 1px,transparent 1px), linear-gradient(90deg,rgba(30,70,57,.025) 1px,transparent 1px), var(--paper);
+      background-size: 28px 28px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    a { color: var(--accent-dark); }
+    a:hover { color: var(--accent); }
+    .shell { width: min(1120px,calc(100% - 32px)); margin: 0 auto; }
+    .site-header { padding: 62px 0 32px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg,rgba(255,255,255,.96),rgba(246,247,244,.9)); }
+    .eyebrow { margin: 0 0 10px; color: var(--accent); font-size: .76rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { max-width: 850px; margin: 0; font-family: Georgia,"Noto Serif SC","Songti SC",serif; font-size: clamp(2rem,5vw,3.75rem); line-height: 1.12; letter-spacing: -.035em; }
+    .subtitle { max-width: 740px; margin: 18px 0 0; color: var(--muted); font-size: 1.05rem; }
+    .stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 30px; }
+    .stat { padding: 17px 19px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.72); }
+    .stat-value { display: block; font-family: Georgia,serif; font-size: 1.85rem; font-weight: 700; line-height: 1; }
+    .stat-label { display: block; margin-top: 7px; color: var(--muted); font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; }
+    main { padding: 28px 0 60px; }
+    .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+    .controls { padding: 20px; }
+    .control-grid { display: grid; grid-template-columns: minmax(250px,2fr) repeat(2,minmax(170px,1fr)); gap: 12px; }
+    .field label { display: block; margin-bottom: 6px; color: var(--muted); font-size: .76rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+    .input-wrap { position: relative; }
+    .search-icon { position: absolute; top: 50%; left: 13px; width: 18px; height: 18px; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    input, select { width: 100%; min-height: 44px; border: 1px solid var(--line-strong); border-radius: 8px; color: var(--ink); background: #fff; outline: none; }
+    input { padding: 10px 12px 10px 40px; }
+    select { padding: 9px 36px 9px 12px; }
+    input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px solid rgba(22,119,200,.22); outline-offset: 2px; border-color: var(--focus); }
+    .control-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line); }
+    .result-count { color: var(--muted); font-size: .9rem; }
+    .result-count strong { color: var(--ink); }
+    .reset-button { border: 0; padding: 7px 10px; color: var(--accent-dark); background: transparent; font-weight: 700; }
+    .reset-button:hover { border-radius: 7px; background: var(--accent-soft); }
+    .tag-section { margin-top: 18px; padding: 18px 20px; }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+    .section-heading h2 { margin: 0; font-family: Georgia,"Noto Serif SC",serif; font-size: 1.08rem; }
+    .section-note { color: var(--muted); font-size: .78rem; }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tag-button { border: 1px solid var(--line); border-radius: 999px; padding: 5px 9px; color: #40504a; background: var(--soft); font-size: var(--tag-size,.78rem); line-height: 1.2; }
+    .tag-button:hover, .tag-button.active { border-color: var(--accent); color: #fff; background: var(--accent); }
+    .entries { display: grid; gap: 12px; margin-top: 18px; }
+    .entry { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: 0 5px 18px rgba(31,58,49,.045); scroll-margin-top: 16px; }
+    .entry.open { border-color: #9fb7ad; box-shadow: var(--shadow); }
+    .entry-toggle { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 14px; align-items: start; width: 100%; padding: 20px; border: 0; color: inherit; background: transparent; text-align: left; }
+    .entry-toggle:hover { background: #fbfcfb; }
+    .chevron { width: 24px; height: 24px; margin-top: 1px; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--accent-dark); transition: transform .18s ease,background .18s ease; }
+    .entry.open .chevron { transform: rotate(180deg); background: var(--accent-soft); }
+    .entry-id { color: var(--accent-dark); font-family: ui-monospace,SFMono-Regular,Consolas,monospace; font-size: .78rem; font-weight: 800; letter-spacing: .035em; }
+    .entry-title { display: block; margin-top: 5px; font-family: Georgia,"Noto Serif SC",serif; font-size: clamp(1.05rem,2vw,1.3rem); font-weight: 700; line-height: 1.45; }
+    .entry-meta { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 9px; color: var(--muted); font-size: .8rem; }
+    .entry-meta span + span::before { content: "·"; margin-right: 12px; color: #9caaa4; }
+    .category-badge { align-self: start; border: 1px solid transparent; border-radius: 999px; padding: 5px 9px; font-size: .72rem; font-weight: 800; white-space: nowrap; }
+    .cat-null-result { color: #4c5551; background: #e8ebea; border-color: #cfd5d2; }
+    .cat-ceiling-effect { color: #174e80; background: #e1effa; border-color: #b8d6ef; }
+    .cat-methodology-failure { color: #8a3f08; background: #fff0df; border-color: #f1c997; }
+    .cat-abandoned-dead-end { color: #8f1d24; background: #fde6e7; border-color: #efb8bc; }
+    .cat-tool-unfit-for-purpose { color: #65328b; background: #f0e6f8; border-color: #d6bce9; }
+    .cat-worse-than-baseline { color: #78151c; background: #f7dde0; border-color: #e4aab0; }
+    .cat-failed-to-replicate { color: #6f5600; background: #fff4c7; border-color: #e9d472; }
+    .cat-hypothesis-falsified { color: #641b20; background: #eddbdc; border-color: #d9acaf; }
+    .cat-other { color: #485056; background: #edf0f2; border-color: #cbd2d7; }
+    .entry-details { border-top: 1px solid var(--line); padding: 0 20px 24px 58px; }
+    .entry-details[hidden] { display: none; }
+    .detail-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 28px; }
+    .detail-block { padding: 19px 0; border-bottom: 1px solid var(--line); }
+    .detail-block.full { grid-column: 1 / -1; }
+    .detail-label { margin: 0 0 7px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .detail-content { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .fact-list, .lesson-list, .link-list { margin: 0; padding-left: 1.15rem; }
+    .fact-list li, .lesson-list li, .link-list li { margin: 5px 0; }
+    .inline-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .inline-tag { border-radius: 999px; padding: 3px 8px; background: var(--soft); color: #45544e; font-size: .76rem; }
+    .empty, .load-state { padding: 52px 24px; border: 1px dashed var(--line-strong); border-radius: var(--radius); color: var(--muted); background: rgba(255,255,255,.7); text-align: center; }
+    .load-state strong, .empty strong { display: block; color: var(--ink); font-size: 1.08rem; }
+    .load-state p, .empty p { max-width: 650px; margin: 7px auto 0; }
+    .retry-button { margin-top: 14px; border: 1px solid var(--accent); border-radius: 8px; padding: 8px 13px; color: #fff; background: var(--accent); font-weight: 700; }
+    footer { padding: 26px 0 38px; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; }
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 20px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 14px; }
+    @media (max-width: 760px) {
+      .site-header { padding-top: 42px; }
+      .control-grid, .detail-grid { grid-template-columns: 1fr; }
+      .detail-block.full { grid-column: auto; }
+      .entry-toggle { grid-template-columns: auto minmax(0,1fr); padding: 17px 15px; }
+      .category-badge { grid-column: 2; justify-self: start; }
+      .entry-details { padding: 0 15px 20px; }
+      .entry-meta span + span::before { display: none; }
+    }
+    @media (max-width: 480px) {
+      .shell { width: min(100% - 20px,1120px); }
+      .stats { gap: 7px; }
+      .stat { padding: 13px 10px; }
+      .stat-value { font-size: 1.45rem; }
+      .stat-label { font-size: .66rem; }
+      .controls, .tag-section { padding: 15px; }
+      .control-footer { align-items: flex-start; }
+    }
+    @media print {
+      body { background: #fff; }
+      .site-header { padding: 20px 0; }
+      .controls, .tag-section, footer { display: none; }
+      .entry { break-inside: avoid; box-shadow: none; }
+      .entry-details[hidden] { display: block; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <p class="eyebrow">Open evidence · 公开证据</p>
+      <h1>AI 协作阴性结果登记册</h1>
+      <p class="subtitle">记录没有奏效的方法、被证伪的假设与实验边界。因为知道什么不 work，和知道什么 work 同等重要。</p>
+      <div class="stats" aria-label="登记册统计概览">
+        <div class="stat"><span class="stat-value" id="total-stat">—</span><span class="stat-label">Entries · 条目</span></div>
+        <div class="stat"><span class="stat-value" id="domain-stat">—</span><span class="stat-label">Domains · 领域</span></div>
+        <div class="stat"><span class="stat-value" id="category-stat">—</span><span class="stat-label">Types · 类型</span></div>
+      </div>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="panel controls" aria-label="搜索与筛选">
+      <div class="control-grid">
+        <div class="field">
+          <label for="search">关键词搜索</label>
+          <div class="input-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="search" type="search" placeholder="搜索标题、假设、方法或标签…" autocomplete="off">
+          </div>
+        </div>
+        <div class="field"><label for="domain-filter">领域 · Domain</label><select id="domain-filter"><option value="">全部领域</option></select></div>
+        <div class="field"><label for="category-filter">类型 · Category</label><select id="category-filter"><option value="">全部类型</option></select></div>
+      </div>
+      <div class="control-footer">
+        <div class="result-count" id="result-count" aria-live="polite">正在载入登记册…</div>
+        <button class="reset-button" id="reset-filters" type="button">清除筛选</button>
+      </div>
+    </section>
+    <section class="panel tag-section" aria-labelledby="tag-heading">
+      <div class="section-heading"><h2 id="tag-heading">标签云</h2><span class="section-note">点击标签筛选，再次点击取消</span></div>
+      <div class="tag-cloud" id="tag-cloud" aria-label="按标签筛选"></div>
+    </section>
+    <section class="entries" id="entries" aria-label="阴性结果条目">
+      <div class="load-state"><strong>正在读取 registry.json</strong><p>请稍候，登记册数据正在加载。</p></div>
+    </section>
+  </main>
+  <footer>
+    <div class="shell footer-inner">
+      <div>数据与文档采用 CC BY 4.0 · 页面生成：GPT-5.6-Sol · 2026-07-25</div>
+      <div class="footer-links">
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">许可协议</a>
+        <a href="https://github.com/redamancy231-create/negative-results-registry" target="_blank" rel="noopener noreferrer">在 GitHub 查看</a>
+        <span id="last-updated">数据更新：—</span>
+      </div>
+    </div>
+  </footer>
+  <script>
+    "use strict";
+    const DOMAIN_LABELS = {
+      "prompt-engineering": "提示词工程 · Prompt Engineering",
+      "methodology-extraction": "方法论提取 · Methodology Extraction",
+      "document-generation": "文档生成 · Document Generation",
+      "tool-building": "工具构建 · Tool Building",
+      "academic-writing": "学术写作 · Academic Writing",
+      "skill-design": "技能设计 · Skill Design",
+      "code-review": "代码审查 · Code Review",
+      "multi-model-collaboration": "多模型协作 · Multi-model Collaboration",
+      "workflow-orchestration": "工作流编排 · Workflow Orchestration",
+      "quantitative-research": "量化研究 · Quantitative Research",
+      "benchmarking": "基准测试 · Benchmarking",
+      "other": "其他 · Other"
+    };
+    const CATEGORY_LABELS = {
+      "null-result": "零结果 · Null result",
+      "ceiling-effect": "天花板效应 · Ceiling effect",
+      "methodology-failure": "方法失败 · Methodology failure",
+      "abandoned-dead-end": "死胡同 · Abandoned dead end",
+      "tool-unfit-for-purpose": "工具不适用 · Tool unfit for purpose",
+      "worse-than-baseline": "劣于基线 · Worse than baseline",
+      "failed-to-replicate": "复现失败 · Failed to replicate",
+      "hypothesis-falsified": "假设被证伪 · Hypothesis falsified",
+      "other": "其他 · Other"
+    };
+    const REPRO_LABELS = {
+      "fully-reproducible": "完全可复现 · Fully reproducible",
+      "partially-reproducible": "部分可复现 · Partially reproducible",
+      "not-reproducible": "不可复现 · Not reproducible",
+      "not-assessed": "未评估 · Not assessed"
+    };
+    const DATA_SOURCES = [
+      "./registry.json",
+      "../registry.json",
+      "https://raw.githubusercontent.com/redamancy231-create/negative-results-registry/main/registry.json"
+    ];
+    const state = {
+      registry: null, entries: [], filteredEntries: [],
+      search: "", domain: "", category: "", tag: "", openIds: new Set()
+    };
+    const elements = {
+      entries: document.getElementById("entries"),
+      search: document.getElementById("search"),
+      domain: document.getElementById("domain-filter"),
+      category: document.getElementById("category-filter"),
+      reset: document.getElementById("reset-filters"),
+      count: document.getElementById("result-count"),
+      tagCloud: document.getElementById("tag-cloud"),
+      totalStat: document.getElementById("total-stat"),
+      domainStat: document.getElementById("domain-stat"),
+      categoryStat: document.getElementById("category-stat"),
+      lastUpdated: document.getElementById("last-updated")
+    };
+    function escapeHtml(value) {
+      return String(value == null ? "" : value)
+        .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;").replaceAll(String.fromCharCode(34), "&quot;");
+    }
+    function safeUrl(value) {
+      try {
+        const url = new URL(String(value), window.location.href);
+        return url.protocol === "http:" || url.protocol === "https:" ? url.href : "";
+      } catch (error) { return ""; }
+    }
+    function debounce(fn, wait) {
+      let timer;
+      return function () {
+        const args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () { fn.apply(null, args); }, wait);
+      };
+    }
+    function unique(values) { return Array.from(new Set(values.filter(Boolean))); }
+    function compareIdsDescending(a, b) {
+      const an = Number(String(a.id).split("-").pop()) || 0;
+      const bn = Number(String(b.id).split("-").pop()) || 0;
+      return bn - an || String(b.id).localeCompare(String(a.id));
+    }
+    function labelFor(map, key) { return map[key] || String(key || "未分类 · Unclassified"); }
+    async function fetchRegistry() {
+      let lastError;
+      for (const source of DATA_SOURCES) {
+        try {
+          const response = await fetch(source, { cache: "no-cache" });
+          if (!response.ok) throw new Error("HTTP " + response.status + " from " + source);
+          const data = await response.json();
+          if (!data || !Array.isArray(data.entries)) throw new Error("registry.json 缺少 entries[]");
+          return data;
+        } catch (error) { lastError = error; }
+      }
+      throw lastError || new Error("无法读取 registry.json");
+    }
+    function initializeRegistry(registry) {
+      state.registry = registry;
+      state.entries = registry.entries.slice().sort(compareIdsDescending);
+      const domains = unique(state.entries.map(function (entry) { return entry.domain; })).sort();
+      const categories = unique(state.entries.map(function (entry) { return entry.category; })).sort();
+      elements.totalStat.textContent = String(state.entries.length);
+      elements.domainStat.textContent = String(domains.length);
+      elements.categoryStat.textContent = String(categories.length);
+      elements.lastUpdated.textContent = "数据更新：" + (registry.metadata && registry.metadata.last_updated || "未知");
+      populateSelect(elements.domain, domains, DOMAIN_LABELS, registry.stats && registry.stats.by_domain);
+      populateSelect(elements.category, categories, CATEGORY_LABELS, registry.stats && registry.stats.by_category);
+      renderTagCloud();
+      applyFilters();
+      openEntryFromHash(true);
+    }
+    function populateSelect(select, values, labels, counts) {
+      const options = values.map(function (value) {
+        const count = counts && Number.isFinite(Number(counts[value])) ? " (" + counts[value] + ")" : "";
+        return "<option value=\"" + escapeHtml(value) + "\">" + escapeHtml(labelFor(labels, value)) + count + "</option>";
+      });
+      select.insertAdjacentHTML("beforeend", options.join(""));
+    }
+    function collectTagCounts() {
+      const counts = new Map();
+      state.entries.forEach(function (entry) {
+        unique(Array.isArray(entry.tags) ? entry.tags : []).forEach(function (tag) {
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+      return Array.from(counts.entries()).sort(function (a, b) {
+        return b[1] - a[1] || a[0].localeCompare(b[0], "zh-CN");
+      });
+    }
+    function renderTagCloud() {
+      const tags = collectTagCounts();
+      const max = Math.max.apply(null, tags.map(function (item) { return item[1]; }).concat([1]));
+      elements.tagCloud.innerHTML = tags.map(function (item) {
+        const tag = item[0];
+        const count = item[1];
+        const size = 0.74 + count / max * 0.2;
+        const active = tag === state.tag ? " active" : "";
+        return "<button type=\"button\" class=\"tag-button" + active + "\" style=\"--tag-size:" + size.toFixed(2) + "rem\" data-tag=\"" + escapeHtml(tag) + "\" aria-pressed=\"" + (tag === state.tag) + "\">" + escapeHtml(tag) + " <span aria-hidden=\"true\">" + count + "</span></button>";
+      }).join("");
+    }
+    function searchableText(entry) {
+      return [entry.title, entry.hypothesis, entry.method, entry.expected_result, entry.actual_result,
+        Array.isArray(entry.tags) ? entry.tags.join(" ") : "",
+        Array.isArray(entry.models_used) ? entry.models_used.join(" ") : ""
+      ].filter(Boolean).join(" ").toLocaleLowerCase("zh-CN");
+    }
+    function applyFilters() {
+      const query = state.search.trim().toLocaleLowerCase("zh-CN");
+      state.filteredEntries = state.entries.filter(function (entry) {
+        const matchesQuery = !query || searchableText(entry).includes(query);
+        const matchesDomain = !state.domain || entry.domain === state.domain;
+        const matchesCategory = !state.category || entry.category === state.category;
+        const matchesTag = !state.tag || Array.isArray(entry.tags) && entry.tags.includes(state.tag);
+        return matchesQuery && matchesDomain && matchesCategory && matchesTag;
+      });
+      renderEntries();
+      updateResultCount();
+    }
+    function updateResultCount() {
+      const tagText = state.tag ? " · 标签：" + escapeHtml(state.tag) : "";
+      elements.count.innerHTML = "显示 <strong>" + state.filteredEntries.length + "</strong> / " + state.entries.length + " 条" + tagText;
+    }
+    function renderEntries() {
+      if (!state.filteredEntries.length) {
+        elements.entries.innerHTML = "<div class=\"empty\"><strong>没有匹配的条目</strong><p>尝试缩短关键词、切换筛选条件，或清除当前标签。</p></div>";
+        return;
+      }
+      elements.entries.innerHTML = state.filteredEntries.map(renderEntry).join("");
+    }
+    function renderEntry(entry) {
+      const id = escapeHtml(entry.id);
+      const isOpen = state.openIds.has(entry.id);
+      return "<article class=\"entry" + (isOpen ? " open" : "") + "\" id=\"entry-" + id + "\" data-entry-id=\"" + id + "\">" +
+        "<button class=\"entry-toggle\" type=\"button\" aria-expanded=\"" + isOpen + "\" aria-controls=\"details-" + id + "\">" +
+        "<svg class=\"chevron\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><path d=\"m8 10 4 4 4-4\"></path></svg>" +
+        "<span><span class=\"entry-id\">" + id + "</span><span class=\"entry-title\">" + escapeHtml(entry.title) + "</span>" +
+        "<span class=\"entry-meta\"><span>" + escapeHtml(labelFor(DOMAIN_LABELS, entry.domain)) + "</span><span>" + escapeHtml(entry.date || "日期未知") + "</span><span>提交：" + escapeHtml(entry.submitted_by || "未知") + "</span></span></span>" +
+        "<span class=\"category-badge cat-" + escapeHtml(entry.category || "other") + "\">" + escapeHtml(labelFor(CATEGORY_LABELS, entry.category)) + "</span></button>" +
+        "<div class=\"entry-details\" id=\"details-" + id + "\"" + (isOpen ? "" : " hidden") + ">" + renderDetails(entry) + "</div></article>";
+    }
+    function renderDetails(entry) {
+      const blocks = [
+        detailBlock("研究假设 · Hypothesis", entry.hypothesis, true),
+        detailBlock("方法 · Method", entry.method, true),
+        detailBlock("预期结果 · Expected", entry.expected_result, false),
+        detailBlock("实际结果 · Actual", entry.actual_result, false),
+        detailBlock("效应量 · Effect size", entry.effect_size || "未报告", false),
+        detailBlock("样本量 · Sample size", entry.sample_size || "未报告", false),
+        detailBlock("解释 · Interpretation", entry.interpretation, true),
+        renderReproducibility(entry.reproducibility),
+        detailBlock("相关正向结果 · Related positive result", entry.related_positive_result || "无", true),
+        renderListBlock("经验教训 · Lessons learned", entry.lessons_learned, "lesson-list", true),
+        renderListBlock("使用模型 / 工具 · Models used", entry.models_used, "fact-list", false),
+        renderTagsBlock(entry.tags), renderLinksBlock(entry.links)
+      ];
+      return "<div class=\"detail-grid\">" + blocks.filter(Boolean).join("") + "</div>";
+    }
+    function detailBlock(label, value, full) {
+      if (value == null || value === "") return "";
+      return "<section class=\"detail-block" + (full ? " full" : "") + "\"><h3 class=\"detail-label\">" + escapeHtml(label) + "</h3><p class=\"detail-content\">" + escapeHtml(value) + "</p></section>";
+    }
+    function renderListBlock(label, values, className, full) {
+      if (!Array.isArray(values) || !values.length) return "";
+      return "<section class=\"detail-block" + (full ? " full" : "") + "\"><h3 class=\"detail-label\">" + escapeHtml(label) + "</h3><ul class=\"" + className + "\">" + values.map(function (value) { return "<li>" + escapeHtml(value) + "</li>"; }).join("") + "</ul></section>";
+    }
+    function renderReproducibility(data) {
+      if (!data || typeof data !== "object") return "";
+      const facts = [];
+      if (data.level) facts.push("<li><strong>级别：</strong>" + escapeHtml(labelFor(REPRO_LABELS, data.level)) + "</li>");
+      if (Array.isArray(data.artifacts_available) && data.artifacts_available.length) facts.push("<li><strong>可用材料：</strong>" + escapeHtml(data.artifacts_available.join("、")) + "</li>");
+      if (data.notes) facts.push("<li><strong>说明：</strong>" + escapeHtml(data.notes) + "</li>");
+      if (!facts.length) return "";
+      return "<section class=\"detail-block full\"><h3 class=\"detail-label\">可复现性 · Reproducibility</h3><ul class=\"fact-list\">" + facts.join("") + "</ul></section>";
+    }
+    function renderTagsBlock(tags) {
+      if (!Array.isArray(tags) || !tags.length) return "";
+      return "<section class=\"detail-block\"><h3 class=\"detail-label\">标签 · Tags</h3><div class=\"inline-tags\">" + tags.map(function (tag) { return "<span class=\"inline-tag\">" + escapeHtml(tag) + "</span>"; }).join("") + "</div></section>";
+    }
+    function renderLinksBlock(links) {
+      if (!Array.isArray(links) || !links.length) return "";
+      const items = links.map(function (link) {
+        const href = safeUrl(link && link.url);
+        if (!href) return "";
+        return "<li><a href=\"" + escapeHtml(href) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + escapeHtml(link.label || link.url) + "</a></li>";
+      }).filter(Boolean);
+      if (!items.length) return "";
+      return "<section class=\"detail-block\"><h3 class=\"detail-label\">链接 · Links</h3><ul class=\"link-list\">" + items.join("") + "</ul></section>";
+    }
+    function toggleEntry(id, updateHash) {
+      if (!state.entries.some(function (entry) { return entry.id === id; })) return;
+      const opening = !state.openIds.has(id);
+      if (opening) state.openIds.add(id); else state.openIds.delete(id);
+      const article = document.getElementById("entry-" + id);
+      if (article) {
+        article.classList.toggle("open", opening);
+        article.querySelector(".entry-toggle").setAttribute("aria-expanded", String(opening));
+        article.querySelector(".entry-details").hidden = !opening;
+      }
+      if (updateHash) {
+        if (opening) history.replaceState(null, "", "#" + encodeURIComponent(id));
+        else if (decodeURIComponent(location.hash.slice(1)) === id) history.replaceState(null, "", location.pathname + location.search);
+      }
+    }
+    function openEntryFromHash(shouldScroll) {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (!/^NRR-\d{4}-\d{3}$/.test(id)) return;
+      const target = state.entries.find(function (entry) { return entry.id === id; });
+      if (!target) return;
+      if (state.domain && target.domain !== state.domain) { state.domain = ""; elements.domain.value = ""; }
+      if (state.category && target.category !== state.category) { state.category = ""; elements.category.value = ""; }
+      if (state.tag && (!target.tags || !target.tags.includes(state.tag))) { state.tag = ""; renderTagCloud(); }
+      if (state.search && !searchableText(target).includes(state.search.toLocaleLowerCase("zh-CN"))) { state.search = ""; elements.search.value = ""; }
+      applyFilters();
+      if (!state.openIds.has(id)) toggleEntry(id, false);
+      if (shouldScroll) requestAnimationFrame(function () {
+        const article = document.getElementById("entry-" + id);
+        if (article) article.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+    function resetFilters() {
+      state.search = ""; state.domain = ""; state.category = ""; state.tag = "";
+      elements.search.value = ""; elements.domain.value = ""; elements.category.value = "";
+      renderTagCloud(); applyFilters(); elements.search.focus();
+    }
+    function showLoadError(error) {
+      elements.entries.innerHTML = "<div class=\"load-state\"><strong>无法载入登记册</strong><p>" + escapeHtml(error && error.message || "未知错误") + "。请通过本地 HTTP 服务打开页面，或确认 registry.json 与站点部署路径可访问。</p><button class=\"retry-button\" id=\"retry-load\" type=\"button\">重新加载</button></div>";
+      elements.count.textContent = "数据加载失败";
+      const retry = document.getElementById("retry-load");
+      if (retry) retry.addEventListener("click", load);
+    }
+    async function load() {
+      elements.entries.innerHTML = "<div class=\"load-state\"><strong>正在读取 registry.json</strong><p>请稍候，登记册数据正在加载。</p></div>";
+      try { initializeRegistry(await fetchRegistry()); }
+      catch (error) { showLoadError(error); }
+    }
+    elements.search.addEventListener("input", debounce(function (event) {
+      state.search = event.target.value; applyFilters();
+    }, 300));
+    elements.domain.addEventListener("change", function (event) {
+      state.domain = event.target.value; applyFilters();
+    });
+    elements.category.addEventListener("change", function (event) {
+      state.category = event.target.value; applyFilters();
+    });
+    elements.reset.addEventListener("click", resetFilters);
+    elements.tagCloud.addEventListener("click", function (event) {
+      const button = event.target.closest("[data-tag]");
+      if (!button) return;
+      state.tag = state.tag === button.dataset.tag ? "" : button.dataset.tag;
+      renderTagCloud(); applyFilters();
+    });
+    elements.entries.addEventListener("click", function (event) {
+      const button = event.target.closest(".entry-toggle");
+      if (!button) return;
+      const article = button.closest("[data-entry-id]");
+      if (article) toggleEntry(article.dataset.entryId, true);
+    });
+    window.addEventListener("hashchange", function () { openEntryFromHash(true); });
+    load();
+  </script>
+</body>
+</html>
