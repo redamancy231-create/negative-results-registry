@@ -79,17 +79,19 @@ flowchart TB
 
 ### By Negative Result Type (9 Categories)
 
-| Code | Type | Description |
-|------|------|------|
-| null-result | Null Result | No significant difference between the experimental and control groups |
-| ceiling-effect | Ceiling Effect | The baseline is already strong, leaving no room for improvement |
-| worse-than-baseline | Worse Than Baseline | The new method performs worse than the baseline |
-| failed-to-replicate | Failed to Replicate | A previously successful finding cannot be replicated |
-| methodology-failure | Methodology Failure | The experimental design or execution itself failed |
-| abandoned-dead-end | Abandoned Dead End | The direction itself is not viable |
-| hypothesis-falsified | Hypothesis Falsified | The original hypothesis was explicitly disproven |
-| tool-unfit-for-purpose | Tool Unfit for Purpose | The selected tool or model is unsuitable for the task |
-| other | Other | |
+| Code | Type |
+|------|------|
+| null-result | Null Result |
+| ceiling-effect | Ceiling Effect |
+| worse-than-baseline | Worse Than Baseline |
+| failed-to-replicate | Failed to Replicate |
+| methodology-failure | Methodology Failure |
+| abandoned-dead-end | Abandoned Dead End |
+| hypothesis-falsified | Hypothesis Falsified |
+| tool-unfit-for-purpose | Tool Unfit for Purpose |
+| other | Other |
+
+> See [methodology.md §Classification System](methodology.md) for detailed descriptions.
 
 ---
 

@@ -79,17 +79,19 @@ flowchart TB
 
 ### 按陰性結果類型（9 類）
 
-| 代碼 | 類型 | 說明 |
-|------|------|------|
-| null-result | 零結果 | 實驗組和對照組無顯著差異 |
-| ceiling-effect | 天花板效應 | 基線已經很好，改善空間為零 |
-| worse-than-baseline | 劣於基線 | 新方法比基線更差 |
-| failed-to-replicate | 重現失敗 | 無法重現先前有效的發現 |
-| methodology-failure | 方法失敗 | 實驗設計／執行本身出問題 |
-| abandoned-dead-end | 死胡同 | 方向本身不可行 |
-| hypothesis-falsified | 假設遭證偽 | 明確推翻了原有假設 |
-| tool-unfit-for-purpose | 工具不適用 | 所選工具／模型不適合任務 |
-| other | 其他 | |
+| 代碼 | 類型 |
+|------|------|
+| null-result | 零結果 |
+| ceiling-effect | 天花板效應 |
+| worse-than-baseline | 劣於基線 |
+| failed-to-replicate | 重現失敗 |
+| methodology-failure | 方法失敗 |
+| abandoned-dead-end | 死胡同 |
+| hypothesis-falsified | 假設遭證偽 |
+| tool-unfit-for-purpose | 工具不適用 |
+| other | 其他 |
+
+> 詳細說明見 [methodology.md §分類體系](methodology.md)
 
 ---
 
