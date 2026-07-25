@@ -4,7 +4,7 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
-[![Entries](https://img.shields.io/badge/Entries-18-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
 
 [![中文](https://img.shields.io/badge/lang-中文-red)]()
 [![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)

@@ -1,0 +1,39 @@
+{
+  "id": "NRR-2026-019",
+  "title": "GitNexus CALLS 边同文件内部方法调用捕获率仅 3/81+ 和 0/17——基于索引断言模块内部耦合不可靠",
+  "domain": "benchmarking",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-22",
+  "hypothesis": "GitNexus 代码知识图谱的 CALLS 边应能可靠捕获方法间调用关系，包括同文件内部调用。预期索引覆盖率 ≥80%，可用于断言模块内部耦合度。",
+  "method": "对 docx-pipeline 项目两个核心模块进行手工源码 grep 交叉验证：(1) PurePythonConverter（pure_python.py, 1,213行, 36个方法）——源码 grep 识别完整 5 层调用链≥81 条内部调用；(2) MermaidRenderer（mermaid_renderer.py, 677行, 17个方法）——源码 grep 识别 render→_check_mmdc/_find_mermaid_blocks/_render_block/_replace_blocks 管道链。对比 GitNexus 索引的 CALLS 边数量。",
+  "expected_result": "GitNexus CALLS 边覆盖同文件内部调用的 ≥80%。",
+  "actual_result": "PurePythonConverter: GitNexus 仅捕获 3 条同文件 CALLS 边（覆盖率约 3/81+, ≤3.7%）。MermaidRenderer: GitNexus 捕获 0 条同文件 CALLS 边（覆盖率 0/17, 0%）。基于 GitNexus CALLS 边数量断言'模块内部耦合低/改动隔离性好'不可靠——索引可能漏掉了大部分内部调用。IMPORT/EXTENDS 边置信度高于同文件 CALLS 边。",
+  "effect_size": "PurePythonConverter 覆盖率 ≤3.7%（3/81+）；MermaidRenderer 覆盖率 0%（0/17）",
+  "sample_size": "2 个模块 × 2 种检测方法（GitNexus vs 源码 grep）",
+  "models_used": ["GitNexus"],
+  "interpretation": "这不是 GitNexus 的 bug——CALLS 边在同文件内的索引策略（可能基于 AST 或符号解析）与跨文件调用（基于 import 关系）使用了不同的检测精度。但对于方法论提取而言，这意味着任何基于 GitNexus CALLS 边数量对'模块内部耦合'的断言都需要源码交叉验证。盲信索引数据会导致对模块复杂度的系统性低估。",
+  "reproducibility": {
+    "level": "fully-reproducible",
+    "artifacts_available": ["code", "logs"],
+    "notes": "第三方分析条目。复现步骤：在 docx-pipeline 仓库运行 GitNexus 索引 → 对比 docx_pipeline/converters/pure_python.py 和 docx_pipeline/renderers/mermaid_renderer.py 的 CALLS 边数量 → 使用 grep 手工统计实际调用链。实证数据记录在 methodology-extraction-methodology 项目记忆文件中。"
+  },
+  "related_positive_result": "跨文件 IMPORT/EXTENDS 边置信度高于同文件 CALLS 边——GitNexus 在跨模块分析中仍然可靠。应对策略：跨文件用 GitNexus，同文件用源码 grep。",
+  "lessons_learned": [
+    "GitNexus CALLS 边同文件覆盖率可低至 0%——不能基于 CALLS 边数量断言模块内部耦合度",
+    "AI 工具评估不能仅靠静态源码分析——需要对照实验（索引 vs 手工统计）才能发现盲区",
+    "跨文件 IMPORT/EXTENDS 边比同文件 CALLS 边可靠——索引策略在不同维度精度不同",
+    "对任何分析工具的声称都需要交叉验证——'3 条 CALLS'可能是真值的 3.7% 而非 100%"
+  ],
+  "tags": ["GitNexus", "CALLS边", "索引覆盖", "代码知识图谱", "源码交叉验证", "第三方分析"],
+  "links": [
+    {
+      "label": "GitNexus 分析项目",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology"
+    },
+    {
+      "label": "GitNexus CALLS 边覆盖盲区（memory 记录）",
+      "url": "https://github.com/redamancy231-create/methodology-handbook"
+    }
+  ]
+}

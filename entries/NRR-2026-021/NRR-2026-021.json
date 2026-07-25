@@ -1,0 +1,39 @@
+{
+  "id": "NRR-2026-021",
+  "title": "方法论提取框架适用性随项目方法论自觉梯度急速衰减——自有100%→有论文69%→纯代码37.5%",
+  "domain": "methodology-extraction",
+  "category": "methodology-failure",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-23",
+  "hypothesis": "方法论提取框架应能从未知开源项目中提取有意义的方法论模式——即使项目没有 CLAUDE.md 或 AI 协作记录，也应能从代码组织、版本控制、质量保障等'被动痕迹'中提取可用信号。",
+  "method": "对三个梯度的项目执行完整 8 组件提取：(1) 自有项目（ETF/M&A/框架等，方法论自觉 ★★★★★）；(2) ml-quant-trading（有 CHANGELOG + CONTRIBUTING + arXiv 论文 + CI + 15 测试 + PR review，方法论自觉 ★★★）；(3) NPGS（C++ 游戏引擎，199 文件，10 commits，零方法论文档，方法论自觉 ★）。对比三梯度的可提取率。",
+  "expected_result": "三梯度可提取率应有渐进下降但仍保有一定基线——预期最低梯度（NPGS）至少 ≥50%（4/8）。",
+  "actual_result": "可提取率梯度 100%→69%→37.5%。NPGS 仅 3/8 可提取（C1-C3 全部来自被动痕迹——代码结构、commit 历史、目录组织），C4 多模型协作/C5 独立审查/C6 方法论文档/C7 闭环修复/C8 数据溯源——5 个组件全部空白。能提取的 3 个组件用 GitNexus 或任何代码分析工具同样可获取——框架在被动痕迹维度上无增量价值。框架的真正价值不是'发现'新模式，而是将已经存在的方法论痕迹系统化命名和归纳。",
+  "effect_size": "可提取率梯度 100%→69%→37.5%；NPGS 5/8 组件空白；最低梯度无增量价值",
+  "sample_size": "3 个项目 × 3 梯度（方法论自觉 ★★★★★/★★★/★）× 8 组件",
+  "models_used": ["DeepSeek-V4-Pro", "GitNexus", "Codex GPT-5.5"],
+  "interpretation": "框架的隐含假设——'源项目知道自己做了什么并记录了下来'——在绝大多数开源项目中不成立。梯度数据表明框架的适用对象极端狭窄：仅对 AI 协作自觉极强的项目（如自有项目群）有效。但这不等于框架无价值——它证明了方法论提取的前提条件（源项目必须有方法论文档），而这个前提条件本身在开源生态中的满足率极低。",
+  "reproducibility": {
+    "level": "partially-reproducible",
+    "artifacts_available": ["logs", "analysis-script", "raw-output"],
+    "notes": "第三方分析条目。NPGS 证据卡在 methodology-extraction-methodology/explorations/evidence_card_npgs_external.md。ml-quant-trading 证据卡在 explorations/evidence_card_ml_quant_trading.md。"
+  },
+  "related_positive_result": "框架在自有项目群（方法论自觉 ★★★★★）中可提取率接近 100%——证明框架本身设计有效，只是适用范围比初始假设窄。",
+  "lessons_learned": [
+    "框架的适用对象极端狭窄——仅对 AI 协作自觉极强的项目有效，不是'通用'方法论提取工具",
+    "可提取率与源项目方法论自觉呈正相关（★★★★★=100%→★★★=69%→★=37.5%）",
+    "框架在被动痕迹维度无增量价值——能用 GitNexus 获取的，框架没有提供额外信息",
+    "框架的价值定位应从'发现'修正为'归纳'——它不是探测器，是整理器"
+  ],
+  "tags": ["方法论提取", "框架适用性", "梯度衰减", "NPGS", "ml-quant-trading", "被动痕迹", "第三方分析"],
+  "links": [
+    {
+      "label": "方法论提取方法论 — NPGS 证据卡",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md"
+    },
+    {
+      "label": "方法论提取方法论 — ml-quant-trading 证据卡",
+      "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_ml_quant_trading.md"
+    }
+  ]
+}

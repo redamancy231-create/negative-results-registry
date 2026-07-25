@@ -3,7 +3,7 @@
     "title": "AI协作阴性结果登记册 · 聚合索引",
     "version": "0.1.0",
     "last_updated": "2026-07-25",
-    "total_entries": 18,
+    "total_entries": 22,
     "generation_model": "DeepSeek-V4-Pro (via Claude Code CLI)"
   },
   "entries": [
@@ -1037,52 +1037,270 @@
           "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_crosscheck.md"
         }
       ]
+    },
+    {
+      "id": "NRR-2026-019",
+      "title": "GitNexus CALLS 边同文件内部方法调用捕获率仅 3/81+ 和 0/17——基于索引断言模块内部耦合不可靠",
+      "domain": "benchmarking",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-22",
+      "hypothesis": "GitNexus 代码知识图谱的 CALLS 边应能可靠捕获方法间调用关系，包括同文件内部调用。预期索引覆盖率 ≥80%，可用于断言模块内部耦合度。",
+      "method": "对 docx-pipeline 项目两个核心模块进行手工源码 grep 交叉验证：(1) PurePythonConverter（pure_python.py, 1,213行, 36个方法）——源码 grep 识别完整 5 层调用链≥81 条内部调用；(2) MermaidRenderer（mermaid_renderer.py, 677行, 17个方法）——源码 grep 识别 render→_check_mmdc/_find_mermaid_blocks/_render_block/_replace_blocks 管道链。对比 GitNexus 索引的 CALLS 边数量。",
+      "expected_result": "GitNexus CALLS 边覆盖同文件内部调用的 ≥80%。",
+      "actual_result": "PurePythonConverter: GitNexus 仅捕获 3 条同文件 CALLS 边（覆盖率约 3/81+, ≤3.7%）。MermaidRenderer: GitNexus 捕获 0 条同文件 CALLS 边（覆盖率 0/17, 0%）。基于 GitNexus CALLS 边数量断言'模块内部耦合低/改动隔离性好'不可靠——索引可能漏掉了大部分内部调用。IMPORT/EXTENDS 边置信度高于同文件 CALLS 边。",
+      "effect_size": "PurePythonConverter 覆盖率 ≤3.7%（3/81+）；MermaidRenderer 覆盖率 0%（0/17）",
+      "sample_size": "2 个模块 × 2 种检测方法（GitNexus vs 源码 grep）",
+      "models_used": [
+        "GitNexus"
+      ],
+      "interpretation": "这不是 GitNexus 的 bug——CALLS 边在同文件内的索引策略（可能基于 AST 或符号解析）与跨文件调用（基于 import 关系）使用了不同的检测精度。但对于方法论提取而言，这意味着任何基于 GitNexus CALLS 边数量对'模块内部耦合'的断言都需要源码交叉验证。盲信索引数据会导致对模块复杂度的系统性低估。",
+      "reproducibility": {
+        "level": "fully-reproducible",
+        "artifacts_available": [
+          "code",
+          "logs"
+        ],
+        "notes": "第三方分析条目。复现步骤：在 docx-pipeline 仓库运行 GitNexus 索引 → 对比 docx_pipeline/converters/pure_python.py 和 docx_pipeline/renderers/mermaid_renderer.py 的 CALLS 边数量 → 使用 grep 手工统计实际调用链。实证数据记录在 methodology-extraction-methodology 项目记忆文件中。"
+      },
+      "related_positive_result": "跨文件 IMPORT/EXTENDS 边置信度高于同文件 CALLS 边——GitNexus 在跨模块分析中仍然可靠。应对策略：跨文件用 GitNexus，同文件用源码 grep。",
+      "lessons_learned": [
+        "GitNexus CALLS 边同文件覆盖率可低至 0%——不能基于 CALLS 边数量断言模块内部耦合度",
+        "AI 工具评估不能仅靠静态源码分析——需要对照实验（索引 vs 手工统计）才能发现盲区",
+        "跨文件 IMPORT/EXTENDS 边比同文件 CALLS 边可靠——索引策略在不同维度精度不同",
+        "对任何分析工具的声称都需要交叉验证——'3 条 CALLS'可能是真值的 3.7% 而非 100%"
+      ],
+      "tags": [
+        "GitNexus",
+        "CALLS边",
+        "索引覆盖",
+        "代码知识图谱",
+        "源码交叉验证",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "GitNexus 分析项目",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology"
+        },
+        {
+          "label": "GitNexus CALLS 边覆盖盲区（memory 记录）",
+          "url": "https://github.com/redamancy231-create/methodology-handbook"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-020",
+      "title": "PocketFlow 100行核心→全部提取资产为[Sp]推测级，N=2 证据仅有方向性指示——极简项目的方法论提取存在固有天花板",
+      "domain": "methodology-extraction",
+      "category": "ceiling-effect",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-25",
+      "hypothesis": "对 PocketFlow（100 行核心 + 分难度 cookbook 的外部开源项目）进行三轮独立分析后，预期至少能提取出 ≥3 个达到 [E] 试行级别的可复用方法论模式。",
+      "method": "对 PocketFlow 进行了三轮独立分析（DeepSeek-V4-Pro + Codex GPT-5.5 + Kimi-K2.7），提取了三组资产：B1 最小核心+示例外挂模式、B2 难度分层体系、C1-C3 反模式清单。按框架 §9.6 证据等级标准逐项评估——[S]自述 → [E]试行 → [I]审查门禁 → [F]证伪。",
+      "expected_result": "至少 B1（最小核心+示例外挂）应达到 [E] 试行级——有 ≥1 个独立源项目支撑且不是推测。",
+      "actual_result": "全部三组资产均为 [Sp] 推测级。B1 的 N=2 证据（无显式说明时 2/4 任务完成→有准索引后 4/4 完成）仅为方向性指示，样本量不足作为 [E] 级证据。B2 难度分级基于框架设计者单一视角。C1-C3 反模式的实际触发频率在目标场景中待观察。根因：从 100 行核心项目中提取方法论模式存在固有的信息密度天花板——项目越小，可提取的方法论信号越少，而推断/外推的成分越多。",
+      "effect_size": "3/3 资产组全部 [Sp] 推测级（0/3 达到 [E]）；N=2 证据仅方向性指示",
+      "sample_size": "1 个项目（100 行核心）× 3 轮独立分析 × 3 组资产",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.5",
+        "Kimi-K2.7"
+      ],
+      "interpretation": "这不是 PocketFlow 的问题——它的极简设计本身就是一种方法论立场。问题在于：从极简项目中提取方法论时，信息密度不够→推断/外推成分增加→证据等级只能停留在 [Sp]。这个天花板不是分析深度不够，而是源项目本身的信息容量限制。对于方法论提取而言，'100 行核心'既是优点（展示了 minimal viable 方法论）也是限制（无法提供跨场景验证所需的多样性证据）。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "第三方分析条目。PocketFlow 为外部开源项目。框架从 PocketFlow 提取的方法论资产及证据等级标注在 ai-collaboration-framework 主文档 §B1/B2/附录 H 中。"
+      },
+      "related_positive_result": "B1 的 N=2 方向一致——虽然不足以达到 [E]，但为后续大样本验证提供了方向。C1-C3 反模式满足'≥2 独立后端审查确认可迁移性'的收录标准。",
+      "lessons_learned": [
+        "从极简项目中提取方法论存在固有信息密度天花板——源项目越小，证据等级越难超过 [Sp]",
+        "N=2 证据只有方向性指示价值——不能承担 [E] 级方法论组件所需的证据重量",
+        "100 行核心既是方法论优点也是提取限制——展示了 minimal viable design 但无法提供多样性证据",
+        "对小型外部项目的方法论提取应预先设定证据等级上限——避免三轮分析后才发现全部 [Sp]"
+      ],
+      "tags": [
+        "PocketFlow",
+        "极简项目",
+        "证据等级",
+        "Sp推测级",
+        "信息密度",
+        "N=2",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "AI 协作框架 — PocketFlow 相关章节",
+          "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
+        },
+        {
+          "label": "PocketFlow 开源仓库",
+          "url": "https://github.com/typicalpenguin/PocketFlow"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-021",
+      "title": "方法论提取框架适用性随项目方法论自觉梯度急速衰减——自有100%→有论文69%→纯代码37.5%",
+      "domain": "methodology-extraction",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-23",
+      "hypothesis": "方法论提取框架应能从未知开源项目中提取有意义的方法论模式——即使项目没有 CLAUDE.md 或 AI 协作记录，也应能从代码组织、版本控制、质量保障等'被动痕迹'中提取可用信号。",
+      "method": "对三个梯度的项目执行完整 8 组件提取：(1) 自有项目（ETF/M&A/框架等，方法论自觉 ★★★★★）；(2) ml-quant-trading（有 CHANGELOG + CONTRIBUTING + arXiv 论文 + CI + 15 测试 + PR review，方法论自觉 ★★★）；(3) NPGS（C++ 游戏引擎，199 文件，10 commits，零方法论文档，方法论自觉 ★）。对比三梯度的可提取率。",
+      "expected_result": "三梯度可提取率应有渐进下降但仍保有一定基线——预期最低梯度（NPGS）至少 ≥50%（4/8）。",
+      "actual_result": "可提取率梯度 100%→69%→37.5%。NPGS 仅 3/8 可提取（C1-C3 全部来自被动痕迹——代码结构、commit 历史、目录组织），C4 多模型协作/C5 独立审查/C6 方法论文档/C7 闭环修复/C8 数据溯源——5 个组件全部空白。能提取的 3 个组件用 GitNexus 或任何代码分析工具同样可获取——框架在被动痕迹维度上无增量价值。框架的真正价值不是'发现'新模式，而是将已经存在的方法论痕迹系统化命名和归纳。",
+      "effect_size": "可提取率梯度 100%→69%→37.5%；NPGS 5/8 组件空白；最低梯度无增量价值",
+      "sample_size": "3 个项目 × 3 梯度（方法论自觉 ★★★★★/★★★/★）× 8 组件",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GitNexus",
+        "Codex GPT-5.5"
+      ],
+      "interpretation": "框架的隐含假设——'源项目知道自己做了什么并记录了下来'——在绝大多数开源项目中不成立。梯度数据表明框架的适用对象极端狭窄：仅对 AI 协作自觉极强的项目（如自有项目群）有效。但这不等于框架无价值——它证明了方法论提取的前提条件（源项目必须有方法论文档），而这个前提条件本身在开源生态中的满足率极低。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "第三方分析条目。NPGS 证据卡在 methodology-extraction-methodology/explorations/evidence_card_npgs_external.md。ml-quant-trading 证据卡在 explorations/evidence_card_ml_quant_trading.md。"
+      },
+      "related_positive_result": "框架在自有项目群（方法论自觉 ★★★★★）中可提取率接近 100%——证明框架本身设计有效，只是适用范围比初始假设窄。",
+      "lessons_learned": [
+        "框架的适用对象极端狭窄——仅对 AI 协作自觉极强的项目有效，不是'通用'方法论提取工具",
+        "可提取率与源项目方法论自觉呈正相关（★★★★★=100%→★★★=69%→★=37.5%）",
+        "框架在被动痕迹维度无增量价值——能用 GitNexus 获取的，框架没有提供额外信息",
+        "框架的价值定位应从'发现'修正为'归纳'——它不是探测器，是整理器"
+      ],
+      "tags": [
+        "方法论提取",
+        "框架适用性",
+        "梯度衰减",
+        "NPGS",
+        "ml-quant-trading",
+        "被动痕迹",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "方法论提取方法论 — NPGS 证据卡",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md"
+        },
+        {
+          "label": "方法论提取方法论 — ml-quant-trading 证据卡",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_ml_quant_trading.md"
+        }
+      ]
+    },
+    {
+      "id": "NRR-2026-022",
+      "title": "'提取者污染'——fork 作者附加的方法论文档被误归因到源项目，制造虚假方法论信号",
+      "domain": "methodology-extraction",
+      "category": "methodology-failure",
+      "submitted_by": "Acerolaorion",
+      "date": "2026-07-23",
+      "hypothesis": "在对 fork 的源项目进行方法论提取时，fork 仓库中所有文件（含 CLAUDE.md、GitNexus 索引、分析报告）应反映源项目的方法论特征。预期这些附加文档能补充源项目的方法论信息。",
+      "method": "对 NPGS（baopinshui/NPGS）进行完整方法论提取。该仓库被 fork 后，提取者（Acerolaorion）在其中添加了 CLAUDE.md、GitNexus 索引文件和独立分析报告，然后从 fork 仓库执行提取。事后追溯了哪些「方法论文档」来自源作者（baopinshui）、哪些来自 fork 提取者。",
+      "expected_result": "至少部分附加文档应反映或补充源项目的方法论特征。",
+      "actual_result": "NPGS 的 CLAUDE.md、GitNexus 索引、分析报告全部来自 fork 提取者。源项目（baopinshui）的方法论文档=0。这些附加文档反映的是提取者自己的方法论（DeepSeek-V4-Pro + GPT-5.6-Sol 审查），不是源项目的。如果不区分两者，提取者会把'自己编写的源项目唯一方法论文档'误归因为'源项目有方法论自觉'——制造虚假方法论信号。",
+      "effect_size": "源项目方法论文档=0；fork 附加文档 100% 来自提取者",
+      "sample_size": "1 个项目（NPGS）× 提取者附加文档 vs 源项目原生文档对比",
+      "models_used": [
+        "DeepSeek-V4-Pro",
+        "GPT-5.6-Sol",
+        "GitNexus"
+      ],
+      "interpretation": "这不是 NPGS 的问题——是提取框架的 Phase 0 设计缺陷。当提取者也是 fork 仓库的唯一方法论文档贡献者时，框架的默认假设（'仓库中的方法论文档反映了源项目的方法论'）会系统性高估源项目的方法论自觉。Phase 0 需要增加'提取者污染'判别步骤——检查 CLAUDE.md/分析报告/GitNexus 索引的作者是否等于源项目作者，过滤掉提取者自己编写的文档。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "logs",
+          "analysis-script"
+        ],
+        "notes": "第三方分析条目。NPGS 源仓库（baopinshui/NPGS）和 fork 仓库（redamancy231-create/NPGS）的差异可独立核查。提取者附加的 CLAUDE.md 和 GitNexus 索引在 fork 仓库中。"
+      },
+      "related_positive_result": "框架在 Phase 0 增加'提取者污染'判别后可避免此问题——检查方法论文档作者身份即可过滤。这不是框架结构性失败，是可修复的设计缺陷。",
+      "lessons_learned": [
+        "当提取者也是仓库中唯一方法论文档的作者时，这些文档反映的是提取者而非源项目——制造虚假方法论信号",
+        "Phase 0 需要'提取者污染'判别——检查 CLAUDE.md/分析报告作者 ≠ 源项目作者时降权或排除",
+        "fork 后添加的分析工件不应被当作源项目方法论的一部分——这是'观察者效应'在方法论提取中的体现",
+        "源项目方法论文档=0 不应被解读为'无法提取'——它是诚实的信号，不是提取失败"
+      ],
+      "tags": [
+        "提取者污染",
+        "fork",
+        "NPGS",
+        "方法论归因",
+        "Phase0缺陷",
+        "虚假信号",
+        "第三方分析"
+      ],
+      "links": [
+        {
+          "label": "NPGS 源仓库 (baopinshui/NPGS)",
+          "url": "https://github.com/baopinshui/NPGS"
+        },
+        {
+          "label": "方法论提取方法论 — NPGS 证据卡",
+          "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md"
+        }
+      ]
     }
   ],
   "stats": {
     "by_domain": {
       "prompt-engineering": 2,
-      "methodology-extraction": 4,
+      "methodology-extraction": 7,
       "document-generation": 2,
       "tool-building": 1,
       "academic-writing": 1,
       "skill-design": 1,
       "code-review": 2,
       "multi-model-collaboration": 4,
-      "workflow-orchestration": 1
+      "workflow-orchestration": 1,
+      "benchmarking": 1
     },
     "by_category": {
       "null-result": 3,
-      "methodology-failure": 11,
-      "ceiling-effect": 3,
+      "methodology-failure": 14,
+      "ceiling-effect": 4,
       "abandoned-dead-end": 1
     },
     "by_year": {
-      "2026": 18
+      "2026": 22
     },
     "models_used": {
-      "GPT-5.5": 13,
+      "GPT-5.5": 14,
       "Qwen3.7-Max": 7,
-      "Kimi-K2.7": 4,
+      "Kimi-K2.7": 5,
       "GLM-5.2": 2,
       "mermaid-cli (mmdc)": 1,
       "python-docx v1.2.0": 1,
       "Microsoft Word": 1,
       "Pillow (修复)": 1,
-      "DeepSeek-V4-Pro": 8,
+      "DeepSeek-V4-Pro": 11,
       "Kimi-K2.7-Code": 1,
       "Claude Opus 4.7": 1,
       "GLM-5.1": 1,
       "Kimi-K2.6": 1,
       "Qwen": 1,
-      "GPT-5.6-Sol": 1,
+      "GPT-5.6-Sol": 2,
       "Claude Opus 4.8": 3,
       "OpenCC": 1,
       "多种 LLM（详见 Kuai et al., 2026-04）": 1,
       "多种 LLM（详见 Nájera et al., 2026-05）": 1,
       "Claude Code": 1,
       "Codex CLI": 1,
-      "Gemini CLI": 1
+      "Gemini CLI": 1,
+      "GitNexus": 3,
+      "Codex GPT-5.5": 1
     }
   }
 }
