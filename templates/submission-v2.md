@@ -9,7 +9,7 @@
 1. **Fork** 本仓库
 2. 复制本模板，按下方各节填写
 3. 创建条目目录，使用临时标识命名（如 `temp-method-failure`）。正式 ID（`NRR-YYYY-NNN`）由维护者在合并 PR 时分配——防止并发 PR 产生 ID 冲突
-4. 保存为 `NRR-YYYY-NNN.md`，并创建对应的 `NRR-YYYY-NNN.json`（按 `schema/entry.schema.json` 校验）
+4. 保存为与临时目录名一致的 `.md` 和 `.json` 文件（如 `temp-method-failure.md` + `temp-method-failure.json`，按 `schema/entry.schema.json` 校验）。合并 PR 时维护者会重命名为正式 ID
 5. 运行 `python scripts/generate_registry.py` 更新 `registry.json`
 6. 提 **Pull Request**
 
