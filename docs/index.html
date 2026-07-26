@@ -57,6 +57,7 @@
     .tag-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
     .tag-button { border: 1px solid var(--line); border-radius: 999px; padding: 5px 9px; color: #40504a; background: var(--soft); font-size: var(--tag-size,.78rem); line-height: 1.2; }
     .tag-button:hover, .tag-button.active { border-color: var(--accent); color: #fff; background: var(--accent); }
+    .show-all-tags { border-style: dashed; font-style: italic; }
     .entries { display: grid; gap: 12px; margin-top: 18px; }
     .entry { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: 0 5px 18px rgba(31,58,49,.045); scroll-margin-top: 16px; }
     .entry.open { border-color: #9fb7ad; box-shadow: var(--shadow); }
@@ -136,7 +137,7 @@
       <div class="stats" aria-label="登记册统计概览">
         <div class="stat"><span class="stat-value" id="total-stat">—</span><span class="stat-label">Entries · 条目</span></div>
         <div class="stat"><span class="stat-value" id="domain-stat">—</span><span class="stat-label">Domains · 领域</span></div>
-        <div class="stat"><span class="stat-value" id="category-stat">—</span><span class="stat-label">Types · 类型</span></div>
+        <div class="stat"><span class="stat-value" id="category-stat">—</span><span class="stat-label" title="Schema 共 9 种类型，当前数据覆盖 4 种">已覆盖类型 · Represented types</span></div>
       </div>
     </div>
   </header>
@@ -168,7 +169,7 @@
   </main>
   <footer>
     <div class="shell footer-inner">
-      <div>数据与文档采用 CC BY 4.0 · 2026-07-25 · 页面实现：GPT-5.6-Sol</div>
+      <div>数据与文档采用 CC BY 4.0 · 2026-07-25<!-- 页面实现：GPT-5.6-Sol --></div>
       <div class="footer-links">
         <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">许可协议</a>
         <a href="https://github.com/redamancy231-create/negative-results-registry" target="_blank" rel="noopener noreferrer">在 GitHub 查看</a>
@@ -216,7 +217,7 @@
     ];
     const state = {
       registry: null, entries: [], filteredEntries: [],
-      search: "", domain: "", category: "", tag: "", openIds: new Set()
+      search: "", domain: "", category: "", tag: "", showAllTags: false, openIds: new Set()
     };
     const elements = {
       entries: document.getElementById("entries"),
@@ -282,6 +283,8 @@
       populateSelect(elements.domain, domains, DOMAIN_LABELS, registry.stats && registry.stats.by_domain);
       populateSelect(elements.category, categories, CATEGORY_LABELS, registry.stats && registry.stats.by_category);
       renderTagCloud();
+      restoreFromURL();
+      renderTagCloud();
       applyFilters();
       openEntryFromHash(true);
     }
@@ -305,20 +308,47 @@
     }
     function renderTagCloud() {
       const tags = collectTagCounts();
-      const max = Math.max.apply(null, tags.map(function (item) { return item[1]; }).concat([1]));
-      elements.tagCloud.innerHTML = tags.map(function (item) {
+      const TAG_LIMIT = 15;
+      const showAll = state.showAllTags;
+      const displayTags = showAll ? tags : tags.filter(function (item, index) { return index < TAG_LIMIT || item[1] >= 2; });
+      const max = Math.max.apply(null, displayTags.map(function (item) { return item[1]; }).concat([1]));
+      var html = displayTags.map(function (item) {
         const tag = item[0];
         const count = item[1];
         const size = 0.74 + count / max * 0.2;
         const active = tag === state.tag ? " active" : "";
         return "<button type=\"button\" class=\"tag-button" + active + "\" style=\"--tag-size:" + size.toFixed(2) + "rem\" data-tag=\"" + escapeHtml(tag) + "\" aria-pressed=\"" + (tag === state.tag) + "\">" + escapeHtml(tag) + " <span aria-hidden=\"true\">" + count + "</span></button>";
       }).join("");
+      if (!showAll && tags.length > displayTags.length) {
+        html += "<button type=\"button\" class=\"tag-button show-all-tags\" id=\"show-all-tags\">显示全部 " + tags.length + " 个标签…</button>";
+      } else if (showAll && tags.length > TAG_LIMIT) {
+        html += "<button type=\"button\" class=\"tag-button show-all-tags\" id=\"show-all-tags\">收起标签</button>";
+      }
+      elements.tagCloud.innerHTML = html;
+      var toggleBtn = document.getElementById("show-all-tags");
+      if (toggleBtn) toggleBtn.addEventListener("click", function () { state.showAllTags = !state.showAllTags; renderTagCloud(); });
     }
     function searchableText(entry) {
       return [entry.title, entry.hypothesis, entry.method, entry.expected_result, entry.actual_result,
         Array.isArray(entry.tags) ? entry.tags.join(" ") : "",
         Array.isArray(entry.models_used) ? entry.models_used.join(" ") : ""
       ].filter(Boolean).join(" ").toLocaleLowerCase("zh-CN");
+    }
+    function updateURL() {
+      var params = new URLSearchParams();
+      if (state.search) params.set("q", state.search);
+      if (state.domain) params.set("domain", state.domain);
+      if (state.category) params.set("category", state.category);
+      if (state.tag) params.set("tag", state.tag);
+      var qs = params.toString();
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    }
+    function restoreFromURL() {
+      var params = new URLSearchParams(location.search);
+      if (params.has("q")) { state.search = params.get("q"); elements.search.value = state.search; }
+      if (params.has("domain")) { state.domain = params.get("domain"); elements.domain.value = state.domain; }
+      if (params.has("category")) { state.category = params.get("category"); elements.category.value = state.category; }
+      if (params.has("tag")) { state.tag = params.get("tag"); }
     }
     function applyFilters() {
       const query = state.search.trim().toLocaleLowerCase("zh-CN");
@@ -331,6 +361,7 @@
       });
       renderEntries();
       updateResultCount();
+      updateURL();
     }
     function updateResultCount() {
       const tagText = state.tag ? " · 标签：" + escapeHtml(state.tag) : "";
@@ -436,6 +467,7 @@
     function resetFilters() {
       state.search = ""; state.domain = ""; state.category = ""; state.tag = "";
       elements.search.value = ""; elements.domain.value = ""; elements.category.value = "";
+      history.replaceState(null, "", location.pathname + location.hash);
       renderTagCloud(); applyFilters(); elements.search.focus();
     }
     function showLoadError(error) {
