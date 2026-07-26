@@ -473,11 +473,15 @@
         "not-reproducible": "不可重現", "not-assessed": "未評估"
       }
     };
-    const DATA_SOURCES = [
-      "./registry.json",
-      "../registry.json",
-      "https://raw.githubusercontent.com/redamancy231-create/negative-results-registry/main/registry.json"
-    ];
+    function getDataSources() {
+      var lang = state.lang;
+      var base = lang === DEFAULT_LANG ? "registry.json" : "registry-" + lang + ".json";
+      return [
+        "./" + base,
+        "../" + base,
+        "https://raw.githubusercontent.com/redamancy231-create/negative-results-registry/main/" + base
+      ];
+    }
     const state = {
       lang: DEFAULT_LANG, registry: null, entries: [], filteredEntries: [], domains: [], categories: [],
       search: "", domain: "", category: "", tag: "", sort: "id-desc", showAllTags: false,
@@ -627,11 +631,14 @@
     function setLanguage(locale) {
       if (!SUPPORTED_LANGS.includes(locale) || locale === state.lang) return;
       state.lang = locale;
-      applyLanguage(true);
+      applyLanguage(false);
+      state.openIds.clear();
+      load();
     }
     async function fetchRegistry() {
       let lastError;
-      for (const source of DATA_SOURCES) {
+      const sources = getDataSources();
+      for (const source of sources) {
         try {
           const response = await fetch(source, { cache: "no-cache" });
           if (!response.ok) throw new Error("HTTP " + response.status + " from " + source);
