@@ -64,7 +64,9 @@ negative-results-registry/
 ├── scripts/
 │   ├── generate_registry.py     # entries/ → registry.json
 │   ├── validate_ci.py           # Schema + 链接 + 一致性校验
-│   └── check_external_links.py  # 外部链接检查
+│   ├── check_external_links.py  # 外部链接检查
+│   ├── update_readme.py         # registry.json → README 自动更新
+│   └── entry_sources.json       # 条目 ID → 来源名称映射
 │
 ├── docs/
 │   ├── index.html               # GitHub Pages 可浏览页面
@@ -87,12 +89,14 @@ negative-results-registry/
 
 ### 添加新条目
 1. 分配新 ID（查阅 `registry.json` 中已有最大 ID）
-2. 复制 `templates/submission.md` 填写内容
+2. 复制 `templates/submission-v2.md` 填写内容
 3. 创建 `entries/NRR-YYYY-NNN/` 目录
 4. 编写 `.md` + `.json` 双件
 5. JSON 文件用 `schema/entry.schema.json` 校验
 6. 运行 `scripts/generate_registry.py` 更新 `registry.json`
-7. 更新 `docs/existing-negative-results.md`（如条目源自自有项目）
+7. 在 `scripts/entry_sources.json` 中添加 ID → 来源映射
+8. 运行 `scripts/update_readme.py` 更新三语 README
+9. 更新 `docs/existing-negative-results.md`（如条目源自自有项目）
 
 ### 收到外部提交（未来）
 1. 验证 JSON Schema 合规
@@ -100,16 +104,9 @@ negative-results-registry/
 3. 分配 ID
 4. 按上述流程加入
 
-## 初始条目来源
+## 条目来源
 
-项目启动时已收录 4 个条目，全部来自维护者自有项目的历史阴性结果：
-
-| ID | 来源项目 | 类型 | 概述 |
-|----|---------|------|------|
-| NRR-2026-001 | prompt-tdd-methodology | null-result | 三段式分段对审查质量无显著影响 |
-| NRR-2026-002 | prompt-tdd-methodology | null-result | 声明式路由 vs NL 路由无差异 |
-| NRR-2026-003 | methodology-extraction-methodology | methodology-failure | 22项目0模式达到≥3源稳定门槛 |
-| NRR-2026-004 | docx-pipeline | methodology-failure | mmdc PNG 无 DPI 元数据→python-docx 默认 72 DPI 致图片拉伸 |
+项目启动时已收录 22 个条目（NRR-2026-001–022），来自 6 个自有公开项目 + 7 个外部来源（学术论文 + 开源项目）。完整列表见 `README.md` §条目概览，或运行 `scripts/generate_registry.py` 查看最新状态。
 
 ---
 

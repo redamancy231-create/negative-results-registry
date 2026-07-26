@@ -4,7 +4,9 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
+<!-- AUTO_GENERATED: entries_badge -->
 [![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
+<!-- AUTO_GENERATED_END -->
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
 [![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
@@ -127,7 +129,9 @@ negative-results-registry/
 ├── scripts/
 │   ├── generate_registry.py     ← entries/ → registry.json
 │   ├── validate_ci.py           ← Schema + link + consistency checks
-│   └── check_external_links.py  ← External link verification
+│   ├── check_external_links.py  ← External link verification
+│   ├── update_readme.py         ← registry.json → README auto-update
+│   └── entry_sources.json       ← Entry ID → source name mapping
 │
 ├── docs/
 │   ├── index.html               ← GitHub Pages browsable site
@@ -145,7 +149,7 @@ negative-results-registry/
 
 ### 5-Minute Process
 
-1. Copy `templates/submission.md`
+1. Copy `templates/submission-v2.md`
 2. Fill in your negative result using the template
 3. Create the `entries/NRR-YYYY-NNN/` directory
 4. Add both `.md` and `.json` files (validate the JSON against `schema/entry.schema.json`)
@@ -171,32 +175,36 @@ negative-results-registry/
 
 ## Entry Overview
 
-The registry currently contains **22 entries** spanning 10 domains × 4 types (out of a 12-domain × 9-type schema), drawn from 6 of our own public projects + 7 external sources (academic papers + open-source projects):
+<!-- AUTO_GENERATED: summary_line -->
+The registry currently contains **22 entries** spanning 10 domains × 4 types (out of a 12-domain × 9-type schema), drawn from 7 of our own public projects + 7 external sources (academic papers + open-source projects):
+<!-- AUTO_GENERATED_END -->
 
+<!-- AUTO_GENERATED: entry_table -->
 | ID | Source | Domain | Type |
-|----|------|------|------|
-| NRR-2026-001 | prompt-tdd-methodology | prompt-engineering | null-result |
-| NRR-2026-002 | prompt-tdd-methodology | prompt-engineering | null-result |
-| NRR-2026-003 | methodology-extraction-methodology | methodology-extraction | methodology-failure |
-| NRR-2026-004 | docx-pipeline | document-generation | methodology-failure |
-| NRR-2026-005 | etf-pattern-match-pybind11 | tool-building | ceiling-effect |
-| NRR-2026-006 | ma-case-study-pipeline | academic-writing | methodology-failure |
-| NRR-2026-007 | claude-skills | skill-design | methodology-failure |
-| NRR-2026-008 | docx-pipeline | code-review | methodology-failure |
-| NRR-2026-009 | ai-collaboration-framework | methodology-extraction | methodology-failure |
-| NRR-2026-010 | ai-collaboration-framework | document-generation | methodology-failure |
-| NRR-2026-011 | Kohli 2026 / CrossCheck | multi-model-collaboration | ceiling-effect |
-| NRR-2026-012 | ai-collaboration-framework | methodology-extraction | abandoned-dead-end |
-| NRR-2026-013 | ai-collaboration-framework | methodology-extraction | methodology-failure |
-| NRR-2026-014 | ai-collaboration-framework | workflow-orchestration | methodology-failure |
-| NRR-2026-015 | ai-collaboration-framework | code-review | methodology-failure |
-| NRR-2026-016 | Kuai et al. (2026) | multi-model-collaboration | ceiling-effect |
-| NRR-2026-017 | Nájera et al. (2026) | multi-model-collaboration | null-result |
-| NRR-2026-018 | CrossCheck (sburl) | multi-model-collaboration | methodology-failure |
-| NRR-2026-019 | GitNexus | benchmarking | methodology-failure |
-| NRR-2026-020 | PocketFlow | methodology-extraction | ceiling-effect |
-| NRR-2026-021 | NPGS / ml-quant-trading | methodology-extraction | methodology-failure |
-| NRR-2026-022 | NPGS | methodology-extraction | methodology-failure |
+|------|------|------|------|
+| NRR-2026-001 | prompt-tdd-methodology | Prompt Engineering | Null Result |
+| NRR-2026-002 | prompt-tdd-methodology | Prompt Engineering | Null Result |
+| NRR-2026-003 | methodology-extraction-methodology | Methodology Extraction | Methodology Failure |
+| NRR-2026-004 | docx-pipeline | Document Generation | Methodology Failure |
+| NRR-2026-005 | etf-pattern-match-pybind11 | Tool Development | Ceiling Effect |
+| NRR-2026-006 | ma-case-study-pipeline | Academic Writing | Methodology Failure |
+| NRR-2026-007 | claude-skills | Skill Design | Methodology Failure |
+| NRR-2026-008 | docx-pipeline | Code Review | Methodology Failure |
+| NRR-2026-009 | ai-collaboration-framework | Methodology Extraction | Methodology Failure |
+| NRR-2026-010 | ai-collaboration-framework | Document Generation | Methodology Failure |
+| NRR-2026-011 | Kohli 2026 / CrossCheck | Multi-Model Collaboration | Ceiling Effect |
+| NRR-2026-012 | ai-collaboration-framework | Methodology Extraction | Abandoned Dead End |
+| NRR-2026-013 | ai-collaboration-framework | Methodology Extraction | Methodology Failure |
+| NRR-2026-014 | ai-collaboration-framework | Workflow Orchestration | Methodology Failure |
+| NRR-2026-015 | ai-collaboration-framework | Code Review | Methodology Failure |
+| NRR-2026-016 | Kuai et al. (2026) | Multi-Model Collaboration | Ceiling Effect |
+| NRR-2026-017 | Nájera et al. (2026) | Multi-Model Collaboration | Null Result |
+| NRR-2026-018 | CrossCheck (sburl) | Multi-Model Collaboration | Methodology Failure |
+| NRR-2026-019 | GitNexus | Benchmarking | Methodology Failure |
+| NRR-2026-020 | PocketFlow | Methodology Extraction | Ceiling Effect |
+| NRR-2026-021 | NPGS | Methodology Extraction | Methodology Failure |
+| NRR-2026-022 | NPGS | Methodology Extraction | Methodology Failure |
+<!-- AUTO_GENERATED_END -->
 
 ---
 

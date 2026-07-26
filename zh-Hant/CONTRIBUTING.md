@@ -21,8 +21,8 @@
 ### 步驟
 
 1. **Fork** 本倉庫
-2. 複製 `templates/submission.md` → 依照範本填寫
-3. 建立 `entries/NRR-YYYY-NNN/` 目錄（ID 使用目前最大編號 +1，例如現有最大編號為 NRR-2026-018，則使用 NRR-2026-019）
+2. 複製 `templates/submission-v2.md` → 依照範本填寫
+3. 建立 `entries/NRR-YYYY-NNN/` 目錄（ID 使用目前最大編號 +1；ID 由維護者在合併 PR 時分配，請先用臨時 slug）
 4. 放入 `.md`（供人閱讀）+ `.json`（供機器讀取，依 `schema/entry.schema.json` 驗證）
 5. JSON 驗證：
    ```bash
@@ -83,7 +83,7 @@
 - **改進 Schema**：增刪 `schema/entry.schema.json` 的欄位或調整限制 → Issue 討論 → PR
 - **改進分類體系**：`methodology.md` 中的領域／類型分類 → Issue 討論
 - **回報條目事實錯誤**：條目中的數字、引用等事實性錯誤 → Issue
-- **翻譯**：英文／正體中文翻譯 → 請見 `en/` 和 `zh-Hant/` 目錄
+- **翻譯**：英文／正體中文翻譯校訂 → 請見 `en/` 和 `zh-Hant/` 目錄
 
 ---
 

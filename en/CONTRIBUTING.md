@@ -21,8 +21,8 @@
 ### Steps
 
 1. **Fork** this repository
-2. Copy `templates/submission.md` → complete it according to the template
-3. Create an `entries/NRR-YYYY-NNN/` directory (use the current highest number +1 for the ID; for example, if the current highest is NRR-2026-018, use NRR-2026-019)
+2. Copy `templates/submission-v2.md` → complete it according to the template
+3. Create an `entries/NRR-YYYY-NNN/` directory (use the current highest number +1 for the ID; the ID will be assigned by the maintainer when merging the PR, so use a temporary slug first)
 4. Add a `.md` file (human-readable) + a `.json` file (machine-readable; validate it against `schema/entry.schema.json`)
 5. Validate the JSON:
    ```bash
@@ -83,7 +83,7 @@ If you are submitting an analysis of a negative result documented in someone els
 - **Improve the Schema**: Add or remove fields or adjust constraints in `schema/entry.schema.json` → discuss in an Issue → submit a PR
 - **Improve the Taxonomy**: Domain/type classifications in `methodology.md` → discuss in an Issue
 - **Report Factual Errors in an Entry**: Factual errors in an entry, such as numbers or citations → open an Issue
-- **Translate**: English/Traditional Chinese translations → see the `en/` and `zh-Hant/` directories (to be created)
+- **Translate**: English/Traditional Chinese translations → see the `en/` and `zh-Hant/` directories
 
 ---
 

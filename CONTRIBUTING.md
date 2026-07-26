@@ -83,7 +83,7 @@
 - **改进 Schema**：`schema/entry.schema.json` 的字段增删或约束调整 → Issue 讨论 → PR
 - **改进分类体系**：`methodology.md` 中的领域/类型分类 → Issue 讨论
 - **报告条目事实错误**：条目中的数字、引用等事实性错误 → Issue
-- **翻译**：英文/正体中文翻译 → 见 `en/` 和 `zh-Hant/` 目录（待创建）
+- **翻译**：英文/正体中文翻译校订 → 见 `en/` 和 `zh-Hant/` 目录
 
 ---
 

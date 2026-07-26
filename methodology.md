@@ -2,6 +2,7 @@
 
 [![中文](https://img.shields.io/badge/lang-中文-red)]()
 [![English](https://img.shields.io/badge/lang-English-blue)](en/methodology.md)
+[![正體中文](https://img.shields.io/badge/lang-正體中文-green)](zh-Hant/methodology.md)
 
 > 科学界有一个"文件抽屉问题"（file drawer problem）：阳性结果发表，阴性结果塞进抽屉。结果是发表偏倚——我们从文献中看到的永远是"什么有效"，很少看到"什么无效"。
 >

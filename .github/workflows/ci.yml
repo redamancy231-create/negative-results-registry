@@ -23,5 +23,8 @@ jobs:
       - name: Schema + internal links + registry consistency
         run: python scripts/validate_ci.py --skip-external-links
 
+      - name: README consistency with registry.json
+        run: python scripts/update_readme.py --check
+
       - name: External link check (advisory only)
         run: python scripts/check_external_links.py
