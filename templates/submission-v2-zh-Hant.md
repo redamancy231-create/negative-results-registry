@@ -37,7 +37,7 @@
 
 > **`domain` 如何選擇**：依主要研究對象選擇，而不是依偶然使用的工具選擇。`prompt-engineering`（prompt 內容／結構）、`code-review`（程式碼審查）、`methodology-extraction`（方法論提取）、`workflow-orchestration`（工作流程編排）、`document-generation`（檔案生成）、`multi-model-collaboration`（多模型協作）、`quantitative-research`（量化研究）、`academic-writing`（學術寫作）、`tool-building`（工具開發）、`skill-design`（Agent/Skill 設計）、`benchmarking`（基準測試）、`other`（皆不適用，須在方法中說明）。若橫跨多個領域，只選擇主要領域，其餘放入 `tags`。
 
-> **`category` 如何選擇**：依證據直接支持的主要結果選擇。`null-result`（未發現具實際意義的差異）、`ceiling-effect`（瓶頸限制了可達增益）、`worse-than-baseline`（劣於明確基線）、`failed-to-replicate`（未能重現既有陽性結果）、`methodology-failure`（方法／流程無法產出可信結論）、`abandoned-dead-end`（因成本、資料或可行性而停止，不宣稱無效）、`hypothesis-falsified`（證據與明確預測相反）、`tool-unfit-for-purpose`（工具無法滿足目標約束）、`other`（皆不適用，須加以解釋）。證據不足或樣本過少時，不要將「不確定」寫成 `null-result`。
+> **`category` 如何選擇**：依證據直接支持的主要結果選擇。`null-result`（未發現具實際意義的差異）、`ceiling-effect`（瓶頸限制了可達增益）、`worse-than-baseline`（劣於明確基線）、`failed-to-replicate`（未能重現既有正面結果）、`methodology-failure`（方法／流程無法產出可信結論）、`abandoned-dead-end`（因成本、資料或可行性而停止，不宣稱無效）、`hypothesis-falsified`（證據與明確預測相反）、`tool-unfit-for-purpose`（工具無法滿足目標約束）、`other`（皆不適用，須加以解釋）。證據不足或樣本過少時，不要將「不確定」寫成 `null-result`。
 ---
 ## 實驗概述
 ### 原始假設 `hypothesis`（必填，≤500 字元）
@@ -92,7 +92,7 @@ _（填寫）_
 | **備註 `reproducibility.notes`** | _≤500 字元；說明材料位置、缺漏項目、執行環境和版本漂移風險_ |
 ---
 ## 相關資訊
-### 後續陽性結果 `related_positive_result`（可選，≤500 字元）
+### 後續正面結果 `related_positive_result`（可選，≤500 字元）
 > 後來是否透過其他方法成功？寫下簡短說明及連結／條目 ID；若無，則在 .md 中寫「無」，並在 .json 中省略該欄位。
 
 _（填寫或「無」）_
