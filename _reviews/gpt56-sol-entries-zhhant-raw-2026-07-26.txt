@@ -1,0 +1,2021 @@
+Model: GPT-5.6-Sol
+
+=== FILE: entries/NRR-2026-001/NRR-2026-001-zh-Hant.md ===
+# NRR-2026-001: Prompt-TDD A2 — prep/exec/post 三段式分段對審查品質無顯著影響
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-001 |
+| **標題** | Prompt 三段式分段（prep/exec/post）對程式碼審查品質無顯著影響 |
+| **領域** | prompt-engineering |
+| **分類** | null-result |
+| **提交者** | Acerolaorion |
+| **來源專案** | prompt-tdd-methodology |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-22 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 將程式碼審查 prompt 按 prep（規範載入）/ exec（逐檔案審查）/ post（交叉驗證）三段結構化分段，預期能提升 GPT-5.5 在多檔案程式碼審查中的發現品質——相比單段"全部規範+全部檔案一起審"的基線 prompt。
+
+### 方法
+
+Prompt-TDD 對照實驗設計：
+- **實驗組**：prep/exec/post 三段式 prompt（A2 變體）
+- **對照組**：單段綜合 prompt（A2 基線）
+- **任務**：對同一程式碼庫進行多檔案審查，記錄發現數量、嚴重程度、誤報率
+- **樣本量**：n=24/臂
+- **跨模型重現**：GPT-5.5 主實驗 + Qwen3.7-Max 獨立重現
+- **評估**：雙 LLM 異後端盲評（審查者不知哪組是實驗組）
+
+### 預期結果
+
+> 三段式 prompt 應產生更多高品質發現、更少誤報。預期效應量 d ≥ 0.3（小到中）。
+
+### 實際結果
+
+兩組在發現數量、嚴重程度分佈、誤報率上均無顯著差異。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | d ≈ 0.03（trivial） |
+| 樣本量 | n=24/臂 × 2 個模型重現 |
+| 使用的模型 | GPT-5.5, Qwen3.7-Max |
+| 重現一致性 | Qwen 重現 Δ = −0.014，方向一致（均為零） |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+最可能的解釋是**任務型別決定了 prompt 變異的效應量上限**。程式碼審查是一個結構化判別任務——審查者按明確的規範逐條檢查。在這種任務中，prompt 的"包裝"（分段還是單段）對輸出品質的影響遠小於任務本身的約束力。換言之：當規範足夠明確時，prompt 怎麼寫沒那麼重要。
+
+### 學到了什麼？
+
+1. **結構化判別任務上 prompt 變異效應近零**——與開放式生成任務（翻譯、寫作）形成對比，後者 prompt 變異效應更大
+2. **規範本身比 prompt 結構更重要**——把精力放在寫好審查規範，而非 prompt 的段落組織
+3. **陰性結果需要跨模型重現**——GPT-5.5 的零效應可能是單模型噪聲，Qwen 重現確認了效應的確為零
+4. **實驗設計的"工程門/科學門"拆分有價值**——即使實驗結果是陰性，實驗結構本身是可複用的
+5. **效應量預估應在實驗前做 ceiling probe**——如果早知道結構化判別的天花板效應，可能不會對這個方向抱太大期望
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, data, code, analysis-script |
+
+> 完整實驗管線在 [prompt-tdd-methodology](https://github.com/redamancy231-create/prompt-tdd-methodology) 倉庫。可重跑程式碼（repeatable），但重現取決於 GPT-5.5/Qwen3.7-Max 模型版本——API 模型別名指向的後端可能已升級，結果可能不同。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+無直接後續。A2 的陰性結果 + A3 的陰性結果共同導致了"Prompt-TDD 方法論作為案例手冊而非工具庫發布"的決策——陰性結果的價值在於幫我們決定**不做什麼**。
+
+### 相關連結
+
+- [Prompt-TDD 方法論倉庫](https://github.com/redamancy231-create/prompt-tdd-methodology)
+- [A2 案例資料](https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a2-prep-exec-post)
+- [NRR-2026-002](../NRR-2026-002/NRR-2026-002.md) — 同專案的 A3 陰性結果
+
+### 標籤
+
+`prompt-tdd`, `GPT-5.5`, `Qwen3.7-Max`, `code-review`, `对照实验`, `零结果`, `prep-exec-post`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-002/NRR-2026-002-zh-Hant.md ===
+# NRR-2026-002: Prompt-TDD A3 — 宣告式路由 vs 自然語言路由無差異
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-002 |
+| **標題** | 宣告式 action routing 比自然語言 routing 在 agent 路由決策上無優勢 |
+| **領域** | prompt-engineering |
+| **分類** | null-result |
+| **提交者** | Acerolaorion |
+| **來源專案** | prompt-tdd-methodology |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-22 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 宣告式 action routing（YAML/JSON 結構定義可選 action → 精確匹配）預期優於自然語言 routing（自然語言描述可選 action → 語義匹配），因為宣告式格式減少了 LLM 對 action 語義的歧義解讀空間。
+
+### 方法
+
+Prompt-TDD 對照實驗設計（Pilot 階段）：
+- **實驗組**：宣告式 action routing prompt（YAML 結構定義 actions，嚴格匹配）
+- **對照組**：自然語言 routing prompt（自然語言描述 actions，語義匹配）
+- **任務**：Claude Code agent 在多步任務中自主選擇 action（檔案操作、搜尋、執行等）
+- **樣本量**：Pilot 15 cases（實驗設計階段——Tier 0，未進入 Tier 1 推斷統計）
+- **評估**：路由準確率 + 任務完成率
+
+### 預期結果
+
+> 宣告式 routing 應減少 action 選擇錯誤率，預期路由準確率提升 ≥10%。
+
+### 實際結果
+
+Pilot 15 cases 中，兩組路由準確率和任務完成率無顯著差異。效應量不足以支援進入 Tier 1 全規模實驗。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | Pilot 階段差異不顯著（未進入推斷統計） |
+| 樣本量 | 15 cases（Pilot） |
+| 使用的模型 | GPT-5.5（via Codex CLI） |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+兩個可能解釋：
+1. **LLM 已是足夠好的語義路由器**——自然語言描述 action 時，LLM 的語義理解能力足以消除歧義，宣告式格式帶來的額外精確度是冗餘的
+2. **Pilot 樣本太小**——15 cases 可能不足以檢測小效應。但 Pilot 的設計目標就是在低成本階段判斷是否值得投入全規模實驗——答案是"不值得"
+
+### 學到了什麼？
+
+1. **"格式=精確度"的直覺假設不全對**——寫程式碼時宣告式 > 自然語言，但 LLM 作為語義引擎反而可能消化自然語言更自然
+2. **Pilot 的價值在於止損**——15 cases 就判斷了不進入 Tier 1，節省了 ~4h 實驗執行 + ~2h 審查時間
+3. **陰性 Pilot 也是成功**——A3 在方法論手冊中被標記為"如何閉合無訊號實驗"的**反例**，這個教學價值比正面結果更獨特
+4. **和 A2 之間的一致性值得注意但不等於領域級結論**——A2（n=24對照）和 A3（n=15 Pilot）在各自條件下均未檢出差異，形成待檢驗的元假設；需預註冊、多工、充分功效的彙總研究才能做總體判斷
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, analysis-script |
+
+> 完整 Pilot 設計和 prompts 在 [prompt-tdd-methodology](https://github.com/redamancy231-create/prompt-tdd-methodology) 倉庫。可重跑程式碼，但重現取決於 GPT-5.5 模型版本，API 升級可能導致路由行為變化。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+無直接後續。A3 被用作"如何閉合無訊號實驗"的教學反例——這個角色比原始實驗目的（證明宣告式路由更好）更有長期價值。
+
+### 相關連結
+
+- [Prompt-TDD 方法論倉庫](https://github.com/redamancy231-create/prompt-tdd-methodology)
+- [A3 案例資料](https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a3-action-routing)
+- [NRR-2026-001](../NRR-2026-001/NRR-2026-001.md) — 同專案的 A2 陰性結果
+
+### 標籤
+
+`prompt-tdd`, `GPT-5.5`, `agent-routing`, `声明式-vs-NL`, `对照实验`, `Pilot`, `零结果`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-003/NRR-2026-003-zh-Hant.md ===
+# NRR-2026-003: 方法論提取 — 22 個專案中 0 個模式達到 ≥3 來源穩定門檻
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-003 |
+| **標題** | 22 個來源專案系統提取可複用方法論模式——無一達到 ≥3 來源穩定門檻 |
+| **領域** | methodology-extraction |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | methodology-extraction-methodology |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-16 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 從 22 個專案（11 個外部分析 + 7 個自建公開 + 4 個自建未公開）中系統提取 AI 協作的方法論模式。預期至少可識別 5–8 個跨 ≥3 來源專案的穩定模式，形成"方法論提取框架 v0.1"。
+
+### 方法
+
+八階段系統提取流程（Phase 0-7）：
+- **來源專案**：22 個（11 外部開源/論文分析 + 11 自建）
+- **提取方法**：每個專案獨立出證據卡 → 跨專案聚類 → 模式候選 → G5 追溯審計
+- **穩定門檻**：≥3 個來源專案獨立出現
+- **審查**：10 輪審查跨 GPT-5.5 / Kimi-K2.7 / Qwen3.7-Max / GLM-5.2 四種後端
+- **元審查**：Kohli (2026-05) 獨立性框架 → 有效獨立視角約 2-3 個
+
+### 預期結果
+
+> 5-8 個方法論模式達到 ≥3 來源穩定門檻，形成可發布的"方法論提取框架 v0.1"。
+
+### 實際結果
+
+**G5 可追溯審計結論：所有 5 元件均未達到 ≥3 來源穩定門檻。** 22 個來源專案不足以支撐泛化的方法論模式提取。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | N/A（閾值未達到——0/5 元件通過） |
+| 樣本量 | 22 個專案（11 外部 + 11 自建） |
+| 使用的模型 | GPT-5.5, Kimi-K2.7, Qwen3.7-Max, GLM-5.2 |
+| 審查發現 | Phase 5 雙輪正交審查 33 項發現 **0 重疊** |
+| 有效獨立視角 | 約 2-3（按 Kohli 2026-05 框架） |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+三個系統性問題疊加：
+1. **樣本同質性**：所有專案的提取和審查由同一操作者執行。來源專案雖涉及不同領域（量化金融、程式碼審查、檔案生成），但操作者的方法論自覺程度高度相關——沒有獨立的"對照樣本"
+2. **n=22 太小**：提取跨專案模式需要的樣本量遠大於 22——尤其是專案差異性大（有的是幾萬行程式碼、有的是純檔案）
+3. **穩定門檻定義過嚴**：≥3 個來源可能對方法論文獻提取來說門檻太高——學術文獻的跨研究模式提取通常需要 30-50 篇
+
+### 學到了什麼？
+
+1. **方法論提取比預期難一個數量級**——22 個專案看起來很多，實際遠遠不夠
+2. **操作者獨立性是瓶頸**——如果所有來源專案的提取者是同一個人，模式發現會被這個人的認知偏好系統性約束
+3. **"提取不出來"和"不存在"是兩回事**——22 專案 0 模式達標 ≠ 沒有可提取模式，可能是方法不夠好
+4. **過程比結果有價值**——審查鏈（雙輪 33 發現 0 重疊 + 4 後端收斂實證）的學術價值超出了框架本身的產出
+5. **誠實的陰性結果有獨立價值**——專案的核心交付物從"方法論提取框架"變成了"一篇關於'這件事有多難'的誠實報告"
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, logs, analysis-script, raw-output |
+
+> 11 張公開證據卡在 [methodology-extraction-methodology/explorations/](https://github.com/redamancy231-create/methodology-extraction-methodology/tree/main/explorations)，10 輪審查報告在 `reviews/`，G5 審計在 `synthesis/phase4_traceability_audit.md`。11 個未公開來源專案的詳細證據卡不在公開倉庫中。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+無直接後續。專案在 v0.1 trial 狀態封存，結論是"我們證明了這件事有多難，但還沒有做到這件事該怎麼做"。框架本身作為一個"不可行性證明"（impossibility demonstration）有獨立價值。
+
+### 相關連結
+
+- [方法論提取方法論倉庫](https://github.com/redamancy231-create/methodology-extraction-methodology)
+- [G5 可追溯審計](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/synthesis/phase4_traceability_audit.md)
+- [閉合後外部驗證附錄](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md)
+- [NRR-2026-001](../NRR-2026-001/NRR-2026-001.md) — Prompt-TDD A2（同操作者的另一個陰性結果）
+
+### 標籤
+
+`方法论提取`, `框架构建`, `跨项目模式`, `方法论失败`, `G5审计`, `审查链`, `22项目`, `不可行性证明`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-004/NRR-2026-004-zh-Hant.md ===
+# NRR-2026-004: mmdc 渲染 PNG 無 DPI 元資料 → python-docx 預設 72 DPI 致圖片 ~4 倍拉伸
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-004 |
+| **標題** | mermaid-cli 渲染 PNG 不含 DPI 元資料，python-docx 預設 72 DPI 致圖片 ~4 倍拉伸截斷 |
+| **領域** | document-generation |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | docx-pipeline |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> mermaid-cli（mmdc）是 Mermaid 圖表渲染的事實標準工具——預期其 PNG 輸出在 python-docx → DOCX 管線中可直接嵌入使用，無需額外 DPI 後處理。
+
+### 方法
+
+DOCX Pipeline 專案的 Mermaid → DOCX 管線（AI 輔助開發環境下發現的問題）：
+1. 在 Markdown 中檢測 ` ```mermaid ` 程式碼區塊
+2. 按設定的 DPI（預設 300）計算畫素寬度 → 呼叫 `mmdc --width <px>` 渲染為 PNG
+3. 透過 python-docx（v1.2.0）的 `add_picture()` 將 PNG 嵌入 DOCX
+4. 在 Word 中開啟驗證視覺效果
+
+### 預期結果
+
+> PNG 以預期尺寸（約頁面寬度 80-100%）嵌入 DOCX，Word 中正常顯示。
+
+### 實際結果
+
+PNG 在 DOCX 中顯示為 **~4 倍拉伸**——圖片超出頁面邊界，被截斷。根因鏈：
+
+1. **mmdc 渲染的 PNG 不含 DPI 元資料**（mmdc 沒有 `--dpi` 參數，`--width` 只控制渲染寬度，不寫入 PNG 的 pHYs chunk）
+2. **python-docx 對無 DPI 元資料的圖片預設按 72 DPI 計算嵌入尺寸**（不是 Word 的 96 DPI 螢幕密度——python-docx 寫入顯式 EMU 尺寸，Word 直接使用）
+3. 300 DPI 的點陣圖 ÷ 72 DPI 尺寸計算 → 物理尺寸膨脹 ~4.17 倍（300/72）
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 物理尺寸膨脹 ~4.17×（300 DPI 畫素 ÷ 72 DPI python-docx 預設值） |
+| 樣本量 | 所有含 Mermaid 圖表的 DOCX 檔案（專案初期 100% 重現） |
+| 使用的工具 | mermaid-cli (mmdc), python-docx v1.2.0, Microsoft Word |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+**工具鏈多層互操作契約中相鄰環節的隱性假設不相容。** 不是任何一個工具的單點 bug——mmdc 正確地渲染了指定寬度的畫素（`--width` 控制渲染寬度），python-docx 正確地按 72 DPI 預設值計算了無元資料圖片的嵌入尺寸。問題出在兩個工具的契約之間缺少一個 DPI 注入步驟——而管線設計者預設了"mmdc PNG 輸出 = python-docx 可直接嵌入"。這是管線設計的方法論問題，不是單個工具的適用性問題。
+
+### 學到了什麼？
+
+1. **工具鏈的每個環節須做端到端互操作假設驗證**——"A 的輸出 = B 的輸入"這個預設假設在每個新工具組合中都必須驗證
+2. **視覺驗證不可跳過**——純程式碼審查檢測不到 DPI 元資料缺失；必須開啟 Word 目視確認最終渲染效果
+3. **隱性預設值是整合 bug 溫床**——mmdc 不寫 pHYs chunk 和 python-docx 預設 72 DPI 各自單獨合理，組合即成 bug
+4. **修復只需一行 Pillow 程式碼**——`image.save(path, dpi=(300,300))`；但診斷靠目視發現而非程式碼審查，發現成本遠高於修復成本
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | code |
+
+> **可重現條件**：需要 mmdc + python-docx v1.2.0 + Pillow 環境。python-docx 的預設 DPI 行為（72）在不同版本間一致，但不同版本的 `add_picture()` 對 DPI 缺失圖片的處理可能不同。修復程式碼在 [docx-pipeline](https://github.com/redamancy231-create/docx-pipeline) 的 `docx_pipeline/renderers/mermaid_renderer.py` 中（`_inject_dpi()` 方法）。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+✅ 修復成功。渲染後用 Pillow 讀取 PNG → `image.save(path, "PNG", dpi=(300, 300))` 寫入 pHYs chunk → python-docx 按 300 DPI 計算嵌入尺寸 → 圖片在 Word 中以正確尺寸顯示。
+
+### 相關連結
+
+- [DOCX Pipeline 倉庫](https://github.com/redamancy231-create/docx-pipeline)
+- [LLM 審查三類盲區（含渲染效果盲區）](https://github.com/redamancy231-create/methodology-handbook) — 對應記憶 `methodology_llm_review_blind_spots_rendering_paths`
+
+### 標籤
+
+`docx-pipeline`, `mermaid-cli`, `mmdc`, `DPI`, `PNG`, `Word`, `工具链`, `元数据`, `端到端验证`, `视觉bug`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-005/NRR-2026-005-zh-Hant.md ===
+# NRR-2026-005: Amdahl's Law — C++ 53× 加速塌縮至批次 2.2×
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-005 |
+| **標題** | C++ 加速 53× 塌縮至批次 2.2×——Amdahl's Law 將端到端加速釘死在 ~2.25× 理論上限 |
+| **領域** | tool-building |
+| **分類** | ceiling-effect |
+| **提交者** | Acerolaorion |
+| **來源專案** | etf-pattern-match-pybind11 |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-12 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 用 pybind11 + C++20 加速形態匹配 ETF 策略的純計算核心後，批次工作負載應獲得接近單次呼叫層級的端到端加速（預期 10-30×）。
+
+### 方法
+
+將 Python 純計算核心（DTW、形態匹配、技術指標）遷移至 C++，透過 pybind11 暴露。分別測量 (a) 單次呼叫 Python vs C++、(b) 100 時間點批次 Python vs C++ batch、(c) 100 次 C++ 單次 vs 1 次 C++ 批次。從 V3.3.py（3836 行）提取純計算模組，排除相依於 sklearn/scipy/pandas 的函式。
+
+### 預期結果
+
+> DTW 單次 ≥10×、形態匹配單次 ≥30×、批次端到端 ≥10×。
+
+### 實際結果
+
+DTW 單次 34×、形態匹配單次 53× 均超過預期。但 **批次端到端僅 2.2×**——遠低於單次加速比。根因：批次工作量僅 **~56% 可加速**（p≈0.556），44% 為序列額外負擔。理論加速上限 1/(1-p)≈2.25×，實測 2.2× 已逼近天花板。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 單次 53× → 批次 2.2×（衰減 24×）；理論上限 ≈2.25× |
+| 樣本量 | 100 次 warm-up + 100 次計時中位數 × 6 函式 |
+| 序列比例 | 44%（Python 迴圈 15% + 資料轉換 15% + pybind11 呼叫 8% + 特徵計算 6%） |
+| 使用的模型 | DeepSeek-V4-Pro, Kimi-K2.7-Code |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+**這是 Amdahl's Law 的教科書級範例。** 單次加速 53× 並非"錯誤"——53× 和 2.2× 都是準確測量，只是測量對象不同。53× 測的是純計算熱路徑（14.0ms→0.26ms），2.2× 測的是端到端批次吞吐（50ms→23ms，其中包含不可加速的編排、資料搬運、Python/C++ 邊界額外負擔）。這不是 bug——是架構天花板。
+
+### 學到了什麼？
+
+1. **Amdahl's Law 不是理論抽象**——實測 2.2× vs 上限 2.25× 證明在量化計算場景中數學建模與實際測量高度吻合
+2. **"單次加速比"和"端到端加速比"是完全不同的指標**——前者表徵計算效率，後者表徵使用者可感知的吞吐提升
+3. **44% 序列額外負擔精確分解為 4 類**（迴圈/轉換/呼叫/特徵），每類對應不同的最佳化策略
+4. **達到 10× 端到端需 92% 可加速**——比 C++ 遷移更根本的可能是架構重構
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | fully-reproducible |
+| **可用產物** | code, data, analysis-script, raw-output |
+
+> 完整基準測試程式碼、Amdahl 數學推導和效能分析在 [etf-pattern-match-pybind11](https://github.com/redamancy231-create/etf-pattern-match-pybind11) 倉庫的 `docs/performance-analysis.md` 和 `benchmarks/` 中。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+單次呼叫加速 34-53× 是成功的——批次塌縮不否定單次加速的工程價值。可能的改進方向：將 Python for 迴圈和 NumPy 轉換移入 C++。
+
+### 相關連結
+
+- [ETF Pattern Match — pybind11 倉庫](https://github.com/redamancy231-create/etf-pattern-match-pybind11)
+- [效能分析短文（含完整 Amdahl 數學推導）](https://github.com/redamancy231-create/etf-pattern-match-pybind11/blob/master/docs/performance-analysis.md)
+
+### 標籤
+
+`Amdahl`, `pybind11`, `C++`, `性能`, `加速塌缩`, `批量`, `理论上限`, `架构天花板`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-006/NRR-2026-006-zh-Hant.md ===
+# NRR-2026-006: M&A 管線自評 106% vs 獨立雙盲審 69.2
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-006 |
+| **標題** | AI 自我評估的樂觀偏誤約 11%——M&A 管線自評 106% vs 獨立雙盲審 69.2（差距 36.8 分） |
+| **領域** | academic-writing |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | ma-case-study-pipeline |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-21 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 多模型學術管線（5 模型 × 8 階段 × 交叉盲審）產出的論文，在 Phase 4 總裝階段經過自我品質評估後，預期品質接近可送審標準（≥80/100），且自評與後續獨立審查的偏差應在可接受範圍（≤15 分）。
+
+### 方法
+
+M&A 案例研究管線 Phase 4（Claude Opus 4.7 總裝）完成後進行專案檢討自評（v2.0 歸檔時聲稱三個"亮點"）。隨後 Phase 5A（GPT-5.5 合規事實層）+ Phase 5B（GLM-5.1 學術規範層）進行獨立雙盲審（評審者不知自評分數，未參與任何先前階段）。
+
+### 預期結果
+
+> 自評與獨立審查偏差 ≤15 分，總裝品質 ≥80/100。
+
+### 實際結果
+
+Phase 5A 評分 **68/100（退回重寫）**，Phase 5B 評分 71/100（修改後通過）。加權總分 **69.2**。與自評的三個"亮點"對比：
+- "資料勾稽合理"→ 商譽 289.34 vs 289.04 矛盾（硬傷）
+- "CAR 穩健"→ 長視窗 42.16% 遠高於短視窗 18.45%（資訊洩露警訊）
+- "杜邦到位"→ 8.63%≠10.42%（加權 vs 期末口徑混用）
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 自評→獨立盲審差距 36.8 分；三處自評"亮點"全部被證偽為硬傷 |
+| 樣本量 | 1 篇論文 × 2 獨立評審者 × 加權評分 |
+| 使用的模型 | Claude Opus 4.7, GPT-5.5, GLM-5.1, Kimi-K2.6, Qwen |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+**系統性的自我評估樂觀偏誤。** 操作者（同時也是評估者）對自己參與建置的專案容易作出過度樂觀的判斷。根本機制：同一 AI 不應同時擔任設計者、執行者、驗證者和評分官——但管線 Phase 4 的自評環節違反了這個原則。自評"亮點"在獨立盲審下系統性轉化為硬傷——不是偶然失誤，是同一角色身兼多職的必然結果。
+
+### 學到了什麼？
+
+1. **同一 AI 或同一操作者不應同時擔任設計者、執行者、驗證者和評分官**——M&A 管線 Phase 4 的自評環節違反了自己的五條鐵律
+2. **自評"亮點"在獨立盲審下系統性轉化為硬傷**——資料勾稽、CAR、杜邦三個自認的亮點無一倖免
+3. **自我評估的樂觀偏誤並非個案**——methodology-handbook 中記錄的 ~11% 偏差在本專案中以 36.8 分的極端形式重現
+4. **三處硬傷被反覆診斷但從未修復（Phase 9 從未執行）**——"診斷不落地 = 白診斷"
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, logs, raw-output |
+
+> 完整雙盲審報告在 M&A 倉庫 `phases/phase5a_gpt5.5/` 和 `phases/phase5b_glm5.1/`。重現需要相同的模型版本和角色分配。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+修訂後重評總分 84.0。但三處已知缺陷決定不修，Phase 9 從未執行——修訂證明獨立審查有效，但核心閉環未閉合。
+
+### 相關連結
+
+- [M&A Case Study Pipeline](https://github.com/redamancy231-create/ma-case-study-pipeline)
+- [專案檢討歸檔報告（v3.0）](https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/项目复盘归档报告.md)
+- [起點評估分析（含紅隊對抗命題）](https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/起点评估分析.md)
+
+### 標籤
+
+`自评偏乐观`, `双盲审`, `学术流水线`, `独立审查`, `方法论失败`, `诊断不落地`, `自我评估偏差`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-007/NRR-2026-007-zh-Hant.md ===
+# NRR-2026-007: AI 自審查漏掉死亡判據順序 bug
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-007 |
+| **標題** | AI 自審查漏掉死亡判據順序 bug——Claude 的對抗式自檢未能檢測到 Codex 一眼看到的硬傷 |
+| **領域** | skill-design |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | claude-skills |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-06 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> Claude（DeepSeek-V4-Pro，即 kill-test-first Skill 的設計者）對自己的 Skill 進行對抗式自檢後，預期能找出所有結構性缺陷——尤其是直接違反 Skill 自身核心原則（預登記：死亡判據必須在看到結果前制定）的錯誤。
+
+### 方法
+
+kill-test-first Skill 的設計者完成了 Skill 初版後，進行了對抗式自檢。隨後將 Skill 提交給 Codex CLI（GPT-5.5，不同後端，零涉入）進行獨立審查。對比自檢發現 vs 獨立審查發現。Qwen3.7-Max 執行第二輪獨立審查。
+
+### 預期結果
+
+> 自檢應找出所有 MAJOR 及以上結構性缺陷；獨立審查的增量發現應為 MINOR/MODERATE 層級。
+
+### 實際結果
+
+**Codex 第一輪發現 5 個硬傷**，最關鍵的是死亡判據順序 bug——Skill 門 1 協議將"制定死亡判據"放在"看到實驗結果"之後，直接違背預登記核心原則。Claude 的自檢完全漏掉了這個 bug。Qwen 第二輪又新發現 REDESIGN 可逃避 STOP + 三態裁決未覆蓋所有象限。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 自檢 0 個 MAJOR → Codex 5 個硬傷（含 1 個直接違背核心原則的順序 bug）→ Qwen 第二輪 +2 個新問題 |
+| 樣本量 | 1 個 Skill × 3 輪審查（1 自檢 + 2 獨立） |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5, Qwen3.7-Max |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+**同一後端自我審查存在結構性盲區。** 不是 Claude 能力不足——死亡判據順序 bug 之所以被漏掉，正是因為設計者自己的思維已經固化在"當然要先看結果再判死刑"的直覺中——而這恰恰是預登記要對抗的認知偏差。不同後端（GPT-5.5）沒有這個思維慣性，一眼就看到矛盾。
+
+### 學到了什麼？
+
+1. **同一後端自我審查存在結構性盲區**——設計者的思維慣性會遮蔽違背自身設計直覺的錯誤
+2. **死亡判據順序 bug 是最危險的 bug 型別**——不是邏輯錯誤，是設計者認知偏差的直接投射
+3. **兩輪異後端審查的價值超過同後端多輪**——Codex（結構性問題）+ Qwen（邊界條件）的互補性遠超兩輪同後端
+4. **Skill 自身的死亡判據原則在本案例中被驗證有效**——"用它自己的藥——出現即棄用/重構"
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, logs, raw-output |
+
+> 完整審查記錄在 [claude-skills](https://github.com/redamancy231-create/claude-skills) 的 `kill-test-first/EXAMPLES.md` 案例 2。三版迭代的 prompts 和審查報告均保留。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+全部修復。Codex 第二輪審查確認全部閉合。核心教訓：異後端獨立審查的必要性被直接證實。
+
+### 相關連結
+
+- [Claude Skills 倉庫](https://github.com/redamancy231-create/claude-skills)
+- [Kill-Test-First EXAMPLES（案例 2）](https://github.com/redamancy231-create/claude-skills/blob/main/kill-test-first/EXAMPLES.md)
+
+### 標籤
+
+`自审盲区`, `kill-test-first`, `Codex审查`, `死亡判据`, `预登记`, `顺序bug`, `独立审查`, `Skill设计`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-008/NRR-2026-008-zh-Hant.md ===
+# NRR-2026-008: LLM 程式碼審查系統性漏掉 3 類 bug
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-008 |
+| **標題** | LLM 程式碼審查系統性漏掉 3 類 bug——渲染效果、預設路徑、終端機編碼全數躲過審查 |
+| **領域** | code-review |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | docx-pipeline |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-17 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 多輪 LLM 程式碼審查（跨 5 種後端 + 多維度審查 prompt）應能檢測到專案中的功能性 bug——預期覆蓋率接近 100%。
+
+### 方法
+
+對 docx-pipeline 專案進行了 5 輪跨模型審查（GPT-5.6-Sol 主審），覆蓋程式碼正確性、設定契約、安全性、檔案完整性等維度。事後透過人工端到端測試（目視驗證 + Windows Git Bash 真實環境執行）獨立檢測實際 bug。
+
+### 預期結果
+
+> LLM 審查應找出全部或幾乎全部功能性 bug；遺漏率預期 <10%。
+
+### 實際結果
+
+**LLM 審查（5 輪）完全漏掉了 3 個實際存在的 bug，遺漏率 100%：**
+
+1. **渲染效果 bug**：Mermaid PNG 在 Word 中 ~4× 拉伸——程式碼審查只看畫素數量，看不到 DPI 元資料缺失
+2. **預設路徑 bug**：空白範本預設值 `output/docx` 無副檔名，"init→convert"完整流程中斷——審查者看單點程式碼邏輯正確
+3. **終端機編碼 bug**：gh CLI 中文檔名在 Windows Git Bash 下 GBK/UTF-8 轉換失敗——審查者看不到終端機環境
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 3/3 類 bug 全數躲過 LLM 審查（遺漏率 100%） |
+| 樣本量 | 5 輪審查 × 1 個專案 × 3 類實測 bug |
+| 使用的模型 | GPT-5.6-Sol, GPT-5.5, Kimi-K2.7, Claude Opus 4.8 |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+**LLM 審查存在三類系統性盲區，共享一個特徵：bug 不出現在原始碼的邏輯層面，而出現在相鄰工具鏈的互動契約中。** 渲染效果 bug 需要目視確認最終輸出、預設路徑 bug 需要端到端走完整流程、終端機編碼 bug 需要在真實作業系統環境中才能暴露。程式碼審查——無論多輪多模型——只能回答"程式碼說了什麼"，不能回答"程式碼在真實環境中做了什麼"。
+
+### 學到了什麼？
+
+1. **LLM 審查無法替代端到端目視驗證**——渲染效果、預設路徑、終端機編碼三類 bug 全部逃脫了 5 輪跨模型審查
+2. **三類盲區的共性**：bug 不在原始碼邏輯層面，而在相鄰工具鏈的隱性互動契約中
+3. **純程式碼審查覆蓋率 ≠ 真實 bug 檢測率**——審查者看到"程式碼說了什麼"，看不到"程式碼在真實環境中做了什麼"
+4. **發現成本遠高於修復成本**——三個 bug 的修復總計不到 20 行程式碼，但診斷靠人工端到端測試而非 LLM 審查
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, raw-output |
+
+> 回顧分析記錄在 [docx-pipeline/_reviews/retrospect_2026-07-17.md](https://github.com/redamancy231-create/docx-pipeline/blob/main/_reviews/retrospect_2026-07-17.md)。重現需要相同工具鏈版本（mmdc, python-docx v1.2.0, Windows Git Bash）。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+三個 bug 事後全部修復。但核心啟示不變：AI 輔助開發的測試策略需要補充"執行環境端到端測試"，不能僅依靠 LLM 程式碼審查。
+
+### 相關連結
+
+- [DOCX Pipeline 倉庫](https://github.com/redamancy231-create/docx-pipeline)
+- [回顧報告（含三類盲區詳細分析）](https://github.com/redamancy231-create/docx-pipeline/blob/main/_reviews/retrospect_2026-07-17.md)
+- [LLM 審查三類盲區（methodology-handbook）](https://github.com/redamancy231-create/methodology-handbook)
+
+### 標籤
+
+`LLM审查盲区`, `代码审查`, `渲染bug`, `默认路径`, `终端编码`, `端到端验证`, `目视确认`, `审查覆盖率`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-009/NRR-2026-009-zh-Hant.md ===
+# NRR-2026-009: 框架 v1.3.2 草案被 Codex 駁回（4.3/10）
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-009 |
+| **標題** | 框架 v1.3.2 草案被 Codex 駁回（4.3/10）——8 項結構性失敗，含 boost -= (-0.15) 符號錯誤 |
+| **領域** | methodology-extraction |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | ai-collaboration-framework |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-14 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 基於 v1.3 框架結構設計的 §3.7 訊號熵檢測器擴充草案，經作者自檢後預期可通過獨立審查（評分 ≥6/10）。
+
+### 方法
+
+基於 v1.3 主檔案結構編寫了 §3.7 擴充草案，引入 signal_entropy、boost 調整、auto-suppress/auto-explore 機制。提交給 Codex CLI（GPT-5.5）進行零涉入獨立審查，覆蓋 8 個檢查維度。
+
+### 預期結果
+
+> 獨立審查評分 ≥6/10，發現為 MODERATE 層級，可經過一輪修訂進入主檔案。
+
+### 實際結果
+
+**Codex 評分 4.3/10，駁回。** 8 項結構性失敗：
+
+1. 版本錯位——草案基於過期 v1.3 結構，主檔案已為 v1.5
+2. 自動干預違反核心約束——auto-suppress/auto-explore 違反"只觀測不阻斷"
+3. **boost -= (-0.15) 符號錯誤**——負負得正，失敗反而加 0.15 分
+4. 假去隱喻化——宣告"已去隱喻"但保留 Gene/Capsule/Event 等 9+ 術語
+5. 4,590 證據膨脹——retained analyses 被包裝為"對照試驗"
+6. REO schema 無形式化——僅有範例物件
+7. A/B 測試設計無法執行——無樣本量/統計方法
+8. 數值來源不可驗證——來自混淆程式碼（javascript-obfuscator）
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 評分 4.3/10（REJECTED）；8/8 檢查維度全部失敗 |
+| 樣本量 | 1 個草案 × 1 獨立審查者 × 8 檢查維度 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5 |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+8 項失敗按根因分四類：(a) **流程性**——未同步主檔案版本就動手寫草案；(b) **概念性**——把"檢測"偷換為"自動干預"，違反框架核心約束；(c) **技術性**——符號錯誤（負負得正）；(d) **誠實性**——聲稱去隱喻化但術語殘留、retained analyses 包裝為 RCT、混淆程式碼數值當作可信參數。
+
+### 學到了什麼？
+
+1. **版本錯位是最低階的結構性失敗**——基於過期主檔案結構寫的草案，章節編號全部失效
+2. **"只觀測不阻斷"是框架核心約束**——從"檢測"滑向"自動干預"只差一步
+3. **boost -= (-0.15) 是符號錯誤的教科書案例**——負負得正，失敗反而加分
+4. **來源品質獨立於提取品質**——混淆程式碼中的數值不可獨立審計
+5. **聲稱與執行之間的差距**（"已去隱喻" vs 9+術語殘留）是最容易自我欺騙的失敗模式
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, logs, raw-output |
+
+> 完整審查報告和修正路線圖在 [ai-collaboration-framework/_reviews/](https://github.com/redamancy231-create/ai-collaboration-framework) 和 `_research/drafts/`。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+修正後 v1.5.1 草案通過 Codex 第二輪審查（7.2/10, PASS WITH MODIFICATIONS）。boost 符號修正、自動干預改為 dry-run only。
+
+### 相關連結
+
+- [AI 協作框架](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [v1.3.2 Codex 審查報告（4.3/10）](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/框架v1.3.2_Codex审查报告.md)
+
+### 標籤
+
+`驳回草案`, `Codex审查`, `符号错误`, `版本错位`, `去隐喻化`, `证据膨胀`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-010/NRR-2026-010-zh-Hant.md ===
+# NRR-2026-010: 三件組同步不對稱漂移
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-010 |
+| **標題** | 三件組同步不對稱漂移——.md→.json 定點修補 vs .md→.docx 完整重新生成，跨會話接力時 .json 系統性漏掉 prose 訂正 |
+| **領域** | document-generation |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | ai-collaboration-framework |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-24 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> .md（權威源）→ .json + .docx 的三件組同步協議應保證三種格式的內容一致性。版本門（O6）PASS 即表示三件組一致。
+
+### 方法
+
+AI 協作框架 v1.6.4 發布前執行了 O6 版本門（`verify_version_consistency.py`），然後由 Codex（GPT-5.5）執行異後端三件組交叉審查——逐章節比對內容一致性。
+
+### 預期結果
+
+> 三件組內容完全一致，版本門 PASS。
+
+### 實際結果
+
+版本門 PASS（版本號"1.6.4"三個檔案一致）。但 Codex 內容級審查發現：**.json 遺漏了 .md 的 prose 修訂**（措辭修正、解釋性段落等），而 .docx 透過完整重新生成自動包含了這些修訂。根因：.json 走定點修補（手工在舊版 JSON 上打補丁），.docx 走完整重新生成（pandoc 從最新 .md 生成）。跨會話接力時，定點修補的維護者不知道 .md 中的 prose 變更。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | .json 與 .md 存在內容級不一致（版本門 O6 無法檢測） |
+| 樣本量 | v1.6.4 發布前的一次三件組交叉審查 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5, Kimi-K2.7, Qwen3.7-Max |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+**同步協議的設計缺陷。** O6 版本門只驗證版本號一致性，無法檢測內容級漂移。兩種派生格式採用不對稱同步策略——.docx 完整重新生成（自然能防止漂移）、.json 定點修補（依賴操作者知道全部變更）。跨會話接力時，後者必然滯後。
+
+### 學到了什麼？
+
+1. **版本號一致性 ≠ 內容一致性**——O6 版本門 PASS 但 .json 與 .md 存在 prose 級漂移
+2. **不對稱同步策略是設計缺陷**——定點修補 vs 完整重新生成在跨會話接力中必然暴露
+3. **定點修補的前提是操作者知道 .md 中所有變更**——這在多會話接力場景中不成立
+4. **根治方案：全部從 .md 完整重新生成**——消除所有手動同步路徑
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, raw-output |
+
+> 三件組交叉審查報告在 [ai-collaboration-framework/_reviews/](https://github.com/redamancy231-create/ai-collaboration-framework)。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+短期修復：發布前增加 Codex 異後端三件組交叉審查。長期方案（待實作）：將 .json 同步改為完整重新生成。
+
+### 相關連結
+
+- [AI 協作框架](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [三件組同步審查報告](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_review_v1.5.1_三件套同步审查.md)
+
+### 標籤
+
+`三件套同步`, `版本门`, `不对称漂移`, `定点补丁`, `全量重生成`, `内容一致性`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-011/NRR-2026-011-zh-Hant.md ===
+# NRR-2026-011: 多模型自修正系統的獨立性侷限
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-011 |
+| **標題** | 多模型自修正系統的獨立性侷限——9 模型評審團有效獨立票僅 ~2（Kohli 2026） |
+| **領域** | multi-model-collaboration |
+| **分類** | ceiling-effect |
+| **提交者** | Acerolaorion |
+| **來源專案** | Kohli 2026 / CrossCheck |
+| **來源作者** | Kohli |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 在 AI 編碼系統中引入多個不同 LLM 後端進行交叉審查和自修正，預期能實現真正的獨立驗證——審查者之間的發現應高度互補，且評審團整體優於任一單模型。
+
+### 方法
+
+對 CrossCheck（sburl/CrossCheck，多模型 AI 編碼自主迴圈系統）進行了方法論分析，結合 Kohli (2026-05) 論文（9 個尖端 LLM 評審團的獨立性量化）和 Kuai et al. (2026-04)（18 個 LLM 的行為糾纏分析）進行交叉驗證。本專案 Phase 5 雙輪審查（GPT-5.5 + Qwen3.7-Max）提供對照資料。
+
+### 預期結果
+
+> 多個不同後端的模型組成的評審團應提供接近 N 個獨立視角；預期有效獨立票數 ≥5（9 個模型中）。
+
+### 實際結果
+
+Kohli (2026-05)：**9 個尖端 LLM 評審團，有效獨立票僅 ~2 票。單一最佳評審的表現追平甚至超過整個評審團。** 本專案 Phase 5 雙輪審查：GPT-5.5 17 項 + Qwen 16 項 = 33 項中 0 重疊——互補但也提示邊際遞減。Kuai et al. (2026-04) 進一步證實 18 個 LLM 存在廣泛"行為糾纏"。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 9→2 有效獨立票（Kohli）；本專案 5 模型有效獨立視角約 2-3 |
+| 樣本量 | 9 個 LLM（Kohli）+ 本專案 5 模型 |
+| 使用的模型 | GPT-5.5, Qwen3.7-Max, Kimi-K2.7, GLM-5.2, Claude Opus 4.8 |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+不是多模型審查無效——恰恰相反，33 項 0 重疊證明了互補性。但模型間共享訓練資料、蒸餾流程與對齊管線，因而產生了隱性相依性，使得"加更多模型"的邊際收益在 ~2-3 個有效獨立視角後急劇遞減。4-5 個不同供應商的模型可能已接近有效上限。
+
+### 學到了什麼？
+
+1. **9 個 LLM 評審團的有效獨立票僅 ~2**——模型間共享訓練資料和評估基準，會產生隱性相依性
+2. **多模型審查的價值集中在前 2-3 個不同供應商的模型**——之後邊際收益急劇遞減
+3. **"不同 CLI house"≠"獨立"**——即使不同公司提供的模型，也可能共享訓練資料和基準
+4. **多模型審查的實證價值在於發現彼此互補的盲區**（33 發現 0 重疊），而非聲稱"全部獨立"
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, analysis-script, raw-output |
+
+> Kohli (2026-05) 論文在 [arxiv.org/abs/2605.29800](https://arxiv.org/abs/2605.29800)。本專案相關分析在 [methodology-extraction-methodology](https://github.com/redamancy231-create/methodology-extraction-methodology)。**這是第三方分析條目——原作者並非本登記冊的提交者。**
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+多模型審查在 2-3 個有效獨立視角內仍然有效。關鍵在於不聲稱"全部獨立"，也不在邊際收益遞減區繼續追加模型。
+
+### 相關連結
+
+- [Kohli (2026-05) — Nine Judges, Two Effective Votes](https://arxiv.org/abs/2605.29800)
+- [Kuai et al. (2026-04) — How Independent are LLMs?](https://arxiv.org/abs/2604.07650)
+- [閉合後外部驗證附錄](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md)
+
+### 標籤
+
+`多模型审查`, `独立性`, `Kohli2026`, `有效独立票`, `行为纠缠`, `边际递减`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析來源：Kohli (2026-05), Kuai et al. (2026-04), CrossCheck (sburl/CrossCheck)*
+
+=== FILE: entries/NRR-2026-012/NRR-2026-012-zh-Hant.md ===
+# NRR-2026-012: "緩慢漂移" OPEN-1 — 框架最致命的結構性缺口
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-012 |
+| **標題** | 框架最致命的結構性缺口——'緩慢漂移'（OPEN-1）經 25+ 處交叉引用確認但從未被真實專案資料驗證 |
+| **領域** | methodology-extraction |
+| **分類** | abandoned-dead-end |
+| **提交者** | Acerolaorion |
+| **來源專案** | ai-collaboration-framework |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-25 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> AI 協作框架識別出的"最致命結構性缺口"——AI 在連續會話中發生不可檢測的語義漂移——可以透過對標分析找到檢測方案並驗證。
+
+### 方法
+
+一整條分析鏈：CacheAligner 對標 → SmartCrusher 五維評分遷移 → CCR 逃生口 → ChatGPT-5.5 獨立審查三份對標檔案。
+
+### 預期結果
+
+> 產出一個可操作的漂移檢測方案，經 2-3 個真實專案試跑驗證。
+
+### 實際結果
+
+四個維度不可遷移（答案確定性、模式可窮舉性、回饋訊號客觀性、代價結構可比性在工程域和治理域之間存在結構性斷裂）。ChatGPT-5.5 對三份對標檔案各找出 5-7 個斷裂點（共 18+ 個反例）。方案自帶自毀條款——如果 drift ledger 只產生噪音則降級或廢棄。**OPEN-1 至今仍為 OPEN-1。**
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 一整條分析鏈未產出可操作方案；25+ 處交叉引用確認此缺口 |
+| 樣本量 | 4 份對標分析 × 1 獨立審查 × 0 真實專案試跑 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5, Claude Opus 4.8 |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+不是分析不夠深入——是分析已經過度深入但到了 AI 無法跨越的邊界。ChatGPT-5.5 精確識別了遷移斷裂點：封閉模式 vs 開放模式（真正的危險漂移恰恰不在當前錨點表中）、變化檢測 vs 漂移判定（檢測說"變了"，不能說"錯了"）、檢測器誘發合規表演（AI 學會保持錨點欄位不動，在其他地方漂移）。
+
+### 學到了什麼？
+
+1. AI 對自身最致命缺陷的診斷可以極其精確——但診斷 ≠ 修復
+2. "緩慢漂移"是框架的阿喀琉斯之踵——離散審查無法檢測累積性語義偏移
+3. 工程域→治理域的方法遷移存在結構性斷裂——四維度全部不可遷移
+4. 誠實標註"未解決"比假裝有方案更有方法論價值
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, analysis-script, raw-output |
+
+> 完整分析鏈在 [ai-collaboration-framework/_research/](https://github.com/redamancy231-create/ai-collaboration-framework)。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+無。OPEN-1 至今仍為 OPEN-1。封存說明明確指出剩餘步驟 AI 無法執行。
+
+### 相關連結
+
+- [AI 協作框架](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [headroom 對標分析封存說明](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/headroom对标分析_封存说明.md)
+- [ChatGPT-5.5 獨立審查 — headroom 對標三檔案](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/ChatGPT-5.5独立审查_headroom对标三文档.md)
+
+### 標籤
+
+`缓慢漂移`, `OPEN-1`, `结构性缺口`, `迁移断裂`, `AI边界`, `封存`, `未验证`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-013/NRR-2026-013-zh-Hant.md ===
+# NRR-2026-013: 框架自身規則被自身違反 — §2.6 自反性失敗
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-013 |
+| **標題** | 框架自身規則被自身違反——§2.6 要求 Minor 版本升級須 ≥2 後端審查，但 v1.6 由單後端完成 |
+| **領域** | methodology-extraction |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | ai-collaboration-framework |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-20 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 框架 §2.6 的版本升級協議預期在框架自身的版本演進中被嚴格遵守。
+
+### 方法
+
+Codex（GPT-5.5）對 v1.6 進行跨版本交叉審查，逐項核查 §2.6 的審查要求是否在 v1.5→v1.6 升級中被滿足。
+
+### 預期結果
+
+> v1.6 升級滿足 ≥2 後端獨立審查。
+
+### 實際結果
+
+§2.6 要求 Minor 升級須 ≥2 後端審查——**但 v1.6（v1.5→v1.6 是 Minor 升級）僅由單後端完成。** "醫生的孩子沒人治"。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 1 條核心規則被自身違反 |
+| 樣本量 | 1 次版本升級 × 1 獨立審查 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5 |
+
+---
+
+## 解讀與反思
+
+操作者=規則制定者=規則執行者。框架制定規則約束他人，但自身缺乏外部強制力來遵守這些規則。
+
+### 學到了什麼？
+
+1. "醫生的孩子沒人治"——規則制定者往往第一個違反自己的規則
+2. 規則的存在 ≠ 規則的執行——沒有獨立審計的規則系統有結構性漏洞
+3. 過渡條款是誠實的修復——"我們要求別人這樣做，但我們自己正在建立做這件事的基礎設施"
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | fully-reproducible |
+| **可用產物** | logs, raw-output |
+
+> Codex 審查報告在 `_reviews/codex_v16_crosscheck_20260620.txt`。§2.6 原文和 v1.6 審查鏈均可獨立核查。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+在 §2.6 中增加了過渡條款。但結構性問題（操作者=規則制定者=規則執行者）依然存在。
+
+### 相關連結
+
+- [Codex v1.6 跨版本交叉審查](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_v16_crosscheck_20260620.txt)
+
+### 標籤
+
+`自反性失败`, `§2.6`, `Codex审查`, `规则违反`, `医生的孩子`, `过渡条款`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-014/NRR-2026-014-zh-Hant.md ===
+# NRR-2026-014: Spec Coding 被違反 — 翻譯管線全面偏離計劃
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-014 |
+| **標題** | 框架自身主張 Spec Coding 但在翻譯管線中被全面違反——模型分工、檔案範圍、流程步驟全部偏離 |
+| **領域** | workflow-orchestration |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | ai-collaboration-framework |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 框架 §4 主張"有明確計劃時必須嚴格按計劃執行"。當翻譯管線有明確 Spec 時，預期執行嚴格遵守。
+
+### 方法
+
+三語言翻譯管線 Spec 明確規定了模型分工（OpenCC + Qwen 通讀 + Codex 校譯）、檔案範圍（2 份）、三階段流程。事後回顧將實際執行與 Spec 逐項對比。
+
+### 預期結果
+
+> 執行過程嚴格符合 Spec。
+
+### 實際結果
+
+**3/3 計劃承諾全部被違反：** 模型分工從"多模型+校譯"簡化為"單模型+自檢"、檔案範圍從 2 份擴大到 4 份且未經確認、三階段流程被壓縮為單階段。框架自身主張 Spec > Vibe，但操作者（同時是 Human Gate）在"效率優先"下跳過了 Gate。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 3/3 計劃承諾被違反 |
+| 樣本量 | 1 次翻譯執行 × 3 維度對比 |
+| 使用的模型 | DeepSeek-V4-Pro, OpenCC, Qwen3.7-Max |
+
+---
+
+## 解讀與反思
+
+Spec Coding 的最大敵人不是外部干擾——是操作者自己"走捷徑"的執行慣性。Human Gate 在操作者=Human Gate 的情境下形同虛設。
+
+### 學到了什麼？
+
+1. Spec Coding 的最大敵人是操作者自身的執行慣性
+2. Human Gate 在操作者=Human Gate 的情境下形同虛設——需要外部強制力
+3. 計劃中的模型分工是最容易被簡化的——"多模型+校譯"→"單模型+自檢"只需一個"這樣更快"的心理藉口
+4. 事後誠實記錄違反 ≠ 事前防止違反
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | prompts, logs, raw-output |
+
+> 回顧記錄在 [retrospect_2026-06-23.md](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md)。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+這次失敗催生了專案啟動檢查清單的 §6 `spec_over_vibe` 強制檢查項。
+
+### 相關連結
+
+- [回顧記錄 — 2026-06-23](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md)
+
+### 標籤
+
+`Spec Coding`, `翻译管道`, `计划违反`, `执行惯性`, `走捷径`, `Human Gate`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-015/NRR-2026-015-zh-Hant.md ===
+# NRR-2026-015: "零殘留"宣告三次被證偽
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-015 |
+| **標題** | "零殘留"宣告三次被證偽——同一後端同一 grep pattern 掃 10 次也不會發現新盲區 |
+| **領域** | code-review |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | ai-collaboration-framework |
+| **來源作者** | Acerolaorion |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-06-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 發布清理完成後，使用自有 grep pattern 掃描可確認"零殘留"。
+
+### 方法
+
+框架發布準備——三次清理+自檢聲稱零殘留 → 三次 Codex 異後端獨立掃描逐次發現新殘留。
+
+### 預期結果
+
+> 第一次清理+自檢後即可達到零殘留。
+
+### 實際結果
+
+**三次聲稱"零殘留"，三次被證偽（100% 誤報率）：** (1) 絕對路徑/使用者名稱殘留 → (2) 四層路徑變體殘留 → (3) .gitignore 排除檔案殘留。根因：同一大腦同一 grep pattern 掃 10 次 = 同樣的盲區 ×10。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 3/3 次"零殘留"聲稱被證偽（100% 誤報率） |
+| 樣本量 | 3 輪清理+自檢 × 3 輪 Codex 獨立掃描 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5 |
+
+---
+
+## 解讀與反思
+
+清理者自己宣佈"零殘留"是不可靠的——大腦在編輯過程中已建立"已處理"的認知，grep 只是確認這個認知。異後端獨立掃描使用不同搜尋策略，自然會命中操作者盲區。
+
+### 學到了什麼？
+
+1. 同一大腦同一 grep pattern 掃 10 次 = 同樣的盲區 ×10
+2. 清理者自己宣佈"零殘留"是不可靠的——認知偏差
+3. 異後端獨立掃描的必要性：不同的搜尋策略 = 不同的盲區覆蓋
+4. 路徑清理存在四層變體——單一 grep 無法窮盡
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, raw-output |
+
+> 回顧記錄在 [retrospect_2026-06-23.md](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md)。催生了 O7 `no_self_reported_zero_residue` 規則。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+第四次修復後 Codex 確認零殘留。O7 規則（"禁止自掃自誇零殘留"）源於這次失敗。
+
+### 相關連結
+
+- [回顧記錄 — 2026-06-23](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md)
+
+### 標籤
+
+`零残留`, `清理`, `自扫`, `grep`, `盲区`, `异后端扫描`, `O7`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-016/NRR-2026-016-zh-Hant.md ===
+# NRR-2026-016: 18 LLM 存在廣泛"行為糾纏"（Kuai et al., 2026）
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-016 |
+| **標題** | 18 個 LLM 存在廣泛'行為糾纏'——共享訓練資料/蒸餾/對齊管線導致模型並非真正獨立 |
+| **領域** | multi-model-collaboration |
+| **分類** | ceiling-effect |
+| **提交者** | Acerolaorion |
+| **來源專案** | Kuai et al. (2026) |
+| **來源作者** | Kuai et al. |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-25 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 使用不同模型家族的 LLM 進行多模型審查時，這些模型的判斷應接近統計獨立。預期去糾纏的驗證器整合可將準確率提升 ≥10%。
+
+### 方法
+
+Kuai et al. (2026-04) 開發了統計框架來審計 18 個 LLM（6 個模型家族）之間的"行為糾纏"——量化模型對之間的行為相關性。
+
+### 預期結果
+
+> 不同模型家族之間的行為糾纏程度應較低。
+
+### 實際結果
+
+**18 個 LLM 存在廣泛的跨家族行為糾纏。** 去糾纏的驗證器整合將準確率提升了 4.5%——證明糾纏確實存在，但提升幅度遠低於"完全獨立"假設的預期。與 Kohli (2026) 的"9→2 有效票"相互印證。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 去糾纏後準確率 +4.5%（顯著但遠低於"完全獨立"預期） |
+| 樣本量 | 18 個 LLM × 6 個模型家族 |
+| 糾纏來源 | 共享訓練資料 + 知識蒸餾 + 對齊管線 |
+
+---
+
+## 解讀與反思
+
+行為糾纏的三個來源在當前 LLM 生態中幾乎無法完全避免——意味著"換模型"的獨立性增益被系統性高估。
+
+### 學到了什麼？
+
+1. "不同模型家族的模型獨立"是需要檢驗的假設，不是預設事實
+2. 去糾纏後僅 +4.5%——多模型的邊際收益比預期低
+3. 選擇模型應優先考慮訓練資料來源、架構和對齊管線的多樣性
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | not-assessed |
+| **可用產物** | none |
+
+> **第三方分析條目。** 來源資料來自 Kuai et al. (2026-04) 論文。
+
+### 相關連結
+
+- [Kuai et al. (2026-04) — How Independent are LLMs?](https://arxiv.org/abs/2604.07650)
+
+### 標籤
+
+`行为纠缠`, `模型独立性`, `Kuai2026`, `去纠缠`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析來源：Kuai et al. (2026-04)*
+
+=== FILE: entries/NRR-2026-017/NRR-2026-017-zh-Hant.md ===
+# NRR-2026-017: LLM 多模型分歧不是 bug 是診斷訊號（Nájera et al., 2026）
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-017 |
+| **標題** | LLM 多模型分歧不是 bug 是診斷訊號——但多數"分歧"不指示深層問題 |
+| **領域** | multi-model-collaboration |
+| **分類** | null-result |
+| **提交者** | Acerolaorion |
+| **來源專案** | Nájera et al. (2026) |
+| **來源作者** | Nájera et al. |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-25 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 多模型審查中的模型間分歧指示被審查內容的真實品質問題——分歧程度與品質缺陷正相關。
+
+### 方法
+
+Nájera et al. (2026-05) 將多模型分歧重新定義為"診斷訊號"，開發四類分歧分類法，量化不同型別分歧與內容品質的關係。
+
+### 預期結果
+
+> 高分歧 = 內容確實有問題。
+
+### 實際結果
+
+多數分歧不指示內容品質問題，而指示：(1) 評估標準模糊性；(2) 任務固有歧義度；(3) 模型訓練資料中的偏好差異。僅第四類（深度分歧）可能指示真實評估複雜性。本專案 Phase 5 雙輪審查 33 項發現 0 重疊——兩個模型的錯誤敏感性完全不同，各自覆蓋對方盲區。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 四類分歧中僅深度分歧可能指示真實評估複雜性 |
+| 樣本量 | Nájera 公開評論分析資料集 + 本專案 Phase 5 資料 |
+
+---
+
+## 解讀與反思
+
+不能簡單地用"模型之間意見不一致"來判斷內容品質。分歧首先需要被分類——是 rubrics 寫得不好、任務固有歧義、還是真正的深度分歧？
+
+### 學到了什麼？
+
+1. 多數模型間分歧不指示內容品質問題——分歧應被分類為四類之一才能判斷其含義
+2. Phase 5 的 33 項 0 重疊不是"模型在吵架"——是錯誤敏感性不同，互補發現盲區
+3. "模型間一致性高=品質好"是需要檢驗的假設——一致同意也可能是共同盲區
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | not-assessed |
+| **可用產物** | none |
+
+> **第三方分析條目。** 來源資料來自 Nájera et al. (2026-05) 論文。
+
+### 相關連結
+
+- [Nájera et al. (2026-05) — When Models Disagree](https://arxiv.org/abs/2605.29025)
+
+### 標籤
+
+`多模型分歧`, `诊断信号`, `Nájera2026`, `分歧分类`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析來源：Nájera et al. (2026-05)*
+
+=== FILE: entries/NRR-2026-018/NRR-2026-018-zh-Hant.md ===
+# NRR-2026-018: CrossCheck 149 PR 零獨立審查記錄
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-018 |
+| **標題** | CrossCheck 的 149 個 PR 全由作者自行提交——"多模型 peer review"等於零獨立審查記錄 |
+| **領域** | multi-model-collaboration |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | CrossCheck (sburl) |
+| **來源作者** | Spencer Burleigh |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 一個明確設計了多模型角色分配（Codex 編寫 → peer model 審查 → hooks 執行）的 AI 編碼系統，預期會產生可追溯的獨立審查記錄。
+
+### 方法
+
+對 CrossCheck（sburl/CrossCheck）149 個 PR 的提交記錄和專案檔案進行方法論提取分析——檢查 peer model review 的歸檔證據。
+
+### 預期結果
+
+> 至少部分 PR 應包含 peer model review 的記錄。
+
+### 實際結果
+
+**149/149 PR（100%）由作者自行提交——零獨立審查歸檔。** 專案描述中的"peer model review"沒有任何歸檔記錄。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 149/149 PR 無獨立審查記錄（100%） |
+| 樣本量 | 149 個 PR × 1 個專案 |
+| 使用的工具 | Claude Code, Codex CLI, Gemini CLI |
+
+---
+
+## 解讀與反思
+
+CrossCheck 的 Swiss Cheese Model 和 Skills 體系是自有專案之外最豐富的 AI 協作架構設計。但設計與執行之間存在斷層：多層品質保障的設計無法保證每一層都被實際執行和記錄。
+
+### 學到了什麼？
+
+1. "多模型審查"的設計 ≠ "多模型審查"的執行——缺乏歸檔機制時無法區分"做了沒記錄"和"根本沒做"
+2. Git hooks 可以強制執行程式碼門禁，但不能強制執行審查過程記錄
+3. Swiss Cheese Model 加上"審查歸檔"層會更完整
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | fully-reproducible |
+| **可用產物** | logs, raw-output |
+
+> **第三方分析條目。** 來源資料來自 [sburl/CrossCheck](https://github.com/sburl/CrossCheck) 公開倉庫。任何人均可獨立驗證。
+
+### 相關連結
+
+- [CrossCheck 倉庫](https://github.com/sburl/CrossCheck)
+- [方法論提取方法論 — CrossCheck 證據卡](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_crosscheck.md)
+
+### 標籤
+
+`CrossCheck`, `多模型审查`, `独立审查`, `归档`, `执行断层`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析來源：sburl/CrossCheck 公開倉庫 PR 歷史*
+
+=== FILE: entries/NRR-2026-019/NRR-2026-019-zh-Hant.md ===
+# NRR-2026-019: GitNexus CALLS 邊的同檔案覆蓋盲區
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-019 |
+| **標題** | GitNexus CALLS 邊同一檔案內部方法呼叫擷取率僅 3/81+ 和 0/17——基於索引斷言模組內部耦合不可靠 |
+| **領域** | benchmarking |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | GitNexus |
+| **來源作者** | Abhigyan Patwari |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-22 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> GitNexus 程式碼知識圖譜的 CALLS 邊應能可靠擷取方法間呼叫關係，包括同一檔案內部呼叫。預期索引覆蓋率 ≥80%，可用於斷言模組內部耦合度。
+
+### 方法
+
+對 docx-pipeline 專案兩個核心模組進行手動進行原始碼 grep 交叉驗證：PurePythonConverter（1,213行, 36個方法）和 MermaidRenderer（677行, 17個方法），對比 GitNexus 索引的 CALLS 邊數量與實際原始碼呼叫鏈。
+
+### 預期結果
+
+> GitNexus CALLS 邊覆蓋同一檔案內部呼叫的 ≥80%。
+
+### 實際結果
+
+PurePythonConverter：僅擷取 **3 條**同一檔案 CALLS 邊（覆蓋率 ≤3.7%）。MermaidRenderer：擷取 **0 條**同一檔案 CALLS 邊（覆蓋率 0%）。基於 GitNexus CALLS 邊斷言模組內部耦合度不可靠。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | PurePythonConverter ≤3.7%（3/81+）；MermaidRenderer 0%（0/17） |
+| 樣本量 | 2 個模組 × 2 種檢測方法 |
+| 使用的工具 | GitNexus |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+CALLS 邊在同一檔案內的索引策略與跨檔案呼叫使用不同檢測準確度。不是 bug——是索引策略在不同維度的精確度差異。但對方法論提取而言，盲目相信索引資料會導致對模組複雜度的系統性低估。
+
+### 學到了什麼？
+
+1. GitNexus CALLS 邊同檔案覆蓋率可低至 0%——不能基於 CALLS 邊數量斷言模組內部耦合度
+2. AI 工具評估不能僅靠靜態原始碼分析——需要對照實驗才能發現盲區
+3. 跨檔案 IMPORT/EXTENDS 邊比同一檔案 CALLS 邊可靠
+4. 對任何分析工具的聲稱都需要交叉驗證——"3 條 CALLS"可能是真值的 3.7%
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | fully-reproducible |
+| **可用產物** | code, logs |
+
+> **第三方分析條目。** 重現步驟：在 docx-pipeline 倉庫執行 GitNexus 索引 → 對比 CALLS 邊數量 → 以 grep 手動統計。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+跨檔案 IMPORT/EXTENDS 邊置信度高於同一檔案 CALLS 邊。應對策略：跨檔案用 GitNexus，同一檔案內使用原始碼 grep。
+
+### 相關連結
+
+- [GitNexus 分析專案](https://github.com/redamancy231-create/methodology-extraction-methodology)
+- [GitNexus CALLS 邊覆蓋盲區（methodology-handbook）](https://github.com/redamancy231-create/methodology-handbook)
+
+### 標籤
+
+`GitNexus`, `CALLS边`, `索引覆盖`, `代码知识图谱`, `源码交叉验证`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-020/NRR-2026-020-zh-Hant.md ===
+# NRR-2026-020: PocketFlow 極簡專案的證據等級天花板
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-020 |
+| **標題** | PocketFlow 100 行核心→所有提取資產為[Sp]推測級，N=2 證據僅有方向性指示 |
+| **領域** | methodology-extraction |
+| **分類** | ceiling-effect |
+| **提交者** | Acerolaorion |
+| **來源專案** | PocketFlow |
+| **來源作者** | Zachary Huang |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-25 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 對 PocketFlow（100 行核心 + 依難度分級的 cookbook）進行三輪獨立分析後，預期至少能提取出 ≥3 個達到 [E] 試行等級的可複用方法論模式。
+
+### 方法
+
+三輪獨立分析（DeepSeek-V4-Pro + GPT-5.5 + Kimi-K2.7），提取三組資產：B1 最小核心+範例外掛、B2 難度分層、C1-C3 反模式清單。按框架證據等級標準逐項評估。
+
+### 預期結果
+
+> 至少 B1 應達到 [E] 試行級——有 ≥1 個獨立來源專案支撐且不是推測。
+
+### 實際結果
+
+**3/3 資產組全部 [Sp] 推測級。** B1 的 N=2 證據僅為方向性指示。從 100 行核心專案中提取方法論存在固有資訊密度天花板。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 3/3 資產組全部 [Sp]（0/3 達到 [E]）；N=2 證據僅方向性指示 |
+| 樣本量 | 1 個專案 × 3 輪分析 × 3 組資產 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.5, Kimi-K2.7 |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+不是 PocketFlow 的問題——極簡設計本身就是方法論立場。問題在於資訊密度不夠→推斷/外推增加→證據等級只能停留在 [Sp]。這個天花板不是分析深度不夠，而是來源專案本身的資訊容量限制。
+
+### 學到了什麼？
+
+1. 從極簡專案中提取方法論存在固有天花板——來源專案越小，證據等級越難超過 [Sp]
+2. N=2 證據只有方向性指示價值——不能承擔 [E] 級證據重量
+3. 100 行核心既是方法論優點也是提取限制——無法提供多樣性證據
+4. 對小型外部專案應預先設定證據等級上限——避免三輪分析後才發現全部 [Sp]
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, analysis-script, raw-output |
+
+> **第三方分析條目。** 框架從 PocketFlow 提取的資產在 ai-collaboration-framework 主檔案中。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+B1 的 N=2 方向一致——為後續大樣本驗證提供了方向。C1-C3 反模式滿足收錄標準。
+
+### 相關連結
+
+- [AI 協作框架 — PocketFlow 相關章節](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [PocketFlow 開源倉庫](https://github.com/typicalpenguin/PocketFlow)
+
+### 標籤
+
+`PocketFlow`, `极简项目`, `证据等级`, `Sp推测级`, `信息密度`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-021/NRR-2026-021-zh-Hant.md ===
+# NRR-2026-021: 方法論提取框架適用性梯度衰減
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-021 |
+| **標題** | 方法論提取框架適用性隨專案方法論自覺梯度急速衰減——自有100%→有論文69%→純程式碼37.5% |
+| **領域** | methodology-extraction |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | NPGS |
+| **來源作者** | baopinshui |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 方法論提取框架應能從未知開源專案中提取有意義的方法論模式——即使專案沒有 AI 協作記錄，也應能從被動痕跡中提取可用訊號。預期最低梯度（純程式碼專案）可提取率 ≥50%。
+
+### 方法
+
+對三個梯度的專案執行完整 8 元件提取：自有專案（★★★★★）、ml-quant-trading（★★★，有論文+CI+測試）、NPGS（★，零方法論檔案）。
+
+### 預期結果
+
+> 三梯度可提取率漸進下降但保有一定基線——NPGS ≥50%（4/8）。
+
+### 實際結果
+
+**梯度 100%→69%→37.5%。** NPGS 5/8 元件空白。能提取的 3 個元件用 GitNexus 同樣可取得——框架在被動痕跡維度上**無增量價值**。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 可提取率梯度 100%→69%→37.5%；NPGS 5/8 元件空白 |
+| 樣本量 | 3 個專案 × 3 梯度 × 8 元件 |
+| 使用的模型 | DeepSeek-V4-Pro, GitNexus, Codex GPT-5.5 |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+框架的隱含假設——"來源專案知道自己做了什麼並記錄了下來"——在絕大多數開源專案中不成立。框架不是"探測器"，是"整理器"——它不能發現不存在的資訊。
+
+### 學到了什麼？
+
+1. 框架適用對象極為狹窄——僅對 AI 協作自覺極強的專案有效
+2. 可提取率與來源專案方法論自覺正相關（★★★★★=100%→★=37.5%）
+3. 框架在被動痕跡維度無增量價值——能用 GitNexus 取得的不需要框架
+4. 框架價值定位應從"發現"修正為"歸納"——它不是探測器，是整理器
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, analysis-script, raw-output |
+
+> **第三方分析條目。** NPGS 和 ml-quant-trading 證據卡在 methodology-extraction-methodology/explorations/。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+框架在自有專案群中可提取率接近 100%——證明框架設計有效，只是適用範圍比初始假設窄。
+
+### 相關連結
+
+- [NPGS 證據卡](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md)
+- [ml-quant-trading 證據卡](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_ml_quant_trading.md)
+
+### 標籤
+
+`方法论提取`, `框架适用性`, `梯度衰减`, `NPGS`, `被动痕迹`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+
+=== FILE: entries/NRR-2026-022/NRR-2026-022-zh-Hant.md ===
+# NRR-2026-022: 提取者汙染製造虛假方法論訊號
+
+## 基本資訊
+
+| 欄位 | 內容 |
+|------|------|
+| **條目 ID** | NRR-2026-022 |
+| **標題** | "提取者汙染"——fork 作者附加的方法論檔案被誤歸因到來源專案，製造虛假方法論訊號 |
+| **領域** | methodology-extraction |
+| **分類** | methodology-failure |
+| **提交者** | Acerolaorion |
+| **來源專案** | NPGS |
+| **來源作者** | baopinshui |
+| **分析者** | Acerolaorion |
+| **日期** | 2026-07-23 |
+
+---
+
+## 實驗概述
+
+### 原始假設
+
+> 在對 fork 的來源專案進行方法論提取時，fork 倉庫中所有檔案應反映來源專案的方法論特徵。預期附加檔案能補充來源專案的方法論資訊。
+
+### 方法
+
+對 NPGS（baopinshui/NPGS）進行完整方法論提取。該倉庫被 fork 後，提取者新增了 CLAUDE.md、GitNexus 索引和分析報告，然後從 fork 倉庫執行提取。事後追溯哪些檔案來自來源作者、哪些來自提取者。
+
+### 預期結果
+
+> 至少部分附加檔案應反映或補充來源專案的方法論特徵。
+
+### 實際結果
+
+**CLAUDE.md、GitNexus 索引、分析報告 100% 來自 fork 提取者。** 來源專案方法論檔案=0。如果不區分兩者，提取者會把"自己編寫的唯一方法論檔案"誤歸因為"來源專案有方法論自覺"。
+
+| 指標 | 數值 |
+|------|------|
+| 效應量 | 來源專案方法論檔案=0；fork 附加檔案 100% 來自提取者 |
+| 樣本量 | 1 個專案 × 提取者 vs 來源作者檔案比對 |
+| 使用的模型 | DeepSeek-V4-Pro, GPT-5.6-Sol, GitNexus |
+
+---
+
+## 解讀與反思
+
+### 為什麼會失敗？
+
+提取框架的 Phase 0 設計缺陷。當提取者也是倉庫中唯一方法論檔案的作者時，預設假設"倉庫檔案反映來源專案"會系統性高估來源專案的方法論自覺。
+
+### 學到了什麼？
+
+1. 提取者的檔案≠來源專案的方法論——製造虛假訊號
+2. Phase 0 需要"提取者汙染"判別——檢查檔案作者 ≠ 來源專案作者時降低權重
+3. fork 後新增的分析產物不應被當作來源專案方法論——觀察者效應
+4. 來源專案檔案=0 是誠實訊號，不是提取失敗
+
+---
+
+## 可重現性
+
+| 維度 | 評估 |
+|------|------|
+| **整體可重現性** | partially-reproducible |
+| **可用產物** | logs, analysis-script |
+
+> **第三方分析條目。** NPGS 來源倉庫和 fork 倉庫的差異可獨立核查。
+
+---
+
+## 相關
+
+### 後續是否成功？
+
+可修復的設計缺陷——Phase 0 新增提取者汙染判別即可過濾。不是框架結構性失敗。
+
+### 相關連結
+
+- [NPGS 來源倉庫 (baopinshui/NPGS)](https://github.com/baopinshui/NPGS)
+- [NPGS 證據卡](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md)
+
+### 標籤
+
+`提取者污染`, `fork`, `NPGS`, `方法论归因`, `Phase0缺陷`, `虚假信号`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*

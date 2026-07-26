@@ -628,11 +628,13 @@
       }
       if (syncURL !== false) updateURL();
     }
+    var loadGeneration = 0;
     function setLanguage(locale) {
       if (!SUPPORTED_LANGS.includes(locale) || locale === state.lang) return;
       state.lang = locale;
       applyLanguage(false);
       state.openIds.clear();
+      updateURL();
       load();
     }
     async function fetchRegistry() {
@@ -877,9 +879,17 @@
     async function load() {
       state.status = "loading";
       state.loadError = null;
+      var gen = ++loadGeneration;
+      var requestedLang = state.lang;
       renderLoading();
-      try { initializeRegistry(await fetchRegistry()); }
-      catch (error) { showLoadError(error); }
+      try {
+        var registry = await fetchRegistry();
+        if (gen !== loadGeneration || state.lang !== requestedLang) return;
+        initializeRegistry(registry);
+      } catch (error) {
+        if (gen !== loadGeneration || state.lang !== requestedLang) return;
+        showLoadError(error);
+      }
     }
     elements.search.addEventListener("input", debounce(function (event) {
       state.search = event.target.value; applyFilters();

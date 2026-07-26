@@ -1,0 +1,2000 @@
+Model: GPT-5.6-Sol
+
+=== FILE: entries/NRR-2026-001/NRR-2026-001-en.md ===
+# NRR-2026-001: Prompt-TDD A2 — prep/exec/post three-stage segmentation had no significant effect on review quality
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-001 |
+| **Title** | Three-stage prompt segmentation (prep/exec/post) had no significant effect on code-review quality |
+| **Domain** | prompt-engineering |
+| **Category** | null-result |
+| **Submitter** | Acerolaorion |
+| **Source Project** | prompt-tdd-methodology |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-22 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Structuring a code-review prompt into three stages—prep (loading specifications), exec (reviewing files one by one), and post (cross-checking)—was expected to improve the quality of GPT-5.5 findings in multi-file code review relative to a single-block baseline prompt that reviewed all specifications and all files together.
+
+### Method
+
+Prompt-TDD controlled experiment design:
+- **Experimental group**: three-stage prep/exec/post prompt (A2 variant)
+- **Control group**: single-block comprehensive prompt (A2 baseline)
+- **Task**: review the same codebase across multiple files and record the number of findings, severity, and false-positive rate
+- **Sample size**: n=24/arm
+- **Cross-model replication**: primary experiment with GPT-5.5 plus independent replication with Qwen3.7-Max
+- **Evaluation**: blinded evaluation by two LLMs using separate backends (reviewers did not know which group was experimental)
+
+### Expected Result
+
+> The three-stage prompt should produce more high-quality findings and fewer false positives. Expected effect size: d ≥ 0.3 (small to medium).
+
+### Actual Result
+
+The two groups showed no significant differences in the number of findings, severity distribution, or false-positive rate.
+
+| Metric | Value |
+|------|------|
+| Effect size | d ≈ 0.03 (trivial) |
+| Sample size | n=24/arm × replication with 2 models |
+| Models used | GPT-5.5, Qwen3.7-Max |
+| Replication consistency | Qwen replication Δ = −0.014, directionally consistent (both null) |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+The most likely explanation is that **the task type determines the upper bound on the effect size of prompt variations**. Code review is a structured classification task: the reviewer checks explicit specifications item by item. In such tasks, prompt “packaging” (segmented versus single-block) has much less influence on output quality than the constraints imposed by the task itself. Put differently, when the specifications are sufficiently explicit, how the prompt is written matters much less.
+
+### What Did We Learn?
+
+1. **Prompt-variation effects are near zero on structured classification tasks**—unlike open-ended generation tasks such as translation and writing, where prompt variations have larger effects
+2. **The specification itself matters more than prompt structure**—invest effort in writing strong review criteria rather than organizing prompt paragraphs
+3. **Negative results require cross-model replication**—the null effect with GPT-5.5 could have been single-model noise; the Qwen replication confirmed that the effect was indeed null
+4. **Separating the experiment's “engineering gate” from its “scientific gate” is valuable**—even with a negative result, the experimental structure itself remains reusable
+5. **Effect sizes should be estimated with a ceiling probe before the experiment**—had the ceiling effect for structured classification been known, expectations for this direction would likely have been lower
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, data, code, analysis-script |
+
+> The complete experimental pipeline is in the [prompt-tdd-methodology](https://github.com/redamancy231-create/prompt-tdd-methodology) repository. The code can be rerun (repeatable), but replication depends on the GPT-5.5/Qwen3.7-Max model versions. The backends referenced by API model aliases may have been upgraded, potentially producing different results.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+There was no direct follow-up. The negative results from A2 and A3 jointly led to the decision to publish the “Prompt-TDD methodology” as a case handbook rather than a tool library. The value of the negative result was that it helped us decide **what not to build**.
+
+### Related Links
+
+- [Prompt-TDD methodology repository](https://github.com/redamancy231-create/prompt-tdd-methodology)
+- [A2 case data](https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a2-prep-exec-post)
+- [NRR-2026-002](../NRR-2026-002/NRR-2026-002.md) — A3 negative result from the same project
+
+### Tags
+
+`prompt-tdd`, `GPT-5.5`, `Qwen3.7-Max`, `code-review`, `对照实验`, `零结果`, `prep-exec-post`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-002/NRR-2026-002-en.md ===
+# NRR-2026-002: Prompt-TDD A3 — no difference between declarative and natural-language routing
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-002 |
+| **Title** | Declarative action routing offered no advantage over natural-language routing in agent routing decisions |
+| **Domain** | prompt-engineering |
+| **Category** | null-result |
+| **Submitter** | Acerolaorion |
+| **Source Project** | prompt-tdd-methodology |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-22 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Declarative action routing (defining available actions in YAML/JSON → exact matching) was expected to outperform natural-language routing (describing available actions in natural language → semantic matching), because the declarative format reduces room for ambiguous LLM interpretation of action semantics.
+
+### Method
+
+Prompt-TDD controlled experiment design (pilot stage):
+- **Experimental group**: declarative action-routing prompt (actions defined in YAML, strict matching)
+- **Control group**: natural-language routing prompt (actions described in natural language, semantic matching)
+- **Task**: a Claude Code agent autonomously selected actions during multi-step tasks (file operations, search, execution, and so on)
+- **Sample size**: 15 pilot cases (experimental-design stage—Tier 0; did not proceed to Tier 1 inferential statistics)
+- **Evaluation**: routing accuracy + task-completion rate
+
+### Expected Result
+
+> Declarative routing should reduce action-selection errors, with an expected improvement in routing accuracy of ≥10%.
+
+### Actual Result
+
+Across the 15 pilot cases, the two groups showed no significant difference in routing accuracy or task-completion rate. The effect size was insufficient to justify proceeding to a full-scale Tier 1 experiment.
+
+| Metric | Value |
+|------|------|
+| Effect size | Difference not significant at the pilot stage (did not proceed to inferential statistics) |
+| Sample size | 15 cases (pilot) |
+| Models used | GPT-5.5 (via Codex CLI) |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+Two possible explanations:
+1. **The LLM was already a sufficiently capable semantic router**—when actions were described in natural language, the LLM's semantic understanding was sufficient to resolve ambiguity, making the extra precision of the declarative format redundant
+2. **The pilot sample was too small**—15 cases may have been insufficient to detect a small effect. But the purpose of the pilot was precisely to determine at low cost whether a full-scale experiment was worth the investment; the answer was “no”
+
+### What Did We Learn?
+
+1. **The intuition that “format equals precision” is only partly correct**—declarative formats outperform natural language in conventional programming, but an LLM acting as a semantic engine may process natural language more naturally
+2. **A pilot's value lies in stopping losses early**—15 cases were enough to decide against Tier 1, saving approximately 4 hours of experiment execution and 2 hours of review time
+3. **A negative pilot is still a success**—A3 was labeled in the methodology handbook as a **counterexample case** showing how to close an experiment with no signal; this teaching value is more distinctive than a positive result
+4. **Consistency with A2 is noteworthy but does not establish a domain-level conclusion**—A2 (n=24 controlled) and A3 (n=15 pilot) each detected no difference under their respective conditions, creating a meta-hypothesis for future testing; an aggregate study would require preregistration, multiple tasks, and adequate power before drawing a general conclusion
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, analysis-script |
+
+> The complete pilot design and prompts are in the [prompt-tdd-methodology](https://github.com/redamancy231-create/prompt-tdd-methodology) repository. The code can be rerun, but replication depends on the GPT-5.5 model version, and API upgrades may change routing behavior.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+There was no direct follow-up. A3 was used as a teaching counterexample for “how to close an experiment with no signal”—a role with greater long-term value than the original objective of proving that declarative routing was better.
+
+### Related Links
+
+- [Prompt-TDD methodology repository](https://github.com/redamancy231-create/prompt-tdd-methodology)
+- [A3 case data](https://github.com/redamancy231-create/prompt-tdd-methodology/tree/master/examples/a3-action-routing)
+- [NRR-2026-001](../NRR-2026-001/NRR-2026-001.md) — A2 negative result from the same project
+
+### Tags
+
+`prompt-tdd`, `GPT-5.5`, `agent-routing`, `声明式-vs-NL`, `对照实验`, `Pilot`, `零结果`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-003/NRR-2026-003-en.md ===
+# NRR-2026-003: Methodology extraction — zero patterns from 22 projects met the ≥3-source stability threshold
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-003 |
+| **Title** | Systematic extraction of reusable methodology patterns from 22 source projects—none met the ≥3-source stability threshold |
+| **Domain** | methodology-extraction |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | methodology-extraction-methodology |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-16 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Systematically extract methodology patterns for AI collaboration from 22 projects (11 external analyses, 7 self-built public projects, and 4 self-built nonpublic projects). At least 5–8 stable patterns were expected to appear across ≥3 source projects and form “Methodology Extraction Framework v0.1.”
+
+### Method
+
+Eight-stage systematic extraction process (Phase 0-7):
+- **Source projects**: 22 (11 external open-source/paper analyses + 11 self-built projects)
+- **Extraction method**: create an independent evidence card for each project → cross-project clustering → pattern candidates → G5 traceability audit
+- **Stability threshold**: independently present in ≥3 source projects
+- **Review**: 10 review rounds across four backends—GPT-5.5 / Kimi-K2.7 / Qwen3.7-Max / GLM-5.2
+- **Meta-review**: Kohli (2026-05) independence framework → approximately 2–3 effectively independent perspectives
+
+### Expected Result
+
+> Five to eight methodology patterns would meet the ≥3-source stability threshold, producing a publishable “Methodology Extraction Framework v0.1.”
+
+### Actual Result
+
+**G5 traceability audit conclusion: none of the five components met the ≥3-source stability threshold.** The 22 source projects were insufficient to support extraction of generalizable methodology patterns.
+
+| Metric | Value |
+|------|------|
+| Effect size | N/A (threshold not met—0/5 components passed) |
+| Sample size | 22 projects (11 external + 11 self-built) |
+| Models used | GPT-5.5, Kimi-K2.7, Qwen3.7-Max, GLM-5.2 |
+| Review findings | 33 findings from two orthogonal Phase 5 review rounds with **zero overlap** |
+| Effectively independent perspectives | Approximately 2–3 (under the Kohli 2026-05 framework) |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+Three systemic problems compounded one another:
+1. **Sample homogeneity**: the same operator extracted and reviewed every project. Although the source projects spanned different domains (quantitative finance, code review, and document generation), their level of methodological self-awareness was highly correlated through the operator; there was no independent “control sample”
+2. **n=22 was too small**: extracting cross-project patterns requires a sample far larger than 22, especially when projects differ substantially (some contain tens of thousands of lines of code; others are documentation only)
+3. **The stability threshold was too strict**: ≥3 sources may be too demanding for methodology-literature extraction; cross-study pattern extraction in academic literature commonly requires 30–50 papers
+
+### What Did We Learn?
+
+1. **Methodology extraction is an order of magnitude harder than expected**—22 projects looks substantial but is nowhere near enough
+2. **Operator independence is the bottleneck**—when one person extracts every source project, that person's cognitive preferences systematically constrain pattern discovery
+3. **“Could not extract” and “does not exist” are different claims**—zero qualifying patterns from 22 projects does not mean no extractable patterns exist; the method may be inadequate
+4. **The process was more valuable than the result**—the review chain (33 nonoverlapping findings across two rounds plus evidence of convergence across four backends) had greater scholarly value than the framework's output
+5. **An honest negative result has independent value**—the project's central deliverable shifted from a “methodology extraction framework” to an “honest report on how difficult this problem is”
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, logs, analysis-script, raw-output |
+
+> Eleven public evidence cards are in [methodology-extraction-methodology/explorations/](https://github.com/redamancy231-create/methodology-extraction-methodology/tree/main/explorations), the 10 review-round reports are in `reviews/`, and the G5 audit is in `synthesis/phase4_traceability_audit.md`. Detailed evidence cards for the 11 nonpublic source projects are not included in the public repository.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+There was no direct follow-up. The project was archived in v0.1 trial status with the conclusion: “We demonstrated how difficult this is, but not yet how to do it.” The framework itself has independent value as an impossibility demonstration.
+
+### Related Links
+
+- [Methodology extraction methodology repository](https://github.com/redamancy231-create/methodology-extraction-methodology)
+- [G5 traceability audit](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/synthesis/phase4_traceability_audit.md)
+- [Post-closure external-validation appendix](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md)
+- [NRR-2026-001](../NRR-2026-001/NRR-2026-001.md) — Prompt-TDD A2 (another negative result from the same operator)
+
+### Tags
+
+`方法论提取`, `框架构建`, `跨项目模式`, `方法论失败`, `G5审计`, `审查链`, `22项目`, `不可行性证明`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-004/NRR-2026-004-en.md ===
+# NRR-2026-004: mmdc-rendered PNG lacked DPI metadata → python-docx defaulted to 72 DPI, stretching the image ~4×
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-004 |
+| **Title** | mermaid-cli rendered PNGs without DPI metadata, causing python-docx to default to 72 DPI and stretch/crop images by ~4× |
+| **Domain** | document-generation |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | docx-pipeline |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> mermaid-cli (mmdc) is the de facto standard tool for rendering Mermaid diagrams, so its PNG output was expected to be directly embeddable in a python-docx → DOCX pipeline without additional DPI post-processing.
+
+### Method
+
+Mermaid → DOCX pipeline in the DOCX Pipeline project (an issue discovered in an AI-assisted development environment):
+1. Detect ` ```mermaid ` code blocks in Markdown
+2. Calculate pixel width from the configured DPI (300 by default) → invoke `mmdc --width <px>` to render a PNG
+3. Embed the PNG in DOCX with python-docx v1.2.0 `add_picture()`
+4. Open the document in Word and visually verify the result
+
+### Expected Result
+
+> The PNG should be embedded at the intended size (approximately 80–100% of page width) and display normally in Word.
+
+### Actual Result
+
+The PNG appeared **stretched by ~4×** in the DOCX, extending beyond the page boundary and being cropped. Root-cause chain:
+
+1. **PNGs rendered by mmdc contain no DPI metadata** (mmdc has no `--dpi` option; `--width` controls only rendered width and does not write the PNG pHYs chunk)
+2. **python-docx calculates the embedded dimensions of an image without DPI metadata using a 72 DPI default** (not Word's 96 DPI screen density—python-docx writes explicit EMU dimensions, which Word uses directly)
+3. A pixel image prepared at 300 DPI ÷ dimensions calculated at 72 DPI → physical dimensions expand by ~4.17× (300/72)
+
+| Metric | Value |
+|------|------|
+| Effect size | Physical dimensions expanded by ~4.17× (300 DPI pixels ÷ python-docx 72 DPI default) |
+| Sample size | Every DOCX document containing Mermaid diagrams (100% reproducible early in the project) |
+| Tools used | mermaid-cli (mmdc), python-docx v1.2.0, Microsoft Word |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+**Implicit assumptions in adjacent layers of the toolchain's interoperability contract were incompatible.** This was not a single-point bug in either tool: mmdc correctly rendered the requested pixel width (`--width` controls rendered width), and python-docx correctly used its 72 DPI default to calculate the embedded dimensions of an image without metadata. The problem was the missing DPI-injection step in the contract between the two tools, while the pipeline designer assumed “mmdc PNG output = directly embeddable by python-docx.” This was a pipeline-design methodology problem, not a question of whether either individual tool was fit for purpose.
+
+### What Did We Learn?
+
+1. **Every stage of a toolchain requires end-to-end validation of interoperability assumptions**—the default assumption that “A's output equals B's input” must be verified for every new combination of tools
+2. **Visual verification cannot be skipped**—code review alone cannot detect missing DPI metadata; the final rendering must be opened in Word and inspected
+3. **Implicit defaults are breeding grounds for integration bugs**—mmdc omitting the pHYs chunk and python-docx defaulting to 72 DPI are each individually reasonable, but their combination creates a bug
+4. **The fix required only one line of Pillow code**—`image.save(path, dpi=(300,300))`; however, diagnosis depended on visual inspection rather than code review, so the cost of discovery far exceeded the cost of repair
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | code |
+
+> **Reproduction requirements**: an environment with mmdc, python-docx v1.2.0, and Pillow. The python-docx default DPI behavior (72) is consistent across versions, although different versions of `add_picture()` may handle images lacking DPI metadata differently. The fix is in `docx_pipeline/renderers/mermaid_renderer.py` (`_inject_dpi()` method) in [docx-pipeline](https://github.com/redamancy231-create/docx-pipeline).
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+✅ The fix succeeded. After rendering, Pillow reads the PNG → `image.save(path, "PNG", dpi=(300, 300))` writes the pHYs chunk → python-docx calculates the embedded dimensions at 300 DPI → the image displays at the correct size in Word.
+
+### Related Links
+
+- [DOCX Pipeline repository](https://github.com/redamancy231-create/docx-pipeline)
+- [Three blind spots in LLM review (including rendering-output blind spots)](https://github.com/redamancy231-create/methodology-handbook) — corresponding memory `methodology_llm_review_blind_spots_rendering_paths`
+
+### Tags
+
+`docx-pipeline`, `mermaid-cli`, `mmdc`, `DPI`, `PNG`, `Word`, `工具链`, `元数据`, `端到端验证`, `视觉bug`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-005/NRR-2026-005-en.md ===
+# NRR-2026-005: Amdahl's Law — 53× C++ speedup collapsed to 2.2× in batch workloads
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-005 |
+| **Title** | 53× C++ speedup collapsed to 2.2× in batch workloads—Amdahl's Law fixed the end-to-end speedup ceiling at ~2.25× |
+| **Domain** | tool-building |
+| **Category** | ceiling-effect |
+| **Submitter** | Acerolaorion |
+| **Source Project** | etf-pattern-match-pybind11 |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-12 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> After accelerating the pure-compute core of a pattern-matching ETF strategy with pybind11 + C++20, batch workloads were expected to achieve end-to-end speedups close to those of individual calls (expected: 10–30×).
+
+### Method
+
+The pure-compute Python core (DTW, pattern matching, and technical indicators) was migrated to C++ and exposed through pybind11. Measurements compared (a) individual Python versus C++ calls, (b) Python versus C++ batch processing at 100 time points, and (c) 100 individual C++ calls versus one C++ batch call. Pure-compute modules were extracted from V3.3.py (3,836 lines), excluding functions dependent on sklearn/scipy/pandas.
+
+### Expected Result
+
+> Individual DTW calls ≥10×, individual pattern-matching calls ≥30×, and batch end-to-end performance ≥10×.
+
+### Actual Result
+
+Individual DTW calls achieved 34× and individual pattern-matching calls achieved 53×, both exceeding expectations. However, **batch end-to-end performance improved by only 2.2×**—far below the per-call speedup. Root cause: only **~56% of the batch workload was accelerable** (p≈0.556), while 44% was serial overhead. The theoretical speedup ceiling was 1/(1-p)≈2.25×; the measured 2.2× was already near that ceiling.
+
+| Metric | Value |
+|------|------|
+| Effect size | Individual call 53× → batch 2.2× (24× attenuation); theoretical ceiling ≈2.25× |
+| Sample size | 100 warm-up runs + median of 100 timed runs × 6 functions |
+| Serial fraction | 44% (Python loops 15% + data conversion 15% + pybind11 calls 8% + feature computation 6%) |
+| Models used | DeepSeek-V4-Pro, Kimi-K2.7-Code |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+**This is a textbook example of Amdahl's Law.** The 53× per-call speedup was not “wrong”—both 53× and 2.2× were accurate measurements of different things. The 53× figure measured the pure-compute hot path (14.0 ms→0.26 ms); 2.2× measured end-to-end batch throughput (50 ms→23 ms, including non-accelerable orchestration, data movement, and Python/C++ boundary overhead). This was not a bug; it was an architectural ceiling.
+
+### What Did We Learn?
+
+1. **Amdahl's Law is not a theoretical abstraction**—the measured 2.2× versus a 2.25× ceiling shows that mathematical modeling closely matched real measurements in a quantitative-computing workload
+2. **“Per-call speedup” and “end-to-end speedup” are entirely different metrics**—the former describes computational efficiency; the latter describes throughput improvement visible to the user
+3. **The 44% serial overhead was decomposed precisely into four categories** (loops/conversion/calls/features), each requiring a different optimization strategy
+4. **Achieving 10× end-to-end requires 92% of the workload to be accelerable**—architectural restructuring may be more fundamental than further C++ migration
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | fully-reproducible |
+| **Available Artifacts** | code, data, analysis-script, raw-output |
+
+> The complete benchmark code, Amdahl derivation, and performance analysis are in `docs/performance-analysis.md` and `benchmarks/` in the [etf-pattern-match-pybind11](https://github.com/redamancy231-create/etf-pattern-match-pybind11) repository.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+The 34–53× per-call speedup was successful; the collapse in batch performance does not negate its engineering value. One possible improvement is to move the Python for-loop and NumPy conversion into C++.
+
+### Related Links
+
+- [ETF Pattern Match — pybind11 repository](https://github.com/redamancy231-create/etf-pattern-match-pybind11)
+- [Performance-analysis brief (including the complete Amdahl derivation)](https://github.com/redamancy231-create/etf-pattern-match-pybind11/blob/master/docs/performance-analysis.md)
+
+### Tags
+
+`Amdahl`, `pybind11`, `C++`, `性能`, `加速塌缩`, `批量`, `理论上限`, `架构天花板`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-006/NRR-2026-006-en.md ===
+# NRR-2026-006: M&A pipeline self-assessment 106% vs. independent double-blind review 69.2
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-006 |
+| **Title** | AI self-assessment was ~11% too optimistic—the M&A pipeline self-assessed at 106% versus 69.2 in independent double-blind review (36.8-point gap) |
+| **Domain** | academic-writing |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ma-case-study-pipeline |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-21 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> A paper produced by a multi-model academic pipeline (5 models × 8 stages × cross-blinded review) was expected to approach submission-ready quality (≥80/100) after self-assessment during Phase 4 assembly, with the discrepancy between self-assessment and subsequent independent review within an acceptable range (≤15 points).
+
+### Method
+
+After Phase 4 of the M&A case-study pipeline (assembly by Claude Opus 4.7), the project conducted a retrospective self-assessment (the v2.0 archive identified three “highlights”). Phase 5A (GPT-5.5 compliance and fact layer) + Phase 5B (GLM-5.1 academic-standards layer) then performed an independent double-blind review (reviewers did not know the self-assessment score and had participated in none of the preceding stages).
+
+### Expected Result
+
+> The discrepancy between self-assessment and independent review should be ≤15 points, and assembly quality should be ≥80/100.
+
+### Actual Result
+
+Phase 5A scored **68/100 (returned for rewriting)**, while Phase 5B scored 71/100 (passed after revision). The weighted total was **69.2**. Compared with the three “highlights” in the self-assessment:
+- “Data reconciliation was sound” → goodwill 289.34 versus 289.04 contradiction (a critical defect)
+- “CAR was robust” → the long window's 42.16% was far above the short window's 18.45% (a warning sign of information leakage)
+- “DuPont analysis was complete” → 8.63% ≠ 10.42% (weighted versus period-end definitions were mixed)
+
+| Metric | Value |
+|------|------|
+| Effect size | 36.8-point gap between self-assessment and independent blind review; all three self-described “highlights” were disproven as critical defects |
+| Sample size | 1 paper × 2 independent reviewers × weighted scoring |
+| Models used | Claude Opus 4.7, GPT-5.5, GLM-5.1, Kimi-K2.6, Qwen |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+**A systematic optimistic bias in self-assessment.** The operator, who also evaluated the project, judged a project they had helped build too favorably. The underlying mechanism is that the same AI should not simultaneously serve as designer, executor, verifier, and scorekeeper—yet the Phase 4 self-assessment violated this principle. Under independent blind review, the self-assessment “highlights” systematically became critical defects. This was not an accidental mistake; it was the predictable result of one role occupying multiple positions.
+
+### What Did We Learn?
+
+1. **The same AI or operator should not simultaneously serve as designer, executor, verifier, and scorekeeper**—the Phase 4 self-assessment in the M&A pipeline violated its own five iron rules
+2. **Self-assessment “highlights” can systematically become critical defects under independent blind review**—none of the three self-identified highlights (data reconciliation, CAR, and DuPont) survived
+3. **Optimistic self-assessment bias is not an isolated case**—the ~11% bias recorded in `methodology-handbook` reappeared here in an extreme 36.8-point form
+4. **Three critical defects were diagnosed repeatedly but never fixed (Phase 9 never ran)**—a diagnosis that is not implemented is a diagnosis wasted
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, logs, raw-output |
+
+> The complete double-blind review reports are in `phases/phase5a_gpt5.5/` and `phases/phase5b_glm5.1/` in the M&A repository. Reproduction requires the same model versions and role assignments.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+The revised paper was re-evaluated at 84.0 overall. However, the three known defects were deliberately left unfixed, and Phase 9 never ran—the revision demonstrated that independent review worked, but the core loop was never closed.
+
+### Related Links
+
+- [M&A Case Study Pipeline](https://github.com/redamancy231-create/ma-case-study-pipeline)
+- [Project retrospective archive report (v3.0)](https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/项目复盘归档报告.md)
+- [Starting-point evaluation analysis (including red-team propositions)](https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/起点评估分析.md)
+
+### Tags
+
+`自评偏乐观`, `双盲审`, `学术流水线`, `独立审查`, `方法论失败`, `诊断不落地`, `自我评估偏差`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-007/NRR-2026-007-en.md ===
+# NRR-2026-007: AI self-review missed the death-criterion ordering bug
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-007 |
+| **Title** | AI self-review missed the death-criterion ordering bug—Claude's adversarial self-check failed to detect a critical defect that Codex saw immediately |
+| **Domain** | skill-design |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | claude-skills |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-06 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> After Claude (DeepSeek-V4-Pro, the designer of the kill-test-first Skill) performed an adversarial self-check of its own Skill, it was expected to catch all structural defects—especially an error that directly violated the Skill's own core principle: death criteria must be formulated before seeing the results.
+
+### Method
+
+After the designer completed the initial version of the kill-test-first Skill, it performed an adversarial self-check. The Skill was then submitted to Codex CLI (GPT-5.5, a different backend with no involvement in its creation) for independent review. Self-check findings were compared with independent-review findings. Qwen3.7-Max performed a second round of independent review.
+
+### Expected Result
+
+> The self-check should catch all structural defects rated MAJOR or above; incremental findings from independent review should be MINOR or MODERATE.
+
+### Actual Result
+
+**Codex found 5 critical defects in the first round**, the most important being the death-criterion ordering bug: the Skill's Gate 1 protocol placed “formulate death criteria” after “see the experimental results,” directly violating the core preregistration principle. Claude's self-check missed this bug completely. In the second round, Qwen found two additional issues: REDESIGN could evade STOP, and the three-state decision did not cover every quadrant.
+
+| Metric | Value |
+|------|------|
+| Effect size | Self-check: 0 MAJOR findings → Codex: 5 critical defects (including 1 ordering bug directly violating a core principle) → Qwen second round: +2 new issues |
+| Sample size | 1 Skill × 3 review rounds (1 self-check + 2 independent reviews) |
+| Models used | DeepSeek-V4-Pro, GPT-5.5, Qwen3.7-Max |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+**Self-review by the same backend has a structural blind spot.** Claude did not miss the death-criterion ordering bug because of insufficient capability; it missed it because the designer's thinking had solidified around the intuition that “of course you look at the results before deciding whether to kill it.” That is precisely the cognitive bias preregistration is intended to counteract. The different backend (GPT-5.5) had no such mental inertia and spotted the contradiction immediately.
+
+### What Did We Learn?
+
+1. **Self-review by the same backend has a structural blind spot**—the designer's cognitive inertia can conceal errors that conflict with its own design intuitions
+2. **A death-criterion ordering bug is the most dangerous type of bug**—it is not a logic error but a direct projection of the designer's cognitive bias
+3. **Two rounds of review by different backends are more valuable than multiple rounds by one backend**—the complementarity of Codex (structural issues) + Qwen (boundary conditions) far exceeded that of two rounds on the same backend
+4. **The Skill's own death-criterion principle was validated in this case**—“use its own medicine: abandon or redesign it when it appears”
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, logs, raw-output |
+
+> Complete review records are in case 2 of `kill-test-first/EXAMPLES.md` in [claude-skills](https://github.com/redamancy231-create/claude-skills). Prompts and review reports from all three iterations were retained.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+All issues were fixed. Codex's second-round review confirmed that every issue was closed. The core lesson—the necessity of independent review by different backends—was directly confirmed.
+
+### Related Links
+
+- [Claude Skills repository](https://github.com/redamancy231-create/claude-skills)
+- [Kill-Test-First EXAMPLES (case 2)](https://github.com/redamancy231-create/claude-skills/blob/main/kill-test-first/EXAMPLES.md)
+
+### Tags
+
+`自审盲区`, `kill-test-first`, `Codex审查`, `死亡判据`, `预登记`, `顺序bug`, `独立审查`, `Skill设计`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-008/NRR-2026-008-en.md ===
+# NRR-2026-008: LLM code review systematically missed three classes of bugs
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-008 |
+| **Title** | LLM code review systematically missed three classes of bugs—rendering output, default paths, and terminal encoding all escaped review |
+| **Domain** | code-review |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | docx-pipeline |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-17 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Multi-round LLM code review (across five backends and multidimensional review prompts) should detect functional bugs in the project, with expected coverage close to 100%.
+
+### Method
+
+The docx-pipeline project underwent five rounds of cross-model review (GPT-5.6-Sol as the primary reviewer), covering code correctness, configuration contracts, security, documentation completeness, and other dimensions. Actual bugs were independently detected afterward through manual end-to-end testing (visual verification + execution in a real Windows Git Bash environment).
+
+### Expected Result
+
+> LLM review should catch all or nearly all functional bugs; the expected miss rate was <10%.
+
+### Actual Result
+
+**Five rounds of LLM review completely missed three real bugs, for a 100% miss rate:**
+
+1. **Rendering-output bug**: Mermaid PNGs were stretched by ~4× in Word—code review saw the pixel count but not the missing DPI metadata
+2. **Default-path bug**: the bare template default `output/docx` had no extension, breaking the complete “init→convert” path—reviewers saw the single-point code logic as correct
+3. **Terminal-encoding bug**: Chinese filenames from the gh CLI failed during GBK/UTF-8 conversion under Windows Git Bash—reviewers could not see the terminal environment
+
+| Metric | Value |
+|------|------|
+| Effect size | All 3/3 bug classes escaped LLM review (100% miss rate) |
+| Sample size | 5 review rounds × 1 project × 3 empirically observed bug classes |
+| Models used | GPT-5.6-Sol, GPT-5.5, Kimi-K2.7, Claude Opus 4.8 |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+**LLM review has three classes of systematic blind spots with one shared feature: the bug does not occur at the source-code logic layer but in the interaction contracts between adjacent tools.** The rendering-output bug required visual confirmation of the final output; the default-path bug required traversing the full end-to-end workflow; and the terminal-encoding bug required a real operating-system environment to surface. Code review—regardless of how many rounds or models are used—can answer only “what the code says,” not “what the code does in the real environment.”
+
+### What Did We Learn?
+
+1. **LLM review cannot replace end-to-end visual verification**—all three classes of bug (rendering output, default paths, and terminal encoding) escaped five rounds of cross-model review
+2. **The three blind spots share one feature**: the bugs occur not in source-code logic but in implicit interaction contracts between adjacent tools
+3. **Pure code-review coverage ≠ real bug-detection rate**—reviewers see “what the code says,” not “what the code does in the real environment”
+4. **Discovery cost far exceeded repair cost**—fixing the three bugs required fewer than 20 lines of code in total, but diagnosis depended on manual end-to-end testing rather than LLM review
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, raw-output |
+
+> The retrospective analysis is recorded in [docx-pipeline/_reviews/retrospect_2026-07-17.md](https://github.com/redamancy231-create/docx-pipeline/blob/main/_reviews/retrospect_2026-07-17.md). Reproduction requires the same toolchain versions (mmdc, python-docx v1.2.0, Windows Git Bash).
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+All three bugs were subsequently fixed. The core lesson remains: testing strategy for AI-assisted development must add “runtime-environment end-to-end testing” and cannot rely solely on LLM code review.
+
+### Related Links
+
+- [DOCX Pipeline repository](https://github.com/redamancy231-create/docx-pipeline)
+- [Retrospective report (detailed analysis of the three blind-spot classes)](https://github.com/redamancy231-create/docx-pipeline/blob/main/_reviews/retrospect_2026-07-17.md)
+- [Three blind-spot classes in LLM review (methodology-handbook)](https://github.com/redamancy231-create/methodology-handbook)
+
+### Tags
+
+`LLM审查盲区`, `代码审查`, `渲染bug`, `默认路径`, `终端编码`, `端到端验证`, `目视确认`, `审查覆盖率`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-009/NRR-2026-009-en.md ===
+# NRR-2026-009: Framework v1.3.2 draft rejected by Codex (4.3/10)
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-009 |
+| **Title** | Framework v1.3.2 draft rejected by Codex (4.3/10)—8 structural failures, including the `boost -= (-0.15)` sign error |
+| **Domain** | methodology-extraction |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ai-collaboration-framework |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-14 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> After author self-check, the draft §3.7 signal-entropy detector extension based on the v1.3 framework structure was expected to pass independent review (score ≥6/10).
+
+### Method
+
+A §3.7 extension draft was written based on the v1.3 master-document structure, introducing `signal_entropy`, `boost` adjustment, and `auto-suppress`/`auto-explore` mechanisms. Codex CLI (GPT-5.5) performed a zero-involvement independent review across eight inspection dimensions.
+
+### Expected Result
+
+> Independent review score ≥6/10, with findings at MODERATE severity, allowing the draft to enter the master document after one revision round.
+
+### Actual Result
+
+**Codex scored it 4.3/10 and rejected it.** Eight structural failures:
+
+1. Version mismatch—the draft was based on the outdated v1.3 structure while the master document was already v1.5
+2. Automatic intervention violated the core constraint—`auto-suppress`/`auto-explore` violated “observe but do not block”
+3. **`boost -= (-0.15)` sign error**—a negative subtracted from a negative becomes positive, so failure increased the score by 0.15
+4. Fake demetaphorization—the draft claimed metaphors had been removed but retained 9+ terms such as Gene/Capsule/Event
+5. Evidence inflation to 4,590—retained analyses were packaged as “controlled trials”
+6. REO schema was not formalized—only example objects were provided
+7. The A/B test design was not executable—no sample size or statistical method
+8. Numerical sources were unverifiable—they came from obfuscated code (`javascript-obfuscator`)
+
+| Metric | Value |
+|------|------|
+| Effect size | Score 4.3/10 (REJECTED); all 8/8 inspection dimensions failed |
+| Sample size | 1 draft × 1 independent reviewer × 8 inspection dimensions |
+| Models used | DeepSeek-V4-Pro, GPT-5.5 |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+The eight failures fell into four root-cause categories: (a) **procedural**—the draft was written without synchronizing to the master-document version; (b) **conceptual**—“detection” was silently replaced with “automatic intervention,” violating the framework's core constraint; (c) **technical**—a sign error (negative minus negative becomes positive); and (d) **honesty-related**—claiming demetaphorization while leaving terminology in place, packaging retained analyses as RCTs, and treating values from obfuscated code as trustworthy parameters.
+
+### What Did We Learn?
+
+1. **Version mismatch is the most basic structural failure**—a draft based on an outdated master-document structure makes every section number invalid
+2. **“Observe but do not block” is the framework's core constraint**—sliding from “detection” to “automatic intervention” requires only one step
+3. **`boost -= (-0.15)` is a textbook sign-error case**—negative minus negative becomes positive, so failure is rewarded
+4. **Source quality is independent of extraction quality**—values in obfuscated code cannot be independently audited
+5. **The gap between claims and execution** (“demetaphorized” versus 9+ terms remaining) is one of the easiest failure modes in which to deceive oneself
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, logs, raw-output |
+
+> The complete review report and correction roadmap are in [ai-collaboration-framework/_reviews/](https://github.com/redamancy231-create/ai-collaboration-framework) and `_research/drafts/`.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+After correction, the v1.5.1 draft passed Codex's second review (7.2/10, PASS WITH MODIFICATIONS). The `boost` sign was corrected and automatic intervention was changed to dry-run only.
+
+### Related Links
+
+- [AI collaboration framework](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [v1.3.2 Codex review report (4.3/10)](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/框架v1.3.2_Codex审查报告.md)
+
+### Tags
+
+`驳回草案`, `Codex审查`, `符号错误`, `版本错位`, `去隐喻化`, `证据膨胀`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-010/NRR-2026-010-en.md ===
+# NRR-2026-010: Asymmetric drift in three-artifact synchronization
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-010 |
+| **Title** | Asymmetric drift in three-artifact synchronization—point patches for .md→.json versus full regeneration for .md→.docx systematically caused .json to omit prose corrections during cross-session handoffs |
+| **Domain** | document-generation |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ai-collaboration-framework |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-24 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> The three-artifact synchronization protocol—.md (authoritative source) → .json + .docx—should guarantee content consistency across the three formats. A PASS at the version gate (O6) should mean that the three artifacts are consistent.
+
+### Method
+
+Before the release of AI collaboration framework v1.6.4, the O6 version gate (`verify_version_consistency.py`) was run. Codex (GPT-5.5) then performed a cross-backend review of the three artifacts, comparing content consistency chapter by chapter.
+
+### Expected Result
+
+> The three artifacts should be fully content-consistent and the version gate should PASS.
+
+### Actual Result
+
+The version gate PASSED (the version number “1.6.4” matched across all three files). However, Codex's content-level review found that **.json omitted prose revisions from .md** (wording corrections, explanatory paragraphs, and so on), while .docx included those revisions automatically through full regeneration. Root cause: .json used point patches (manually patching an old JSON version), whereas .docx used full regeneration (pandoc generated it from the latest .md). During a cross-session handoff, the point-patch maintainer did not know about all prose changes in .md.
+
+| Metric | Value |
+|------|------|
+| Effect size | Content-level inconsistency between .json and .md (undetectable by O6 version gate) |
+| Sample size | One three-artifact cross-review before the v1.6.4 release |
+| Models used | DeepSeek-V4-Pro, GPT-5.5, Kimi-K2.7, Qwen3.7-Max |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+**A design defect in the synchronization protocol.** The O6 version gate checked only version-number consistency and could not detect content-level drift. The two derived formats used asymmetric synchronization strategies—.docx was fully regenerated (naturally preventing drift), while .json used point patches (depending on the operator knowing every change). During a cross-session handoff, the latter was bound to lag.
+
+### What Did We Learn?
+
+1. **Version-number consistency ≠ content consistency**—the O6 version gate PASSED even though .json and .md had prose-level drift
+2. **An asymmetric synchronization strategy is a design defect**—point patches versus full regeneration will inevitably be exposed during cross-session handoffs
+3. **Point patches assume that the operator knows every change in .md**—this assumption fails in multi-session handoff scenarios
+4. **The definitive fix is to regenerate everything from .md**—eliminate every manual synchronization path
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, raw-output |
+
+> The three-artifact cross-review report is in [ai-collaboration-framework/_reviews/](https://github.com/redamancy231-create/ai-collaboration-framework).
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+Short-term fix: add a Codex cross-backend review of the three artifacts before release. Long-term solution (not yet implemented): change .json synchronization to full regeneration.
+
+### Related Links
+
+- [AI collaboration framework](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [Three-artifact synchronization review report](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_review_v1.5.1_三件套同步审查.md)
+
+### Tags
+
+`三件套同步`, `版本门`, `不对称漂移`, `定点补丁`, `全量重生成`, `内容一致性`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-011/NRR-2026-011-en.md ===
+# NRR-2026-011: Independence limitations of multi-model self-correction systems
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-011 |
+| **Title** | Independence limitations of multi-model self-correction systems—the 9-model panel had only ~2 effectively independent votes (Kohli 2026) |
+| **Domain** | multi-model-collaboration |
+| **Category** | ceiling-effect |
+| **Submitter** | Acerolaorion |
+| **Source Project** | Kohli 2026 / CrossCheck |
+| **Source Authors** | Kohli |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Introducing multiple LLM backends into AI coding systems for cross-review and self-correction was expected to produce genuinely independent verification: reviewers' findings should be highly complementary, and the panel as a whole should outperform any single model.
+
+### Method
+
+CrossCheck (sburl/CrossCheck, a multi-model AI coding autonomous-loop system) was analyzed methodologically, with cross-validation against Kohli (2026-05) on quantified independence in a panel of nine frontier LLMs and Kuai et al. (2026-04) on behavioral entanglement among 18 LLMs. This project's two-round Phase 5 review (GPT-5.5 + Qwen3.7-Max) provided comparison data.
+
+### Expected Result
+
+> A panel of models using different backends should provide close to N independent perspectives; the expected number of effectively independent votes was ≥5 out of 9 models.
+
+### Actual Result
+
+Kohli (2026-05): **A panel of nine frontier LLMs had only ~2 effectively independent votes. A single best judge matched or even exceeded the performance of the full panel.** This project's Phase 5 review produced 17 findings from GPT-5.5 + 16 from Qwen3.7-Max = 33 findings with zero overlap—complementary, but also suggestive of diminishing returns. Kuai et al. (2026-04) further confirmed widespread “behavioral entanglement” among 18 LLMs.
+
+| Metric | Value |
+|------|------|
+| Effect size | 9→2 effectively independent votes (Kohli); approximately 2–3 effectively independent perspectives across 5 models in this project |
+| Sample size | 9 LLMs (Kohli) + 5 models in this project |
+| Models used | GPT-5.5, Qwen3.7-Max, Kimi-K2.7, GLM-5.2, Claude Opus 4.8 |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+This does not mean multi-model review is ineffective—quite the opposite: 33 findings with zero overlap demonstrate complementarity. However, shared training data, distillation, and alignment pipelines create implicit dependencies between models, so the marginal benefit of “adding more models” drops sharply after approximately 2–3 effectively independent perspectives. Four or five models from different providers may already be close to the effective ceiling.
+
+### What Did We Learn?
+
+1. **A nine-LLM review panel yielded only ~2 effectively independent votes**—shared training data and evaluation benchmarks create implicit dependencies between models
+2. **The value of multi-model review is concentrated in the first 2–3 models from different providers**—marginal returns drop sharply afterward
+3. **“Different CLI houses” ≠ “independent”**—models from different companies may still share training data and benchmarks
+4. **The empirical value of multi-model review is finding complementary blind spots** (33 findings with zero overlap), not claiming that all views are independent
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, analysis-script, raw-output |
+
+> The Kohli (2026-05) paper is at [arxiv.org/abs/2605.29800](https://arxiv.org/abs/2605.29800). Related analyses for this project are in [methodology-extraction-methodology](https://github.com/redamancy231-create/methodology-extraction-methodology). **This is a third-party analysis entry—the original author is not the submitter of this registry.**
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+Multi-model review remains effective within 2–3 effectively independent perspectives. The key is not to claim that all views are independent and not to continue adding models after the point of diminishing marginal returns.
+
+### Related Links
+
+- [Kohli (2026-05) — Nine Judges, Two Effective Votes](https://arxiv.org/abs/2605.29800)
+- [Kuai et al. (2026-04) — How Independent are LLMs?](https://arxiv.org/abs/2604.07650)
+- [Post-closure external-validation appendix](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md)
+
+### Tags
+
+`多模型审查`, `独立性`, `Kohli2026`, `有效独立票`, `行为纠缠`, `边际递减`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析来源：Kohli (2026-05), Kuai et al. (2026-04), CrossCheck (sburl/CrossCheck)*
+=== FILE: entries/NRR-2026-012/NRR-2026-012-en.md ===
+# NRR-2026-012: “Slow drift” OPEN-1—the framework's most serious structural gap
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-012 |
+| **Title** | The framework's most serious structural gap—“slow drift” (OPEN-1) was confirmed by 25+ cross-references but never validated against real project data |
+| **Domain** | methodology-extraction |
+| **Category** | abandoned-dead-end |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ai-collaboration-framework |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-25 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> The “most serious structural gap” identified by the AI collaboration framework—undetectable semantic drift across consecutive sessions—could be addressed by finding and validating a detection method through comparative analysis.
+
+### Method
+
+A complete analysis chain: CacheAligner comparison → transfer of SmartCrusher's five-dimensional scoring → CCR escape hatch → independent ChatGPT-5.5 review of three comparison documents.
+
+### Expected Result
+
+> Produce an operational drift-detection method and validate it through trials on 2–3 real projects.
+
+### Actual Result
+
+The four dimensions were not transferable: answer determinacy, exhaustibility of patterns, objectivity of feedback signals, and comparability of cost structures all showed structural breaks between the engineering and governance domains. ChatGPT-5.5 found 5–7 breakpoints in each of the three comparison documents (18+ counterexamples in total). The method included its own self-destruct clause—downgrade or abandon it if the drift ledger produced only noise. **OPEN-1 remains OPEN-1.**
+
+| Metric | Value |
+|------|------|
+| Effect size | The complete analysis chain produced no operational method; this gap was confirmed by 25+ cross-references |
+| Sample size | 4 comparative analyses × 1 independent review × 0 real-project trials |
+| Models used | DeepSeek-V4-Pro, GPT-5.5, Claude Opus 4.8 |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+This was not a lack of analytical depth—the analysis had already gone too deep and reached a boundary AI could not cross. ChatGPT-5.5 precisely identified the transfer breakpoints: closed patterns versus open patterns (the truly dangerous drift is precisely not in the current anchor table); change detection versus drift judgment (a detector can say “it changed,” but not “it is wrong”); and detector-induced compliance theater (the AI may learn to keep anchor fields unchanged while drifting elsewhere).
+
+### What Did We Learn?
+
+1. AI can diagnose its own most serious defects with extreme precision—but diagnosis ≠ repair
+2. “Slow drift” is the framework's Achilles' heel—discrete reviews cannot detect cumulative semantic shift
+3. Method transfer from the engineering domain to the governance domain has structural breaks—all four dimensions were non-transferable
+4. Honestly labeling an issue “unresolved” has more methodological value than pretending a solution exists
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, analysis-script, raw-output |
+
+> The complete analysis chain is in [ai-collaboration-framework/_research/](https://github.com/redamancy231-create/ai-collaboration-framework).
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+No. OPEN-1 remains OPEN-1. The archive note explicitly states that the remaining steps cannot be performed by AI.
+
+### Related Links
+
+- [AI collaboration framework](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [Headroom comparison analysis archive note](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/headroom对标分析_封存说明.md)
+- [Independent ChatGPT-5.5 review—three headroom comparison documents](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/ChatGPT-5.5独立审查_headroom对标三文档.md)
+
+### Tags
+
+`缓慢漂移`, `OPEN-1`, `结构性缺口`, `迁移断裂`, `AI边界`, `封存`, `未验证`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-013/NRR-2026-013-en.md ===
+# NRR-2026-013: The framework violated its own rule—§2.6 self-referential failure
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-013 |
+| **Title** | The framework violated its own rule—§2.6 required ≥2-backend review for a Minor version upgrade, but v1.6 was completed with one backend |
+| **Domain** | methodology-extraction |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ai-collaboration-framework |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-20 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> The version-upgrade protocol in framework §2.6 was expected to be followed strictly during the framework's own version evolution.
+
+### Method
+
+Codex (GPT-5.5) performed a cross-version review of v1.6, checking item by item whether the §2.6 review requirements had been met during the v1.5→v1.6 upgrade.
+
+### Expected Result
+
+> The v1.6 upgrade should satisfy independent review by ≥2 backends.
+
+### Actual Result
+
+§2.6 requires ≥2-backend review for a Minor upgrade—but **v1.6 (v1.5→v1.6 was a Minor upgrade) was completed using only one backend.** “The doctor's child goes untreated.”
+
+| Metric | Value |
+|------|------|
+| Effect size | 1 core rule violated by the framework itself |
+| Sample size | 1 version upgrade × 1 independent review |
+| Models used | DeepSeek-V4-Pro, GPT-5.5 |
+
+---
+
+## Interpretation and Reflection
+
+The operator = rule maker = rule enforcer. The framework creates rules to constrain others but lacks external enforcement to follow those rules itself.
+
+### What Did We Learn?
+
+1. “The doctor's child goes untreated”—rule makers are often the first to violate their own rules
+2. The existence of a rule ≠ enforcement of the rule—a rule system without independent auditing has structural vulnerabilities
+3. A transition clause is an honest repair: “We require others to do this, but we are still building the infrastructure to do it ourselves”
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | fully-reproducible |
+| **Available Artifacts** | logs, raw-output |
+
+> The Codex review report is in `_reviews/codex_v16_crosscheck_20260620.txt`. The original §2.6 text and the v1.6 review chain can be independently checked.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+A transition clause was added to §2.6. However, the structural issue (operator = rule maker = rule enforcer) remains.
+
+### Related Links
+
+- [Codex v1.6 cross-version review](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_v16_crosscheck_20260620.txt)
+
+### Tags
+
+`自反性失败`, `§2.6`, `Codex审查`, `规则违反`, `医生的孩子`, `过渡条款`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-014/NRR-2026-014-en.md ===
+# NRR-2026-014: Spec Coding was violated—the translation pipeline departed from the plan throughout
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-014 |
+| **Title** | The framework claimed Spec Coding but violated it throughout the translation pipeline—model roles, file scope, and process stages all diverged from the plan |
+| **Domain** | workflow-orchestration |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ai-collaboration-framework |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Framework §4 claims that “when a clear plan exists, execution must follow the plan strictly.” When the translation pipeline had an explicit Spec, execution was expected to comply strictly.
+
+### Method
+
+The three-language translation pipeline Spec explicitly defined model roles (OpenCC + Qwen full read-through + Codex proofreading), file scope (2 files), and a three-stage process. A retrospective compared actual execution with the Spec item by item.
+
+### Expected Result
+
+> Execution should match the Spec exactly.
+
+### Actual Result
+
+**All 3/3 plan commitments were violated:** model roles were simplified from “multiple models + proofreading” to “one model + self-check”; file scope expanded from 2 files to 4 without confirmation; and the three-stage process was compressed into one stage. The framework itself claimed Spec > Vibe, but the operator (also the Human Gate) skipped the gate in the name of “efficiency first.”
+
+| Metric | Value |
+|------|------|
+| Effect size | 3/3 plan commitments violated |
+| Sample size | 1 translation execution × comparison across 3 dimensions |
+| Models used | DeepSeek-V4-Pro, OpenCC, Qwen3.7-Max |
+
+---
+
+## Interpretation and Reflection
+
+The greatest enemy of Spec Coding is not external interference but the operator's own execution habit of “taking shortcuts.” The Human Gate is effectively meaningless when the operator and Human Gate are the same entity.
+
+### What Did We Learn?
+
+1. The greatest enemy of Spec Coding is the operator's own execution habit
+2. The Human Gate is effectively meaningless when the operator is also the Human Gate—it requires external enforcement
+3. Model-role assignments in a plan are the easiest part to simplify—“multiple models + proofreading” becomes “one model + self-check” with a single mental excuse: “This is faster”
+4. Honestly recording a violation after the fact ≠ preventing the violation in advance
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | prompts, logs, raw-output |
+
+> The retrospective is recorded in [retrospect_2026-06-23.md](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md).
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+This failure led to the mandatory `spec_over_vibe` check in §6 of the project startup checklist.
+
+### Related Links
+
+- [Retrospective — 2026-06-23](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md)
+
+### Tags
+
+`Spec Coding`, `翻译管道`, `计划违反`, `执行惯性`, `走捷径`, `Human Gate`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-015/NRR-2026-015-en.md ===
+# NRR-2026-015: The “zero residue” claim was disproven three times
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-015 |
+| **Title** | The “zero residue” claim was disproven three times—the same backend using the same grep pattern 10 times still could not find new blind spots |
+| **Domain** | code-review |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | ai-collaboration-framework |
+| **Source Authors** | Acerolaorion |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-06-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> After release cleanup was complete, scanning with the project's own grep pattern could confirm “zero residue.”
+
+### Method
+
+Framework release preparation: three rounds of cleanup + self-check claimed zero residue → three rounds of independent Codex scans by a different backend found new residue each time.
+
+### Expected Result
+
+> Zero residue should be achieved after the first cleanup + self-check.
+
+### Actual Result
+
+**The “zero residue” claim was made three times and disproven three times (100% false-positive rate):** (1) absolute paths/usernames remained → (2) four-layer path variants remained → (3) residue remained in files excluded by `.gitignore`. Root cause: the same brain using the same grep pattern 10 times produced the same blind spot ×10.
+
+| Metric | Value |
+|------|------|
+| Effect size | All 3/3 “zero residue” claims were disproven (100% false-positive rate) |
+| Sample size | 3 cleanup + self-check rounds × 3 independent Codex scan rounds |
+| Models used | DeepSeek-V4-Pro, GPT-5.5 |
+
+---
+
+## Interpretation and Reflection
+
+It is unreliable for the cleaner to declare “zero residue” personally—the brain has already formed the cognition that the item was “handled” during editing, and grep merely confirms that cognition. Independent scans by a different backend use different search strategies and naturally hit the operator's blind spots.
+
+### What Did We Learn?
+
+1. The same brain using the same grep pattern 10 times = the same blind spot ×10
+2. A cleaner's self-declaration of “zero residue” is unreliable—a cognitive-bias problem
+3. Independent scanning by a different backend is necessary: different search strategies provide different blind-spot coverage
+4. Path cleanup has four layers of variants—a single grep cannot exhaust them all
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, raw-output |
+
+> The retrospective is recorded in `retrospect_2026-06-23.md`. It led to the O7 `no_self_reported_zero_residue` rule.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+After a fourth repair round, Codex confirmed zero residue. The O7 rule (“no self-congratulating self-scan for zero residue”) originated from this failure.
+
+### Related Links
+
+- [Retrospective — 2026-06-23](https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/retrospects/retrospect_2026-06-23.md)
+
+### Tags
+
+`零残留`, `清理`, `自扫`, `grep`, `盲区`, `异后端扫描`, `O7`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-016/NRR-2026-016-en.md ===
+# NRR-2026-016: 18 LLMs showed widespread “behavioral entanglement” (Kuai et al., 2026)
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-016 |
+| **Title** | Eighteen LLMs showed widespread “behavioral entanglement”—shared training data, distillation, and alignment pipelines meant the models were not truly independent |
+| **Domain** | multi-model-collaboration |
+| **Category** | ceiling-effect |
+| **Submitter** | Acerolaorion |
+| **Source Project** | Kuai et al. (2026) |
+| **Source Authors** | Kuai et al. |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-25 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> When using LLMs from different model families for multi-model review, their judgments should be approximately statistically independent. A debiased validator ensemble was expected to improve accuracy by ≥10%.
+
+### Method
+
+Kuai et al. (2026-04) developed a statistical framework to audit “behavioral entanglement” among 18 LLMs (6 model families), quantifying behavioral correlations between model pairs.
+
+### Expected Result
+
+> Behavioral entanglement should be low between different model families.
+
+### Actual Result
+
+**The 18 LLMs showed widespread cross-family behavioral entanglement.** A debiased validator ensemble improved accuracy by 4.5%—showing that entanglement was real, but the improvement was far below what the “fully independent” assumption predicted. This corroborates Kohli (2026)'s “9→2 effective votes” finding.
+
+| Metric | Value |
+|------|------|
+| Effect size | +4.5% accuracy after debiasing (significant but far below the “fully independent” expectation) |
+| Sample size | 18 LLMs × 6 model families |
+| Sources of entanglement | Shared training data + knowledge distillation + alignment pipelines |
+
+---
+
+## Interpretation and Reflection
+
+Behavioral entanglement has three sources that are nearly impossible to avoid completely in the current LLM ecosystem, meaning that the independence gains from “switching models” are systematically overestimated.
+
+### What Did We Learn?
+
+1. “Independence of models from different families” is a hypothesis that requires testing, not a default fact
+2. Debiasing produced only +4.5%—the marginal benefit of multi-model review is lower than expected
+3. Model selection should prioritize diversity in training-data sources, architecture, and alignment pipelines
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | not-assessed |
+| **Available Artifacts** | none |
+
+> **Third-party analysis entry.** Source data came from the Kuai et al. (2026-04) paper.
+
+### Related Links
+
+- [Kuai et al. (2026-04) — How Independent are LLMs?](https://arxiv.org/abs/2604.07650)
+
+### Tags
+
+`行为纠缠`, `模型独立性`, `Kuai2026`, `去纠缠`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析来源：Kuai et al. (2026-04)*
+=== FILE: entries/NRR-2026-017/NRR-2026-017-en.md ===
+# NRR-2026-017: Multi-model LLM disagreement is a diagnostic signal, not a bug (Nájera et al., 2026)
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-017 |
+| **Title** | Multi-model LLM disagreement is a diagnostic signal, not a bug—but most “disagreements” do not indicate a deep problem |
+| **Domain** | multi-model-collaboration |
+| **Category** | null-result |
+| **Submitter** | Acerolaorion |
+| **Source Project** | Nájera et al. (2026) |
+| **Source Authors** | Nájera et al. |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-25 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> Disagreement between models in multi-model review indicates a real quality problem in the reviewed content; the degree of disagreement should be positively correlated with quality defects.
+
+### Method
+
+Nájera et al. (2026-05) reframed multi-model disagreement as a “diagnostic signal,” developed a four-class taxonomy of disagreement, and quantified the relationship between each disagreement type and content quality.
+
+### Expected Result
+
+> High disagreement = the content really has a problem.
+
+### Actual Result
+
+Most disagreements did not indicate a content-quality problem. Instead, they indicated (1) ambiguity in the evaluation criteria; (2) intrinsic ambiguity in the task; or (3) preference differences in model training data. Only the fourth class (deep disagreement) may indicate genuine evaluation complexity. This project's two-round Phase 5 review produced 33 findings with zero overlap—the two models had completely different error sensitivities and each covered the other's blind spots.
+
+| Metric | Value |
+|------|------|
+| Effect size | Of four disagreement classes, only deep disagreement may indicate genuine evaluation complexity |
+| Sample size | Nájera's public comment-analysis dataset + this project's Phase 5 data |
+
+---
+
+## Interpretation and Reflection
+
+It is not valid to judge content quality simply by saying that “the models disagree.” Disagreement must first be classified: were the rubrics poorly written, was the task intrinsically ambiguous, or was it genuine deep disagreement?
+
+### What Did We Learn?
+
+1. Most inter-model disagreement does not indicate a content-quality problem—disagreement must be classified into one of four classes before its meaning can be assessed
+2. Phase 5's 33 findings with zero overlap were not “models arguing”—they reflected different error sensitivities and complementary coverage of blind spots
+3. “High inter-model agreement = high quality” is a hypothesis that requires testing—agreement can also reflect a shared blind spot
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | not-assessed |
+| **Available Artifacts** | none |
+
+> **Third-party analysis entry.** Source data came from the Nájera et al. (2026-05) paper.
+
+### Related Links
+
+- [Nájera et al. (2026-05) — When Models Disagree](https://arxiv.org/abs/2605.29025)
+
+### Tags
+
+`多模型分歧`, `诊断信号`, `Nájera2026`, `分歧分类`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析来源：Nájera et al. (2026-05)*
+=== FILE: entries/NRR-2026-018/NRR-2026-018-en.md ===
+# NRR-2026-018: CrossCheck had no independent-review records across 149 PRs
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-018 |
+| **Title** | All 149 CrossCheck PRs were self-reported by the author—“multi-model peer review” amounted to zero independent-review records |
+| **Domain** | multi-model-collaboration |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | CrossCheck (sburl) |
+| **Source Authors** | Spencer Burleigh |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> An AI coding system that explicitly assigns multiple model roles (Codex writes → peer model reviews → hooks execute) was expected to produce traceable records of independent review.
+
+### Method
+
+A methodological extraction analysis of the commit history and project documentation for 149 CrossCheck (sburl/CrossCheck) PRs, checking for archived evidence of peer-model review.
+
+### Expected Result
+
+> At least some PRs should contain records of peer-model review.
+
+### Actual Result
+
+**All 149/149 PRs (100%) were self-reported by the author—zero archived independent reviews.** The project's description of “peer model review” had no archived records.
+
+| Metric | Value |
+|------|------|
+| Effect size | 149/149 PRs had no independent-review record (100%) |
+| Sample size | 149 PRs × 1 project |
+| Tools used | Claude Code, Codex CLI, Gemini CLI |
+
+---
+
+## Interpretation and Reflection
+
+CrossCheck's Swiss Cheese Model and Skills system are among the richest AI collaboration architecture designs outside the project's own ecosystem. But there is an execution gap between design and practice: designing multiple layers of quality assurance cannot guarantee that every layer is actually executed and recorded.
+
+### What Did We Learn?
+
+1. The design of “multi-model review” ≠ execution of “multi-model review”—without an archival mechanism, it is impossible to distinguish “performed but not recorded” from “never performed”
+2. Git hooks can enforce code gates but cannot enforce recording of the review process
+3. The Swiss Cheese Model would be more complete with a “review archive” layer
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | fully-reproducible |
+| **Available Artifacts** | logs, raw-output |
+
+> **Third-party analysis entry.** Source data came from the public [sburl/CrossCheck](https://github.com/sburl/CrossCheck) repository. Anyone can verify it independently.
+
+### Related Links
+
+- [CrossCheck repository](https://github.com/sburl/CrossCheck)
+- [Methodology extraction methodology — CrossCheck evidence card](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_crosscheck.md)
+
+### Tags
+
+`CrossCheck`, `多模型审查`, `独立审查`, `归档`, `执行断层`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+*分析来源：sburl/CrossCheck 公开仓库 PR 历史*
+=== FILE: entries/NRR-2026-019/NRR-2026-019-en.md ===
+# NRR-2026-019: GitNexus CALLS-edge blind spot for same-file coverage
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-019 |
+| **Title** | GitNexus captured only 3/81+ and 0/17 same-file internal method calls—asserting module-internal coupling from index data is unreliable |
+| **Domain** | benchmarking |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | GitNexus |
+| **Source Authors** | Abhigyan Patwari |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-22 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> The CALLS edges in the GitNexus code knowledge graph should reliably capture method-call relationships, including calls within the same file. Expected index coverage was ≥80%, making the edges suitable for asserting module-internal coupling.
+
+### Method
+
+Manual source-code grep cross-validation was performed on two core modules in the docx-pipeline project: PurePythonConverter (1,213 lines, 36 methods) and MermaidRenderer (677 lines, 17 methods). The number of CALLS edges in the GitNexus index was compared with the actual call chains in the source.
+
+### Expected Result
+
+> GitNexus CALLS edges should cover ≥80% of same-file internal calls.
+
+### Actual Result
+
+PurePythonConverter: only **3** same-file CALLS edges were captured (coverage ≤3.7%). MermaidRenderer: **0** same-file CALLS edges were captured (0% coverage). Asserting module-internal coupling from GitNexus CALLS edges is unreliable.
+
+| Metric | Value |
+|------|------|
+| Effect size | PurePythonConverter ≤3.7% (3/81+); MermaidRenderer 0% (0/17) |
+| Sample size | 2 modules × 2 detection methods |
+| Tools used | GitNexus |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+The indexing strategy for same-file CALLS edges has different detection accuracy from cross-file calls. This is not a bug but a difference in indexing precision across dimensions. However, for methodology extraction, blindly trusting index data would systematically underestimate module complexity.
+
+### What Did We Learn?
+
+1. Same-file coverage of GitNexus CALLS edges can be as low as 0%—do not assert module-internal coupling from CALLS-edge counts
+2. AI-tool evaluation cannot rely only on static source analysis—controlled experiments are needed to reveal blind spots
+3. Cross-file IMPORT/EXTENDS edges are more reliable than same-file CALLS edges
+4. Claims made by any analysis tool require cross-validation—“3 CALLS edges” may be only 3.7% of the truth
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | fully-reproducible |
+| **Available Artifacts** | code, logs |
+
+> **Third-party analysis entry.** To reproduce: run GitNexus indexing in the docx-pipeline repository → compare the number of CALLS edges → manually count with grep.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+Cross-file IMPORT/EXTENDS edges have higher confidence than same-file CALLS edges. Recommended strategy: use GitNexus across files and source-code grep within files.
+
+### Related Links
+
+- [GitNexus analysis project](https://github.com/redamancy231-create/methodology-extraction-methodology)
+- [GitNexus CALLS-edge coverage blind spot (methodology-handbook)](https://github.com/redamancy231-create/methodology-handbook)
+
+### Tags
+
+`GitNexus`, `CALLS边`, `索引覆盖`, `代码知识图谱`, `源码交叉验证`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-020/NRR-2026-020-en.md ===
+# NRR-2026-020: Evidence-grade ceiling of the minimal PocketFlow project
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-020 |
+| **Title** | PocketFlow's 100-line core made every extracted asset [Sp] speculative; N=2 evidence provided only directional indication |
+| **Domain** | methodology-extraction |
+| **Category** | ceiling-effect |
+| **Submitter** | Acerolaorion |
+| **Source Project** | PocketFlow |
+| **Source Authors** | Zachary Huang |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-25 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> After three independent analyses of PocketFlow (a 100-line core plus a cookbook organized by difficulty), at least three reusable methodology patterns were expected to reach the [E] trial level.
+
+### Method
+
+Three independent analyses (DeepSeek-V4-Pro + GPT-5.5 + Kimi-K2.7) extracted three asset groups: B1 minimal core + example add-ons, B2 difficulty stratification, and C1-C3 anti-pattern list. Each was assessed against the framework's evidence-grade criteria.
+
+### Expected Result
+
+> At least B1 should reach the [E] trial level—supported by ≥1 independent source project and not merely speculative.
+
+### Actual Result
+
+**All 3/3 asset groups were [Sp] speculative level.** B1's N=2 evidence provided only directional indication. Extracting methodology from a 100-line core project has an inherent information-density ceiling.
+
+| Metric | Value |
+|------|------|
+| Effect size | All 3/3 asset groups were [Sp] (0/3 reached [E]); N=2 evidence provided only directional indication |
+| Sample size | 1 project × 3 analysis rounds × 3 asset groups |
+| Models used | DeepSeek-V4-Pro, GPT-5.5, Kimi-K2.7 |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+This was not a problem with PocketFlow—minimalist design is itself a methodological position. The problem was insufficient information density → more inference/extrapolation → evidence grade could only remain at [Sp]. This ceiling was not caused by insufficient analytical depth; it was imposed by the information capacity of the source project itself.
+
+### What Did We Learn?
+
+1. Methodology extraction from minimal projects has an inherent ceiling—the smaller the source project, the harder it is for the evidence grade to exceed [Sp]
+2. N=2 evidence has only directional-indication value—it cannot carry the weight of [E]-level evidence
+3. A 100-line core is both a methodological strength and an extraction limitation—it cannot provide evidence of diversity
+4. For small external projects, set an evidence-grade ceiling in advance—avoid discovering only after three analysis rounds that everything is [Sp]
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, analysis-script, raw-output |
+
+> **Third-party analysis entry.** The assets extracted from PocketFlow by the framework are in the main document of ai-collaboration-framework.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+B1's N=2 evidence was directionally consistent, providing a direction for later large-sample validation. The C1-C3 anti-patterns met the inclusion criteria.
+
+### Related Links
+
+- [AI collaboration framework — PocketFlow-related section](https://github.com/redamancy231-create/ai-collaboration-framework)
+- [PocketFlow open-source repository](https://github.com/typicalpenguin/PocketFlow)
+
+### Tags
+
+`PocketFlow`, `极简项目`, `证据等级`, `Sp推测级`, `信息密度`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-021/NRR-2026-021-en.md ===
+# NRR-2026-021: Applicability gradient decay of the methodology-extraction framework
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-021 |
+| **Title** | Methodology-extraction framework applicability decayed rapidly with the source project's methodological self-awareness gradient—100% for own projects → 69% for projects with papers → 37.5% for pure-code projects |
+| **Domain** | methodology-extraction |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | NPGS |
+| **Source Authors** | baopinshui |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> The methodology-extraction framework should be able to extract meaningful methodology patterns from unknown open-source projects—even when a project has no AI collaboration records, usable signals should be extractable from passive traces. The expected minimum gradient (a pure-code project) had an extraction rate of ≥50%.
+
+### Method
+
+A complete eight-component extraction was performed across three project gradients: own projects (★★★★★), ml-quant-trading (★★★, with paper + CI + tests), and NPGS (★, with zero methodology documentation).
+
+### Expected Result
+
+> Extraction rates should decline progressively across the three gradients while retaining a baseline—NPGS ≥50% (4/8).
+
+### Actual Result
+
+**The gradient was 100% → 69% → 37.5%.** Five of eight NPGS components were blank. The three extractable components could also be obtained with GitNexus, meaning the framework had **no incremental value** for passive traces.
+
+| Metric | Value |
+|------|------|
+| Effect size | Extraction-rate gradient 100% → 69% → 37.5%; 5/8 NPGS components blank |
+| Sample size | 3 projects × 3 gradients × 8 components |
+| Models used | DeepSeek-V4-Pro, GitNexus, Codex GPT-5.5 |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+The framework's implicit assumption—“the source project knows what it did and recorded it”—does not hold for most open-source projects. The framework is not a “detector” but an “organizer”: it cannot discover information that does not exist.
+
+### What Did We Learn?
+
+1. The framework's applicable population is extremely narrow—it works only for projects with very strong AI-collaboration self-awareness
+2. Extraction rate is positively associated with the source project's methodological self-awareness (★★★★★=100%→★=37.5%)
+3. The framework has no incremental value for passive traces—anything GitNexus can obtain does not require the framework
+4. The framework's value proposition should be corrected from “discovery” to “synthesis”—it is not a detector but an organizer
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, analysis-script, raw-output |
+
+> **Third-party analysis entry.** Evidence cards for NPGS and ml-quant-trading are in `methodology-extraction-methodology/explorations/`.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+Within the project's own project group, the framework's extraction rate approached 100%—showing that the framework design works, but its applicability is narrower than initially assumed.
+
+### Related Links
+
+- [NPGS evidence card](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md)
+- [ml-quant-trading evidence card](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_ml_quant_trading.md)
+
+### Tags
+
+`方法论提取`, `框架适用性`, `梯度衰减`, `NPGS`, `被动痕迹`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
+=== FILE: entries/NRR-2026-022/NRR-2026-022-en.md ===
+# NRR-2026-022: Extractor contamination created a false methodology signal
+
+## Basic Information
+
+| Field | Content |
+|------|------|
+| **Entry ID** | NRR-2026-022 |
+| **Title** | “Extractor contamination”—methodology documents added by a fork author were misattributed to the source project, creating a false methodology signal |
+| **Domain** | methodology-extraction |
+| **Category** | methodology-failure |
+| **Submitter** | Acerolaorion |
+| **Source Project** | NPGS |
+| **Source Authors** | baopinshui |
+| **Analyst** | Acerolaorion |
+| **Date** | 2026-07-23 |
+
+---
+
+## Experiment Overview
+
+### Original Hypothesis
+
+> When extracting methodology from a fork's source project, all files in the fork repository should reflect the source project's methodological characteristics. Additional documents were expected to supplement the source project's methodology information.
+
+### Method
+
+A complete methodology extraction was performed on NPGS (baopinshui/NPGS). After the repository was forked, the extractor added `CLAUDE.md`, a GitNexus index, and analysis reports, then performed extraction from the fork. The documents were traced afterward to determine which came from the source author and which came from the extractor.
+
+### Expected Result
+
+> At least some additional documents should reflect or supplement the source project's methodological characteristics.
+
+### Actual Result
+
+**`CLAUDE.md`, the GitNexus index, and the analysis reports were 100% created by the fork extractor.** The source project had zero methodology documentation. Without distinguishing the two, the extractor would misattribute the “only methodology documentation written by the extractor” to the source project as evidence of “methodological self-awareness.”
+
+| Metric | Value |
+|------|------|
+| Effect size | Source-project methodology documentation = 0; fork-added documents = 100% extractor-authored |
+| Sample size | 1 project × comparison of extractor versus source-author documentation |
+| Models used | DeepSeek-V4-Pro, GPT-5.6-Sol, GitNexus |
+
+---
+
+## Interpretation and Reflection
+
+### Why Did It Fail?
+
+A design defect in Phase 0 of the extraction framework. When the extractor is also the sole author of methodology documentation in the repository, the default assumption that “repository documentation reflects the source project” systematically overestimates the source project's methodological self-awareness.
+
+### What Did We Learn?
+
+1. Extractor-authored documentation ≠ source-project methodology—it creates a false signal
+2. Phase 0 needs an “extractor contamination” check—down-weight documentation when its author ≠ the source project's author
+3. Analysis artifacts added after forking should not be treated as source-project methodology—an observer effect
+4. Zero source-project documentation is an honest signal, not an extraction failure
+
+---
+
+## Reproducibility
+
+| Dimension | Assessment |
+|------|------|
+| **Overall Reproducibility** | partially-reproducible |
+| **Available Artifacts** | logs, analysis-script |
+
+> **Third-party analysis entry.** The differences between the NPGS source repository and the fork can be independently verified.
+
+---
+
+## Related
+
+### Did It Succeed Later?
+
+This is a fixable design defect: adding an extractor-contamination check to Phase 0 is sufficient to filter it out. It is not a structural framework failure.
+
+### Related Links
+
+- [NPGS source repository (baopinshui/NPGS)](https://github.com/baopinshui/NPGS)
+- [NPGS evidence card](https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md)
+
+### Tags
+
+`提取者污染`, `fork`, `NPGS`, `方法论归因`, `Phase0缺陷`, `虚假信号`, `第三方分析`
+
+---
+
+*生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
+*翻译模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-26*
