@@ -1103,7 +1103,7 @@
         }
       ],
       "source_project": "CrossCheck (sburl)",
-      "source_authors": "sburl（待核实）",
+      "source_authors": "Spencer Burleigh",
       "analyst": "Acerolaorion",
       "source_project_url": "https://github.com/sburl/CrossCheck"
     },
@@ -1158,7 +1158,7 @@
         }
       ],
       "source_project": "GitNexus",
-      "source_authors": "待核实",
+      "source_authors": "Abhigyan Patwari",
       "analyst": "Acerolaorion"
     },
     {
@@ -1216,7 +1216,7 @@
         }
       ],
       "source_project": "PocketFlow",
-      "source_authors": "待核实",
+      "source_authors": "Zachary Huang",
       "analyst": "Acerolaorion"
     },
     {
@@ -1274,7 +1274,7 @@
         }
       ],
       "source_project": "NPGS",
-      "source_authors": "baopinshui（待核实）",
+      "source_authors": "baopinshui",
       "analyst": "Acerolaorion",
       "source_project_url": "https://github.com/baopinshui/NPGS"
     },
@@ -1332,7 +1332,7 @@
         }
       ],
       "source_project": "NPGS",
-      "source_authors": "baopinshui（待核实）",
+      "source_authors": "baopinshui",
       "analyst": "Acerolaorion",
       "source_project_url": "https://github.com/baopinshui/NPGS"
     }
