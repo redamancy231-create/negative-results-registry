@@ -37,7 +37,7 @@
     main { padding: 28px 0 60px; }
     .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
     .controls { padding: 20px; }
-    .control-grid { display: grid; grid-template-columns: minmax(250px,2fr) repeat(2,minmax(170px,1fr)); gap: 12px; }
+    .control-grid { display: grid; grid-template-columns: minmax(220px,2fr) repeat(3,minmax(140px,1fr)); gap: 12px; }
     .field label { display: block; margin-bottom: 6px; color: var(--muted); font-size: .76rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
     .input-wrap { position: relative; }
     .search-icon { position: absolute; top: 50%; left: 13px; width: 18px; height: 18px; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
@@ -153,6 +153,7 @@
         </div>
         <div class="field"><label for="domain-filter">领域 · Domain</label><select id="domain-filter"><option value="">全部领域</option></select></div>
         <div class="field"><label for="category-filter">类型 · Category</label><select id="category-filter"><option value="">全部类型</option></select></div>
+        <div class="field"><label for="sort-select">排序 · Sort</label><select id="sort-select"><option value="id-desc">最新优先</option><option value="id-asc">最早优先</option><option value="date-desc">最近日期</option><option value="date-asc">最早日期</option><option value="domain">按领域</option><option value="repro">可复现性优先</option></select></div>
       </div>
       <div class="control-footer">
         <div class="result-count" id="result-count" aria-live="polite">正在载入登记册…</div>
@@ -217,13 +218,14 @@
     ];
     const state = {
       registry: null, entries: [], filteredEntries: [],
-      search: "", domain: "", category: "", tag: "", showAllTags: false, openIds: new Set()
+      search: "", domain: "", category: "", tag: "", sort: "id-desc", showAllTags: false, openIds: new Set()
     };
     const elements = {
       entries: document.getElementById("entries"),
       search: document.getElementById("search"),
       domain: document.getElementById("domain-filter"),
       category: document.getElementById("category-filter"),
+      sort: document.getElementById("sort-select"),
       reset: document.getElementById("reset-filters"),
       count: document.getElementById("result-count"),
       tagCloud: document.getElementById("tag-cloud"),
@@ -340,6 +342,7 @@
       if (state.domain) params.set("domain", state.domain);
       if (state.category) params.set("category", state.category);
       if (state.tag) params.set("tag", state.tag);
+      if (state.sort !== "id-desc") params.set("sort", state.sort);
       var qs = params.toString();
       history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
     }
@@ -349,16 +352,33 @@
       if (params.has("domain")) { state.domain = params.get("domain"); elements.domain.value = state.domain; }
       if (params.has("category")) { state.category = params.get("category"); elements.category.value = state.category; }
       if (params.has("tag")) { state.tag = params.get("tag"); }
+      if (params.has("sort")) { state.sort = params.get("sort"); elements.sort.value = state.sort; }
+    }
+    var REPRO_ORDER = { "fully-reproducible": 0, "partially-reproducible": 1, "not-reproducible": 2, "not-assessed": 3 };
+    function sortEntries(entries) {
+      switch (state.sort) {
+        case "id-asc": return entries.slice().sort(function (a, b) { return a.id.localeCompare(b.id); });
+        case "date-desc": return entries.slice().sort(function (a, b) { return (b.date || "").localeCompare(a.date || "") || compareIdsDescending(a, b); });
+        case "date-asc": return entries.slice().sort(function (a, b) { return (a.date || "").localeCompare(b.date || "") || compareIdsDescending(a, b); });
+        case "domain": return entries.slice().sort(function (a, b) { return a.domain.localeCompare(b.domain) || compareIdsDescending(a, b); });
+        case "repro": return entries.slice().sort(function (a, b) {
+          var ra = REPRO_ORDER[(a.reproducibility && a.reproducibility.level) || ""] != null ? REPRO_ORDER[(a.reproducibility && a.reproducibility.level) || ""] : 9;
+          var rb = REPRO_ORDER[(b.reproducibility && b.reproducibility.level) || ""] != null ? REPRO_ORDER[(b.reproducibility && b.reproducibility.level) || ""] : 9;
+          return ra - rb || compareIdsDescending(a, b);
+        });
+        default: return entries;
+      }
     }
     function applyFilters() {
       const query = state.search.trim().toLocaleLowerCase("zh-CN");
-      state.filteredEntries = state.entries.filter(function (entry) {
+      var filtered = state.entries.filter(function (entry) {
         const matchesQuery = !query || searchableText(entry).includes(query);
         const matchesDomain = !state.domain || entry.domain === state.domain;
         const matchesCategory = !state.category || entry.category === state.category;
         const matchesTag = !state.tag || Array.isArray(entry.tags) && entry.tags.includes(state.tag);
         return matchesQuery && matchesDomain && matchesCategory && matchesTag;
       });
+      state.filteredEntries = sortEntries(filtered);
       renderEntries();
       updateResultCount();
       updateURL();
@@ -465,8 +485,8 @@
       });
     }
     function resetFilters() {
-      state.search = ""; state.domain = ""; state.category = ""; state.tag = "";
-      elements.search.value = ""; elements.domain.value = ""; elements.category.value = "";
+      state.search = ""; state.domain = ""; state.category = ""; state.tag = ""; state.sort = "id-desc";
+      elements.search.value = ""; elements.domain.value = ""; elements.category.value = ""; elements.sort.value = "id-desc";
       history.replaceState(null, "", location.pathname + location.hash);
       renderTagCloud(); applyFilters(); elements.search.focus();
     }
@@ -489,6 +509,9 @@
     });
     elements.category.addEventListener("change", function (event) {
       state.category = event.target.value; applyFilters();
+    });
+    elements.sort.addEventListener("change", function (event) {
+      state.sort = event.target.value; applyFilters();
     });
     elements.reset.addEventListener("click", resetFilters);
     elements.tagCloud.addEventListener("click", function (event) {
