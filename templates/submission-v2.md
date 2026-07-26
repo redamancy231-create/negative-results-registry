@@ -28,7 +28,11 @@
 | **标题 `title`** | _≤120 字符；一句话包含“测试对象/基线 + 阴性结果”，避免只写“实验失败”。例：`结构化 prompt 相比单段 prompt 未提高代码审查召回率`_ |
 | **领域 `domain`** | _从下列枚举中选 1 个最能代表主要研究对象的代码_ |
 | **分类 `category`** | _从下列枚举中选 1 个最能代表主要阴性结论的代码_ |
-| **提交者 `submitted_by`** | _GitHub 用户名或姓名；第三方分析仍填本条目提交者_ |
+| **提交者 `submitted_by`** | _GitHub 用户名或姓名；谁向本登记册提交了这条目_ |
+| **来源项目 `source_project`** | _阴性结果来自哪个项目/论文？第一方填自己的项目名，第三方填源项目/论文名（≤200 字符）_ |
+| **来源作者 `source_authors`** | _源项目的原始作者。第一方填自己（与 submitted_by 同），第三方填原作者（如 `Kuai et al.`、`baopinshui`；≤300 字符）_ |
+| **分析者 `analyst`** | _谁分析了这个阴性结果？第一方=自己，第三方分析=你（与 submitted_by 同，与 source_authors 不同）_ |
+| **来源项目 URL `source_project_url`** | _（可选）源项目的链接，如 GitHub 仓库或论文 URL_ |
 | **日期 `date`** | `YYYY-MM-DD`；第一方填实验结束日，第三方填本次分析完成日 |
 
 > **`domain` 怎么选**：按主要研究对象选择，而不是按偶然使用的工具选择。`prompt-engineering`（prompt 内容/结构）、`code-review`（代码审查）、`methodology-extraction`（方法论提取）、`workflow-orchestration`（流程编排）、`document-generation`（文档生成）、`multi-model-collaboration`（多模型协作）、`quantitative-research`（量化研究）、`academic-writing`（学术写作）、`tool-building`（工具开发）、`skill-design`（Agent/Skill 设计）、`benchmarking`（基准评测）、`other`（均不适用，须在方法中说明）。若跨领域，只选主领域，其余放入 `tags`。
@@ -103,7 +107,7 @@ _例如：`prompt-tdd`, `GPT-5.5`, `code-review`, `第三方分析`_
 ---
 ## 提交前检查清单
 - [ ] `.md` 与 `.json` 同名成对存在，目录名、文件名和 `id` 完全一致。
-- [ ] 11 个必填字段均已填写：`id`, `title`, `domain`, `category`, `submitted_by`, `date`, `hypothesis`, `method`, `expected_result`, `actual_result`, `interpretation`。
+- [ ] 14 个必填字段均已填写：`id`, `title`, `domain`, `category`, `submitted_by`, `source_project`, `source_authors`, `analyst`, `date`, `hypothesis`, `method`, `expected_result`, `actual_result`, `interpretation`。
 - [ ] `domain`、`category`、可复现性级别和产物均使用 schema 中的英文代码；日期为 `YYYY-MM-DD`。
 - [ ] 标题及各长文本未超限；`lessons_learned` 为 1–5 条且每条 ≤200 字符；`tags` 最多 10 个且每个 ≤50 字符。
 - [ ] 指标表与 JSON 的 `effect_size`、`sample_size`、`models_used` 完全一致；Markdown 与 JSON 的其他镜像字段也一致。

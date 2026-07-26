@@ -11,11 +11,16 @@
   "actual_result": "Pilot 15 cases 中两组路由准确率和任务完成率无显著差异。效应量不足以支持进入 Tier 1 全规模实验。",
   "effect_size": "Pilot 阶段差异不显著（未进入推断统计）",
   "sample_size": "15 cases（Pilot，Tier 0）",
-  "models_used": ["GPT-5.5"],
+  "models_used": [
+    "GPT-5.5"
+  ],
   "interpretation": "两个可能解释：(1) LLM 已是足够好的语义路由器——自然语义理解足以消除 action 歧义，声明式精度是冗余的；(2) Pilot 样本太小，但 Pilot 的目标就是在低成本阶段判断是否值得投入全规模——答案是'不值得'。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["prompts", "analysis-script"],
+    "artifacts_available": [
+      "prompts",
+      "analysis-script"
+    ],
     "notes": "完整 Pilot 设计和 prompts 在 prompt-tdd-methodology 仓库。复现依赖 GPT-5.5 模型版本，API 升级可能导致路由行为变化。可重跑代码，但未必复现相同结果。"
   },
   "related_positive_result": "无直接后续。A3 被用作'如何闭合无信号实验'的教学反例。",
@@ -25,7 +30,15 @@
     "阴性 Pilot 也是成功——A3 作为反例案例的教学价值比阳性结果更独特",
     "A2（n=24对照）和 A3（n=15 Pilot）在各自条件下均未检出差异——形成待检验的元假设：prompt 结构变异效应量可能低于预期；需预注册、多任务、充分功效的汇总研究验证"
   ],
-  "tags": ["prompt-tdd", "GPT-5.5", "agent-routing", "声明式-vs-NL", "对照实验", "Pilot", "零结果"],
+  "tags": [
+    "prompt-tdd",
+    "GPT-5.5",
+    "agent-routing",
+    "声明式-vs-NL",
+    "对照实验",
+    "Pilot",
+    "零结果"
+  ],
   "links": [
     {
       "label": "Prompt-TDD 方法论仓库",
@@ -39,5 +52,9 @@
       "label": "NRR-2026-001（同项目 A2 阴性结果）",
       "url": "https://github.com/redamancy231-create/negative-results-registry/blob/main/entries/NRR-2026-001/NRR-2026-001.md"
     }
-  ]
+  ],
+  "source_project": "prompt-tdd-methodology",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
 }

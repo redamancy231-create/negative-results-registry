@@ -130,8 +130,7 @@ negative-results-registry/
 │   ├── generate_registry.py     ← entries/ → registry.json
 │   ├── validate_ci.py           ← Schema + 链接 + 一致性校验
 │   ├── check_external_links.py  ← 外部链接检查
-│   ├── update_readme.py         ← registry.json → README 自动更新
-│   └── entry_sources.json       ← 条目 ID → 来源名称映射
+│   └── update_readme.py         ← registry.json → README 自动更新
 │
 ├── docs/
 │   ├── index.html               ← GitHub Pages 可浏览页面

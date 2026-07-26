@@ -11,11 +11,19 @@
   "actual_result": "Codex 第一轮独立审查发现 5 个硬伤，其中最关键的一个——**死亡判据顺序 bug**——Claude 的自检完全漏掉：Skill 门 1 协议将'制定死亡判据'放在了'看到实验结果'之后——这直接违背了预登记的核心原则（死亡判据必须在看到数据前冻结）。此外 Codex 还发现了：独立否决无机制、门 1/门 2 数据边界不清晰、过度声称、前置门槛外包+alpha 定位错误。Qwen 第二轮审查又新发现：REDESIGN 可逃避 STOP + 三态裁决未覆盖所有象限。",
   "effect_size": "自检发现 0 个 MAJOR → Codex 发现 5 个硬伤（含 1 个直接违背核心原则的顺序 bug）→ Qwen 第二轮再发现 2 个新问题",
   "sample_size": "1 个 Skill × 3 轮审查（1 自检 + 2 独立）",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.5", "Qwen3.7-Max"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.5",
+    "Qwen3.7-Max"
+  ],
   "interpretation": "这是'同一后端自我审查不可靠'的直接实证——不是 Claude 能力不足，而是设计者对自己产出的盲区是结构性的。死亡判据顺序 bug 之所以被漏掉，正是因为设计者自己的思维已经固化在'当然要先看结果再判死刑'的直觉中——而这恰恰是预登记要对抗的认知偏差。不同后端（GPT-5.5）没有这个思维惯性，一眼就看到矛盾。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["prompts", "logs", "raw-output"],
+    "artifacts_available": [
+      "prompts",
+      "logs",
+      "raw-output"
+    ],
     "notes": "完整审查记录在 claude-skills 仓库的 kill-test-first/EXAMPLES.md 案例 2。三版迭代的 prompts 和审查报告均保留。复现依赖具体模型版本。"
   },
   "related_positive_result": "全部修复。修复后的 Skill 协议重新排序了死亡判据步骤，增加了独立否决机制，明确了门 1/门 2 边界。Codex 第二轮审查确认全部闭合。但核心教训比修复更重要：证明了异后端独立审查的必要性。",
@@ -25,7 +33,16 @@
     "两轮异后端审查的价值超过同后端多轮——Codex（发现结构性问题）+ Qwen（发现边界条件）的互补性远超两轮同后端审查",
     "Skill 自身的死亡判据原则（'用它自己的药——出现即弃用/重构'）在本案例中被验证有效"
   ],
-  "tags": ["自审盲区", "kill-test-first", "Codex审查", "死亡判据", "预登记", "顺序bug", "独立审查", "Skill设计"],
+  "tags": [
+    "自审盲区",
+    "kill-test-first",
+    "Codex审查",
+    "死亡判据",
+    "预登记",
+    "顺序bug",
+    "独立审查",
+    "Skill设计"
+  ],
   "links": [
     {
       "label": "Claude Skills 仓库",
@@ -39,5 +56,9 @@
       "label": "Skill 设计协议（P0→P1→P2 重构，methodology-handbook）",
       "url": "https://github.com/redamancy231-create/methodology-handbook"
     }
-  ]
+  ],
+  "source_project": "claude-skills",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/claude-skills"
 }

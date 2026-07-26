@@ -11,11 +11,19 @@
   "actual_result": "版本门 PASS（只检查了版本号——'1.6.4' 三个文件一致）。但 Codex 内容级交叉审查发现：.json 遗漏了 .md 在 v1.6.3→v1.6.4 期间的 prose 修订（措辞修正、解释性段落、已知局限的措辞升级等），而 .docx 通过全量重生成自动包含了这些修订。根因：.json 同步走的是'定点补丁'模式（手工/脚本在旧版 JSON 上打补丁），而 .docx 同步走的是'全量重生成'模式（pandoc 从最新 .md 全量生成）。跨会话接力时，定点补丁的维护者不知道 .md 中发生了哪些 prose 级别的修订，导致 .json 系统性滞后于 .md。",
   "effect_size": ".json 与 .md 存在内容级不一致（非版本号不一致——版本门 O6 无法检测）",
   "sample_size": "v1.6.4 发布前的一次三件套交叉审查",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.5", "Kimi-K2.7", "Qwen3.7-Max"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.5",
+    "Kimi-K2.7",
+    "Qwen3.7-Max"
+  ],
   "interpretation": "这不是单次疏忽——是同步协议的设计缺陷。O6 版本门只校验版本号一致性（Layer 1: 版本号 grep + Layer 2: header 一致性），但无法检测内容级漂移（prose 修订在 .md 中生效但 .json 中未同步）。根本问题：两种派生格式采用了不对称的同步策略——.docx 全量重生成（天然防漂移，但 O(N) 代价）、.json 定点补丁（轻量但依赖操作者知道 .md 中所有变更）。当操作者不知道（跨会话接力）或忘记（同一会话但注意力聚焦在 .md 上）时，.json→.md 之间产生系统性滞后。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["logs", "raw-output"],
+    "artifacts_available": [
+      "logs",
+      "raw-output"
+    ],
     "notes": "Codex 三件套交叉审查报告在 ai-collaboration-framework/_reviews/codex_review_v1.5.1_三件套同步审查.md。复现需要相同的多会话接力场景。"
   },
   "related_positive_result": "短期修复：发布前增加 Codex 异后端三件套交叉审查步骤。长期方案（待实现）：将 .json 同步改为全量重生成（从 .md 一次生成），消除定点补丁路径。",
@@ -25,7 +33,15 @@
     "定点补丁的前提是操作者知道 .md 中所有变更——这在多会话接力场景中不成立",
     "三件套同步的最优策略是全部从 .md 全量重生成——消除所有手动同步路径"
   ],
-  "tags": ["三件套同步", "版本门", "不对称漂移", "定点补丁", "全量重生成", "内容一致性", "多会话接力"],
+  "tags": [
+    "三件套同步",
+    "版本门",
+    "不对称漂移",
+    "定点补丁",
+    "全量重生成",
+    "内容一致性",
+    "多会话接力"
+  ],
   "links": [
     {
       "label": "AI 协作框架仓库",
@@ -35,5 +51,9 @@
       "label": "三件套同步审查报告",
       "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_review_v1.5.1_三件套同步审查.md"
     }
-  ]
+  ],
+  "source_project": "ai-collaboration-framework",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
 }

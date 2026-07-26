@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 registry.json + entry_sources.json 自动更新 README 中的统计数字和条目概览表。
+"""从 registry.json 自动更新 README 中的统计数字和条目概览表。
 
 用法:
     python scripts/update_readme.py          # 更新三语 README
@@ -9,6 +9,9 @@
     <!-- AUTO_GENERATED: entries_badge --> ... <!-- AUTO_GENERATED_END -->
     <!-- AUTO_GENERATED: summary_line --> ... <!-- AUTO_GENERATED_END -->
     <!-- AUTO_GENERATED: entry_table --> ... <!-- AUTO_GENERATED_END -->
+
+数据来源：registry.json 中的条目（Schema V2 起 source_project/source_authors/analyst
+均为条目内嵌字段，无需额外映射文件）。
 """
 
 import json
@@ -18,7 +21,6 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REGISTRY_PATH = PROJECT_ROOT / "registry.json"
-SOURCES_PATH = PROJECT_ROOT / "scripts" / "entry_sources.json"
 
 README_PATHS = {
     "zh-CN": PROJECT_ROOT / "README.md",
@@ -108,16 +110,11 @@ CATEGORY_I18N = {
     },
 }
 
-# 每种语言使用的列标题
 COLUMN_HEADERS = {
     "zh-CN": ["ID", "来源", "领域", "类型"],
     "en": ["ID", "Source", "Domain", "Type"],
     "zh-Hant": ["ID", "來源", "領域", "類型"],
 }
-
-MARKER_PATTERN = re.compile(
-    r"<!-- AUTO_GENERATED: (\w+) -->.*?<!-- AUTO_GENERATED_END -->", re.DOTALL
-)
 
 
 def load_json(path):
@@ -126,36 +123,36 @@ def load_json(path):
 
 
 def generate_badge(total_entries):
-    """生成 Entries badge 行。"""
     return (
         f"[![Entries](https://img.shields.io/badge/Entries-{total_entries}"
         f"-brightgreen.svg)]()"
     )
 
 
-def generate_summary(lang, entries, source_map):
-    """生成摘要行（已收录 N 条目，覆盖 X 领域 × Y 类型...）。"""
+def is_own_project(entry):
+    """第一方条目：source_authors == analyst == submitted_by（均为同一维护者）。"""
+    return (
+        entry.get("source_authors", "") == entry.get("analyst", "")
+        and entry.get("source_authors", "") == entry.get("submitted_by", "")
+    )
+
+
+def generate_summary(lang, entries):
+    """生成摘要行。"""
     total = len(entries)
-    domains = sorted(set(e["domain"] for e in entries))
-    categories = sorted(set(e["category"] for e in entries))
-
-    domain_count = len(domains)
-    category_count = len(categories)
-
-    # 全部 schema 中的领域/类型数
+    domain_count = len(set(e["domain"] for e in entries))
+    category_count = len(set(e["category"] for e in entries))
     schema_domains = 12
     schema_categories = 9
 
-    # 唯一来源项目数
     own_sources = set()
     external_sources = set()
     for e in entries:
-        src = source_map.get(e["id"], {})
-        source_name = src.get("source", "unknown")
-        if src.get("is_own_project", False):
-            own_sources.add(source_name)
+        sp = e.get("source_project", "unknown")
+        if is_own_project(e):
+            own_sources.add(sp)
         else:
-            external_sources.add(source_name)
+            external_sources.add(sp)
 
     templates = {
         "zh-CN": (
@@ -182,23 +179,20 @@ def generate_summary(lang, entries, source_map):
     return templates[lang]
 
 
-def generate_table(lang, entries, source_map):
-    """生成条目概览表。"""
+def generate_table(lang, entries):
+    """生成条目概览表（来源列取自 entry.source_project）。"""
     headers = COLUMN_HEADERS[lang]
     domain_i18n = DOMAIN_I18N[lang]
     category_i18n = CATEGORY_I18N[lang]
 
-    lines = []
-    # 表头
-    lines.append(
-        "| " + " | ".join(headers) + " |"
-    )
-    # 分隔线
-    lines.append("|" + "|".join(["------" for _ in headers]) + "|")
+    lines = [
+        "| " + " | ".join(headers) + " |",
+        "|" + "|".join(["------" for _ in headers]) + "|",
+    ]
 
     for e in entries:
         eid = e["id"]
-        source = source_map.get(eid, {}).get("source", "unknown")
+        source = e.get("source_project", "unknown")
         domain_label = domain_i18n.get(e["domain"], e["domain"])
         category_label = category_i18n.get(e["category"], e["category"])
         lines.append(
@@ -209,7 +203,6 @@ def generate_table(lang, entries, source_map):
 
 
 def replace_markers(content, marker_name, replacement):
-    """替换 content 中指定 marker 之间的内容。返回新 content 和是否发生替换。"""
     pattern = (
         r"<!-- AUTO_GENERATED: " + marker_name + r" -->.*?"
         r"<!-- AUTO_GENERATED_END -->"
@@ -223,8 +216,7 @@ def replace_markers(content, marker_name, replacement):
     return new_content, count > 0
 
 
-def process_readme(lang, entries, source_map, check_only=False):
-    """处理一个 README 文件。"""
+def process_readme(lang, entries, check_only=False):
     readme_path = README_PATHS[lang]
     if not readme_path.exists():
         print(f"  SKIP: {readme_path} not found")
@@ -232,19 +224,14 @@ def process_readme(lang, entries, source_map, check_only=False):
 
     content = readme_path.read_text(encoding="utf-8")
 
-    # 检查是否存在所需标记
     required_markers = ["entries_badge", "summary_line", "entry_table"]
     missing = [m for m in required_markers if f"AUTO_GENERATED: {m}" not in content]
     if missing:
         print(f"  WARNING: {readme_path.name} missing markers: {missing}")
-        # 非致命——允许渐进式迁移
 
-    total = len(entries)
-
-    # 生成内容
-    badge = generate_badge(total)
-    summary = generate_summary(lang, entries, source_map)
-    table = generate_table(lang, entries, source_map)
+    badge = generate_badge(len(entries))
+    summary = generate_summary(lang, entries)
+    table = generate_table(lang, entries)
 
     new_content = content
     changed = False
@@ -257,9 +244,6 @@ def process_readme(lang, entries, source_map, check_only=False):
         new_content, replaced = replace_markers(new_content, marker_name, generated)
         if replaced:
             changed = True
-        else:
-            # 标记不存在时跳过（非致命）
-            pass
 
     if check_only:
         if content != new_content:
@@ -273,7 +257,7 @@ def process_readme(lang, entries, source_map, check_only=False):
             readme_path.write_text(new_content, encoding="utf-8")
             print(f"  UPDATED: {readme_path.name}")
         else:
-            print(f"  UNCHANGED: {readme_path.name} (no markers found?)")
+            print(f"  UNCHANGED: {readme_path.name}")
         return True
 
 
@@ -285,15 +269,7 @@ def main():
         sys.exit(1)
 
     registry = load_json(REGISTRY_PATH)
-    entries = registry.get("entries", [])
-
-    source_map = {}
-    if SOURCES_PATH.exists():
-        sources_data = load_json(SOURCES_PATH)
-        source_map = sources_data.get("entries", {})
-
-    # 按 ID 排序
-    entries_sorted = sorted(entries, key=lambda e: e["id"])
+    entries = sorted(registry.get("entries", []), key=lambda e: e["id"])
 
     mode = "CHECK" if check_only else "UPDATE"
     print(f"=== README {mode} ===\n")
@@ -301,7 +277,7 @@ def main():
     all_ok = True
     for lang in ["zh-CN", "en", "zh-Hant"]:
         print(f"[{lang}]")
-        ok = process_readme(lang, entries_sorted, source_map, check_only)
+        ok = process_readme(lang, entries, check_only)
         if not ok:
             all_ok = False
 

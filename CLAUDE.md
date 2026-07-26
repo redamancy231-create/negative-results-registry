@@ -65,8 +65,7 @@ negative-results-registry/
 │   ├── generate_registry.py     # entries/ → registry.json
 │   ├── validate_ci.py           # Schema + 链接 + 一致性校验
 │   ├── check_external_links.py  # 外部链接检查
-│   ├── update_readme.py         # registry.json → README 自动更新
-│   └── entry_sources.json       # 条目 ID → 来源名称映射
+│   └── update_readme.py         # registry.json → README 自动更新
 │
 ├── docs/
 │   ├── index.html               # GitHub Pages 可浏览页面
@@ -91,12 +90,10 @@ negative-results-registry/
 1. 分配新 ID（查阅 `registry.json` 中已有最大 ID）
 2. 复制 `templates/submission-v2.md` 填写内容
 3. 创建 `entries/NRR-YYYY-NNN/` 目录
-4. 编写 `.md` + `.json` 双件
-5. JSON 文件用 `schema/entry.schema.json` 校验
-6. 运行 `scripts/generate_registry.py` 更新 `registry.json`
-7. 在 `scripts/entry_sources.json` 中添加 ID → 来源映射
-8. 运行 `scripts/update_readme.py` 更新三语 README
-9. 更新 `docs/existing-negative-results.md`（如条目源自自有项目）
+4. 编写 `.md` + `.json` 双件（JSON 按 Schema V2 校验：需含 `source_project`/`source_authors`/`analyst`）
+5. 运行 `scripts/generate_registry.py` 更新 `registry.json`
+6. 运行 `scripts/update_readme.py` 更新三语 README
+7. 更新 `docs/existing-negative-results.md`（如条目源自自有项目）
 
 ### 收到外部提交（未来）
 1. 验证 JSON Schema 合规

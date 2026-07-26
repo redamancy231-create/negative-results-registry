@@ -11,11 +11,19 @@
   "actual_result": "全部三组资产按框架 §9.6 实际标注均为 [Sp] 推测级。B1 的 N=2 证据（无显式说明时 2/4 任务完成→有准索引后 4/4 完成）可核验为 [S] 源验证级事实，但其'最小核心提升了任务完成率'的解释仅达到 [Sp]。B2 难度分级基于框架设计者单一视角。C1-C3 反模式的实际触发频率在目标场景中待观察。根因：从 100 行核心项目中提取方法论模式存在固有的信息密度天花板——项目越小，可提取的方法论信号越少，而推断/外推的成分越多。",
   "effect_size": "3/3 资产组全部 [Sp] 推测级（0/3 达到 [E]）；N=2 证据仅方向性指示",
   "sample_size": "1 个项目（100 行核心）× 3 轮独立分析 × 3 组资产",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.5", "Kimi-K2.7"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.5",
+    "Kimi-K2.7"
+  ],
   "interpretation": "这不是 PocketFlow 的问题——它的极简设计本身就是一种方法论立场。问题在于：从极简项目中提取方法论时，信息密度不够→推断/外推成分增加→证据等级只能停留在 [Sp]。这个天花板不是分析深度不够，而是源项目本身的信息容量限制。对于方法论提取而言，'100 行核心'既是优点（展示了 minimal viable 方法论）也是限制（无法提供跨场景验证所需的多样性证据）。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["logs", "analysis-script", "raw-output"],
+    "artifacts_available": [
+      "logs",
+      "analysis-script",
+      "raw-output"
+    ],
     "notes": "第三方分析条目。分析日期：2026-06（三轮分析）。PocketFlow 源仓库（github.com/typicalpenguin/PocketFlow）截至 2026-07-25 已不可公开访问——无法固定源快照 commit。框架从 PocketFlow 提取的方法论资产及证据等级标注在 ai-collaboration-framework 主文档 §B1/B2/附录 H 中。此条目基于分析时的仓库状态，当前不可独立复核源仓库。"
   },
   "related_positive_result": "B1 的 N=2 方向一致——虽然不足以达到 [E]，但为后续大样本验证提供了方向。C1-C3 反模式满足'≥2 独立后端审查确认可迁移性'的收录标准。",
@@ -25,7 +33,15 @@
     "100 行核心既是方法论优点也是提取限制——展示了 minimal viable design 但无法提供多样性证据",
     "对小型外部项目的方法论提取应预先设定证据等级上限——避免三轮分析后才发现全部 [Sp]"
   ],
-  "tags": ["PocketFlow", "极简项目", "证据等级", "Sp推测级", "信息密度", "N=2", "第三方分析"],
+  "tags": [
+    "PocketFlow",
+    "极简项目",
+    "证据等级",
+    "Sp推测级",
+    "信息密度",
+    "N=2",
+    "第三方分析"
+  ],
   "links": [
     {
       "label": "AI 协作框架 — PocketFlow 相关章节",
@@ -35,5 +51,8 @@
       "label": "PocketFlow 开源仓库",
       "url": "https://github.com/typicalpenguin/PocketFlow"
     }
-  ]
+  ],
+  "source_project": "PocketFlow",
+  "source_authors": "待核实",
+  "analyst": "Acerolaorion"
 }

@@ -11,11 +11,18 @@
   "actual_result": "NPGS 的 CLAUDE.md、GitNexus 索引、分析报告全部来自 fork 提取者。源项目（baopinshui）的方法论文档=0。这些附加文档反映的是提取者自己的方法论（DeepSeek-V4-Pro + GPT-5.6-Sol 审查），不是源项目的。如果不区分两者，提取者会把'自己编写的源项目唯一方法论文档'误归因为'源项目有方法论自觉'——制造虚假方法论信号。",
   "effect_size": "源项目方法论文档=0；fork 附加文档 100% 来自提取者",
   "sample_size": "1 个项目（NPGS）× 提取者附加文档 vs 源项目原生文档对比",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.6-Sol", "GitNexus"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.6-Sol",
+    "GitNexus"
+  ],
   "interpretation": "这不是 NPGS 的问题——是提取框架的 Phase 0 设计缺陷。当提取者也是 fork 仓库的唯一方法论文档贡献者时，框架的默认假设（'仓库中的方法论文档反映了源项目的方法论'）会系统性高估源项目的方法论自觉。Phase 0 需要增加'提取者污染'判别步骤——检查 CLAUDE.md/分析报告/GitNexus 索引的作者是否等于源项目作者，过滤掉提取者自己编写的文档。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["logs", "analysis-script"],
+    "artifacts_available": [
+      "logs",
+      "analysis-script"
+    ],
     "notes": "第三方分析条目。分析日期：2026-07-23。源快照：NPGS upstream commit 30d1c58（2026-07-25 最新），fork commit d0407f2（2026-07-22）。源仓库（baopinshui/NPGS）在 commit 30d1c58 的根目录经核查无 README、CLAUDE.md 或分析报告——所有方法论文档由 fork 后续提交加入。compare URL: github.com/baopinshui/NPGS/compare/30d1c58...redamancy231-create/NPGS:d0407f2。"
   },
   "related_positive_result": "框架在 Phase 0 增加'提取者污染'判别后可避免此问题——检查方法论文档作者身份即可过滤。这不是框架结构性失败，是可修复的设计缺陷。",
@@ -25,7 +32,15 @@
     "fork 后添加的分析工件不应被当作源项目方法论的一部分——这是'观察者效应'在方法论提取中的体现",
     "源项目方法论文档=0 不应被解读为'无法提取'——它是诚实的信号，不是提取失败"
   ],
-  "tags": ["提取者污染", "fork", "NPGS", "方法论归因", "Phase0缺陷", "虚假信号", "第三方分析"],
+  "tags": [
+    "提取者污染",
+    "fork",
+    "NPGS",
+    "方法论归因",
+    "Phase0缺陷",
+    "虚假信号",
+    "第三方分析"
+  ],
   "links": [
     {
       "label": "NPGS 源仓库 (baopinshui/NPGS)",
@@ -35,5 +50,9 @@
       "label": "方法论提取方法论 — NPGS 证据卡",
       "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md"
     }
-  ]
+  ],
+  "source_project": "NPGS",
+  "source_authors": "baopinshui（待核实）",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/baopinshui/NPGS"
 }

@@ -11,11 +11,18 @@
   "actual_result": "Codex 审查评分 4.3/10，**驳回**。8 项结构性失败：(1) 版本错位——草案基于过期 v1.3 结构，主文档已为 v1.5——章节编号全部失效；(2) 自动干预违反核心约束——auto-suppress/auto-explore 让系统自动改变执行策略，违反 §3.7.1'只观测不阻断'；(3) boost -= (-0.15) 符号错误——delta_failure=-0.15，负负得正，失败反而加 0.15 分；(4) 假去隐喻化——声明'已去隐喻'但保留 Gene/Capsule/Event/epigenetic_mark 等 9+ 生物学术语；(5) 4,590 证据膨胀——将 Evolver 的 retained analyses 当作'4,590 次对照试验'背书；(6) REO schema 无形式化——仅有示例对象，无 $schema/required/enum；(7) A/B 测试设计无法执行——无样本量/重复/统计方法；(8) 数值来源不可验证——delta 值来自混淆代码（javascript-obfuscator），不可独立审计。",
   "effect_size": "评分 4.3/10（REJECTED）；8/8 检查维度全部失败",
   "sample_size": "1 个草案 × 1 独立审查者（GPT-5.5）× 8 检查维度",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.5"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.5"
+  ],
   "interpretation": "这是 v1.3→v1.5 演进中最有价值的一次失败。8 项失败按根因分类：(a) 流程性——未同步主文档版本就动手写草案；(b) 概念性——把'检测'偷换为'自动干预'，违反框架核心约束；(c) 技术性——符号错误（负负得正）；(d) 诚实性——声称去隐喻化但 9+术语残留、4,590 retained analyses 被包装为 RCT、混淆代码的数值被当作可信参数。这次驳回教会了框架'草案必须基于最新主文档'和'来源质量独立于提取质量'两条原则。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["prompts", "logs", "raw-output"],
+    "artifacts_available": [
+      "prompts",
+      "logs",
+      "raw-output"
+    ],
     "notes": "完整审查报告在 ai-collaboration-framework/_reviews/框架v1.3.2_Codex审查报告.md，修正路线图在 _research/drafts/框架v1.3.2_修正路线图.md。草案原文在 _research/drafts/框架v1.3.2_新增节草案.md。"
   },
   "related_positive_result": "修正后 v1.5.1 草案通过了 Codex 第二轮审查（7.2/10, PASS WITH MODIFICATIONS）。boost 符号修正、自动干预改为 dry-run only、去隐喻化改为实质性去隐喻。",
@@ -26,7 +33,16 @@
     "来源质量独立于提取质量——混淆代码中的数值不可独立审计，无论提取过程多严谨",
     "声称与执行之间的差距（'已去隐喻' vs 9+术语残留）是最容易自我欺骗的失败模式"
   ],
-  "tags": ["驳回草案", "Codex审查", "符号错误", "版本错位", "去隐喻化", "证据膨胀", "核心约束违反", "结构失败"],
+  "tags": [
+    "驳回草案",
+    "Codex审查",
+    "符号错误",
+    "版本错位",
+    "去隐喻化",
+    "证据膨胀",
+    "核心约束违反",
+    "结构失败"
+  ],
   "links": [
     {
       "label": "AI 协作框架仓库",
@@ -36,5 +52,9 @@
       "label": "v1.3.2 Codex 审查报告（4.3/10, REJECTED）",
       "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/框架v1.3.2_Codex审查报告.md"
     }
-  ]
+  ],
+  "source_project": "ai-collaboration-framework",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
 }

@@ -11,11 +11,21 @@
   "actual_result": "Phase 5A 评分 68/100（退回重写），Phase 5B 评分 71/100（修改后通过）。加权总分 69.2（68×0.6+71×0.4）。与 Phase 4 自评的三个'亮点'对比：数据勾稽合理→商誉 289.34 vs 289.04 矛盾（硬伤）；CAR 稳健→长窗口 42.16% 远高于短窗口 18.45%（信息泄露警讯非稳健证据）；杜邦到位→8.63%≠10.42%（加权 vs 期末口径混用）。独立审查还发现模拟数据标注为 Wind/CSMAR/年报真实来源（学术不端嫌疑）。",
   "effect_size": "自评→独立盲审差距 36.8 分（69.2-106 的归一化差距）；三处自评'亮点'全部被证伪为硬伤",
   "sample_size": "1 篇论文 × 2 独立评审者（GPT-5.5 + GLM-5.1）× 加权评分",
-  "models_used": ["Claude Opus 4.7", "GPT-5.5", "GLM-5.1", "Kimi-K2.6", "Qwen"],
+  "models_used": [
+    "Claude Opus 4.7",
+    "GPT-5.5",
+    "GLM-5.1",
+    "Kimi-K2.6",
+    "Qwen"
+  ],
   "interpretation": "这不是偶然失误——是系统性的自评估偏乐观偏差。操作者（同时也是评估者）对自己参与构建的项目存在 ~11% 的偏乐观偏差（已在 methodology-handbook 中记录为独立条目）。根本机制：同一 AI 不应同时担任设计者、执行者、验证者和评分官——但流水线 Phase 4 的自评环节违反了这个原则。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["prompts", "logs", "raw-output"],
+    "artifacts_available": [
+      "prompts",
+      "logs",
+      "raw-output"
+    ],
     "notes": "完整双盲审报告在 phases/phase5a_gpt5.5/ 和 phases/phase5b_glm5.1/。自评材料在 项目复盘归档报告.md。论文在另一独立仓库。复现需要相同的模型版本和角色分配。"
   },
   "related_positive_result": "修订后重评总分 84.0（5A: 82, 5B: 87）。但三处已知缺陷决定不修（商誉/杜邦/CAR），Phase 9（最终修正）从未运行。修订证明独立审查有效，但核心闭环未闭合。",
@@ -25,7 +35,15 @@
     "自评估偏乐观偏差并非个案——methodology-handbook 中记录的 ~11% 偏差在本项目中以 36.8 分的极端形式重现",
     "三处硬伤被反复诊断但从未修复（Phase 9 从未运行）——'诊断不落地=白诊断'"
   ],
-  "tags": ["自评偏乐观", "双盲审", "学术流水线", "独立审查", "方法论失败", "诊断不落地", "自我评估偏差"],
+  "tags": [
+    "自评偏乐观",
+    "双盲审",
+    "学术流水线",
+    "独立审查",
+    "方法论失败",
+    "诊断不落地",
+    "自我评估偏差"
+  ],
   "links": [
     {
       "label": "M&A Case Study Pipeline 仓库",
@@ -39,5 +57,9 @@
       "label": "起点评估分析（含红队对抗命题）",
       "url": "https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/起点评估分析.md"
     }
-  ]
+  ],
+  "source_project": "ma-case-study-pipeline",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/ma-case-study-pipeline"
 }

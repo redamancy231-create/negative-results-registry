@@ -11,11 +11,17 @@
   "actual_result": "三次声称'零残留'，三次被异后端独立扫描发现新残留：(1) 第一次——自检声称零残留 → Codex 发现绝对路径和用户名残留；(2) 第二次——修复后再次声称零残留 → Codex 发现新的路径变体（正斜杠/反斜杠/JSON-escaped/PowerShell triple-escaped 四层变体）；(3) 第三次——再次声称零残留 → Codex 发现 project_status.md 等 .gitignore 排除文件的残留（自检只扫了 tracked files）。根因：同一大脑用同一 grep pattern 扫同一批文件 → 第 10 次和第 1 次看到的东西一样——盲区不会因为重复而消失。",
   "effect_size": "3/3 次'零残留'声称被异后端独立扫描证伪（100% 误报率）",
   "sample_size": "3 轮清理+自检 × 3 轮 Codex 独立扫描",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.5"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.5"
+  ],
   "interpretation": "这三次误报不是操作不仔细——是同一后端同一搜索策略的结构性盲区。操作者用自己写的 grep pattern 扫自己编辑过的文件——大脑已经在编辑过程中建立了'我已经处理过了'的认知，grep 只是确认这个认知。异后端独立扫描使用不同的搜索策略（不同的关键字选择、不同的文件范围假设），自然会命中操作者盲区中的残留。第四次修复后，项目启动检查清单新增了 O7 'no_self_reported_zero_residue'——规定清理类任务不得基于自有 grep pattern 声称零残留，必须由异后端/异工具独立确认。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["logs", "raw-output"],
+    "artifacts_available": [
+      "logs",
+      "raw-output"
+    ],
     "notes": "回顾记录在 retrospect_2026-06-23.md。三次 Codex 独立扫描的发现列表和修复记录在 _reviews/ 中。"
   },
   "related_positive_result": "第四次修复后，Codex 独立扫描确认零残留。本项目启动检查清单 O7 规则（'禁止自扫自夸零残留'）源于这次失败。但核心启示不变：清理类任务的'完成'不能由清理者自己宣布。",
@@ -25,7 +31,16 @@
     "异后端独立扫描的必要性：不同的搜索策略 = 不同的盲区覆盖",
     "路径清理存在四层变体（正斜杠/反斜杠/JSON-escaped/PowerShell triple-escaped）——单一 grep 无法穷尽"
   ],
-  "tags": ["零残留", "清理", "自扫", "grep", "盲区", "异后端扫描", "O7", "路径变体"],
+  "tags": [
+    "零残留",
+    "清理",
+    "自扫",
+    "grep",
+    "盲区",
+    "异后端扫描",
+    "O7",
+    "路径变体"
+  ],
   "links": [
     {
       "label": "回顾记录 — 2026-06-23",
@@ -39,5 +54,9 @@
       "label": "O7 no_self_reported_zero_residue（methodology-handbook）",
       "url": "https://github.com/redamancy231-create/methodology-handbook"
     }
-  ]
+  ],
+  "source_project": "ai-collaboration-framework",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
 }

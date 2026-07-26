@@ -11,11 +11,17 @@
   "actual_result": "Codex 审查发现：§2.6 明确要求 Minor 版本升级须经 ≥2 后端独立审查，但 v1.6（v1.5→v1.6 是 Minor 升级）实际上仅由单后端（DeepSeek-V4-Pro）完成主要编辑和审查。这是一个自反性失败——框架自己制定的规则，在框架自己的版本升级中没有被遵守。Codex 将此标记为 MAJOR 发现，要求在审查报告中显式记录此偏差。后续处理：在 §2.6 中增加了过渡条款（当前版本在建立多后端审查基础设施之前的豁免期），但本质上是一次'医生自己不遵医嘱'的自反性失败。",
   "effect_size": "1 条核心规则被自身违反（§2.6 Minor 升级 ≥2 后端审查 → 实际 1 后端）",
   "sample_size": "1 次版本升级（v1.5→v1.6）× Codex 独立审查",
-  "models_used": ["DeepSeek-V4-Pro", "GPT-5.5"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.5"
+  ],
   "interpretation": "这是'医生的孩子没人治'（physician, heal thyself）问题的直接实例。框架花费大量篇幅论证多后端独立审查的必要性，并将此要求编码为 §2.6 的硬约束——但在框架自身的版本升级中，这个约束被静默地绕过了。问题不在于'没有能力做多后端审查'——框架项目有多后端审查的基础设施和流程——而在于'操作者自己就是审查流程的设计者和执行者，缺乏外部强制力'。这正是框架 §1.8 局限 #9（作者-读者同构性）的直接体现。",
   "reproducibility": {
     "level": "fully-reproducible",
-    "artifacts_available": ["logs", "raw-output"],
+    "artifacts_available": [
+      "logs",
+      "raw-output"
+    ],
     "notes": "Codex 审查报告在 ai-collaboration-framework/_reviews/codex_v16_crosscheck_20260620.txt。§2.6 原文和 v1.6 审查链均可独立核查。"
   },
   "related_positive_result": "在 §2.6 中增加了过渡条款——明确标注当前版本在建立稳定的多后端审查基础设施之前的豁免期。但这是修复症状而非根因——'操作者=规则制定者=规则执行者'的结构性问题依然存在。",
@@ -25,7 +31,15 @@
     "自反性失败比外部失败更难检测——因为操作者对自己违反自己规则的行为有天然的盲区",
     "过渡条款是诚实的修复——'我们要求别人这样做，但我们自己正在建立做这件事的基础设施'"
   ],
-  "tags": ["自反性失败", "版本升级", "§2.6", "Codex审查", "规则违反", "医生的孩子", "过渡条款"],
+  "tags": [
+    "自反性失败",
+    "版本升级",
+    "§2.6",
+    "Codex审查",
+    "规则违反",
+    "医生的孩子",
+    "过渡条款"
+  ],
   "links": [
     {
       "label": "Codex v1.6 跨版本交叉审查报告",
@@ -35,5 +49,9 @@
       "label": "AI 协作框架仓库",
       "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     }
-  ]
+  ],
+  "source_project": "ai-collaboration-framework",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
 }

@@ -11,11 +11,16 @@
   "actual_result": "PurePythonConverter: GitNexus 仅捕获 3 条同文件 CALLS 边（覆盖率约 3/81+, ≤3.7%）。MermaidRenderer: GitNexus 捕获 0 条同文件 CALLS 边（覆盖率 0/17, 0%）。基于 GitNexus CALLS 边数量断言'模块内部耦合低/改动隔离性好'不可靠——索引可能漏掉了大部分内部调用。IMPORT/EXTENDS 边置信度高于同文件 CALLS 边。",
   "effect_size": "PurePythonConverter 覆盖率 ≤3.7%（3/81+）；MermaidRenderer 覆盖率 0%（0/17）",
   "sample_size": "2 个模块 × 2 种检测方法（GitNexus vs 源码 grep）",
-  "models_used": ["GitNexus"],
+  "models_used": [
+    "GitNexus"
+  ],
   "interpretation": "这不是 GitNexus 的 bug——CALLS 边在同文件内的索引策略（可能基于 AST 或符号解析）与跨文件调用（基于 import 关系）使用了不同的检测精度。但对于方法论提取而言，这意味着任何基于 GitNexus CALLS 边数量对'模块内部耦合'的断言都需要源码交叉验证。盲信索引数据会导致对模块复杂度的系统性低估。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["code", "logs"],
+    "artifacts_available": [
+      "code",
+      "logs"
+    ],
     "notes": "第三方分析条目。分析日期：2026-07-22。源快照：docx-pipeline commit a9ccd2a（2026-07-25 为最新）。复现需固定 GitNexus 版本和索引配置、手工 grep 的完整调用清单。实证数据记录在 methodology-extraction-methodology 项目记忆文件中。"
   },
   "related_positive_result": "跨文件 IMPORT/EXTENDS 边置信度高于同文件 CALLS 边——GitNexus 在跨模块分析中仍然可靠。应对策略：跨文件用 GitNexus，同文件用源码 grep。",
@@ -25,7 +30,14 @@
     "跨文件 IMPORT/EXTENDS 边比同文件 CALLS 边可靠——索引策略在不同维度精度不同",
     "对任何分析工具的声称都需要交叉验证——'3 条 CALLS'可能是真值的 3.7% 而非 100%"
   ],
-  "tags": ["GitNexus", "CALLS边", "索引覆盖", "代码知识图谱", "源码交叉验证", "第三方分析"],
+  "tags": [
+    "GitNexus",
+    "CALLS边",
+    "索引覆盖",
+    "代码知识图谱",
+    "源码交叉验证",
+    "第三方分析"
+  ],
   "links": [
     {
       "label": "GitNexus 分析项目",
@@ -35,5 +47,8 @@
       "label": "GitNexus CALLS 边覆盖盲区（memory 记录）",
       "url": "https://github.com/redamancy231-create/methodology-handbook"
     }
-  ]
+  ],
+  "source_project": "GitNexus",
+  "source_authors": "待核实",
+  "analyst": "Acerolaorion"
 }

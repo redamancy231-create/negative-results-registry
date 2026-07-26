@@ -2,7 +2,7 @@
   "metadata": {
     "title": "AI协作阴性结果登记册 · 聚合索引",
     "version": "0.1.0",
-    "last_updated": "2026-07-25",
+    "last_updated": "2026-07-26",
     "total_entries": 22,
     "generation_model": "DeepSeek-V4-Pro (via Claude Code CLI)"
   },
@@ -65,7 +65,11 @@
           "label": "NRR-2026-002（同项目 A3 阴性结果）",
           "url": "https://github.com/redamancy231-create/negative-results-registry/blob/main/entries/NRR-2026-002/NRR-2026-002.md"
         }
-      ]
+      ],
+      "source_project": "prompt-tdd-methodology",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
     },
     {
       "id": "NRR-2026-002",
@@ -121,7 +125,11 @@
           "label": "NRR-2026-001（同项目 A2 阴性结果）",
           "url": "https://github.com/redamancy231-create/negative-results-registry/blob/main/entries/NRR-2026-001/NRR-2026-001.md"
         }
-      ]
+      ],
+      "source_project": "prompt-tdd-methodology",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
     },
     {
       "id": "NRR-2026-003",
@@ -188,7 +196,11 @@
           "label": "NRR-2026-001（同操作者的 Prompt-TDD A2 阴性结果）",
           "url": "https://github.com/redamancy231-create/negative-results-registry/blob/main/entries/NRR-2026-001/NRR-2026-001.md"
         }
-      ]
+      ],
+      "source_project": "methodology-extraction-methodology",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/methodology-extraction-methodology"
     },
     {
       "id": "NRR-2026-004",
@@ -245,7 +257,11 @@
           "label": "LLM 审查三类盲区（含渲染效果盲区）",
           "url": "https://github.com/redamancy231-create/methodology-handbook"
         }
-      ]
+      ],
+      "source_project": "docx-pipeline",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/docx-pipeline"
     },
     {
       "id": "NRR-2026-005",
@@ -301,7 +317,11 @@
           "label": "性能分析短文（含完整 Amdahl 数学推导）",
           "url": "https://github.com/redamancy231-create/etf-pattern-match-pybind11/blob/master/docs/performance-analysis.md"
         }
-      ]
+      ],
+      "source_project": "etf-pattern-match-pybind11",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/etf-pattern-match-pybind11"
     },
     {
       "id": "NRR-2026-006",
@@ -362,7 +382,11 @@
           "label": "起点评估分析（含红队对抗命题）",
           "url": "https://github.com/redamancy231-create/ma-case-study-pipeline/blob/main/起点评估分析.md"
         }
-      ]
+      ],
+      "source_project": "ma-case-study-pipeline",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ma-case-study-pipeline"
     },
     {
       "id": "NRR-2026-007",
@@ -422,7 +446,11 @@
           "label": "Skill 设计协议（P0→P1→P2 重构，methodology-handbook）",
           "url": "https://github.com/redamancy231-create/methodology-handbook"
         }
-      ]
+      ],
+      "source_project": "claude-skills",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/claude-skills"
     },
     {
       "id": "NRR-2026-008",
@@ -482,7 +510,11 @@
           "label": "LLM 审查三类盲区（methodology-handbook）",
           "url": "https://github.com/redamancy231-create/methodology-handbook"
         }
-      ]
+      ],
+      "source_project": "docx-pipeline",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/docx-pipeline"
     },
     {
       "id": "NRR-2026-009",
@@ -538,7 +570,11 @@
           "label": "v1.3.2 Codex 审查报告（4.3/10, REJECTED）",
           "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/框架v1.3.2_Codex审查报告.md"
         }
-      ]
+      ],
+      "source_project": "ai-collaboration-framework",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     },
     {
       "id": "NRR-2026-010",
@@ -593,7 +629,11 @@
           "label": "三件套同步审查报告",
           "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_reviews/codex_review_v1.5.1_三件套同步审查.md"
         }
-      ]
+      ],
+      "source_project": "ai-collaboration-framework",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     },
     {
       "id": "NRR-2026-011",
@@ -655,7 +695,10 @@
           "label": "方法论提取方法论 — 闭合后外部验证附录",
           "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/post-hoc-external-validation.md"
         }
-      ]
+      ],
+      "source_project": "Kohli 2026 / CrossCheck",
+      "source_authors": "Kohli",
+      "analyst": "Acerolaorion"
     },
     {
       "id": "NRR-2026-012",
@@ -716,7 +759,11 @@
           "label": "ChatGPT-5.5 独立审查 — headroom 对标三文档",
           "url": "https://github.com/redamancy231-create/ai-collaboration-framework/blob/main/_research/ChatGPT-5.5独立审查_headroom对标三文档.md"
         }
-      ]
+      ],
+      "source_project": "ai-collaboration-framework",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     },
     {
       "id": "NRR-2026-013",
@@ -769,7 +816,11 @@
           "label": "AI 协作框架仓库",
           "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
         }
-      ]
+      ],
+      "source_project": "ai-collaboration-framework",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     },
     {
       "id": "NRR-2026-014",
@@ -825,7 +876,11 @@
           "label": "AI 协作框架仓库",
           "url": "https://github.com/redamancy231-create/ai-collaboration-framework"
         }
-      ]
+      ],
+      "source_project": "ai-collaboration-framework",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     },
     {
       "id": "NRR-2026-015",
@@ -883,7 +938,11 @@
           "label": "O7 no_self_reported_zero_residue（methodology-handbook）",
           "url": "https://github.com/redamancy231-create/methodology-handbook"
         }
-      ]
+      ],
+      "source_project": "ai-collaboration-framework",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/redamancy231-create/ai-collaboration-framework"
     },
     {
       "id": "NRR-2026-016",
@@ -930,7 +989,10 @@
           "label": "Kuai et al. (2026-04) — How Independent are LLMs?",
           "url": "https://arxiv.org/abs/2604.07650"
         }
-      ]
+      ],
+      "source_project": "Kuai et al. (2026)",
+      "source_authors": "Kuai et al.",
+      "analyst": "Acerolaorion"
     },
     {
       "id": "NRR-2026-017",
@@ -978,7 +1040,10 @@
           "label": "Nájera et al. (2026-05) — When Models Disagree",
           "url": "https://arxiv.org/abs/2605.29025"
         }
-      ]
+      ],
+      "source_project": "Nájera et al. (2026)",
+      "source_authors": "Nájera et al.",
+      "analyst": "Acerolaorion"
     },
     {
       "id": "NRR-2026-018",
@@ -1036,7 +1101,11 @@
           "label": "方法论提取方法论 — CrossCheck 证据卡",
           "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_crosscheck.md"
         }
-      ]
+      ],
+      "source_project": "CrossCheck (sburl)",
+      "source_authors": "sburl（待核实）",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/sburl/CrossCheck"
     },
     {
       "id": "NRR-2026-019",
@@ -1087,7 +1156,10 @@
           "label": "GitNexus CALLS 边覆盖盲区（memory 记录）",
           "url": "https://github.com/redamancy231-create/methodology-handbook"
         }
-      ]
+      ],
+      "source_project": "GitNexus",
+      "source_authors": "待核实",
+      "analyst": "Acerolaorion"
     },
     {
       "id": "NRR-2026-020",
@@ -1142,7 +1214,10 @@
           "label": "PocketFlow 开源仓库",
           "url": "https://github.com/typicalpenguin/PocketFlow"
         }
-      ]
+      ],
+      "source_project": "PocketFlow",
+      "source_authors": "待核实",
+      "analyst": "Acerolaorion"
     },
     {
       "id": "NRR-2026-021",
@@ -1197,7 +1272,11 @@
           "label": "方法论提取方法论 — ml-quant-trading 证据卡",
           "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_ml_quant_trading.md"
         }
-      ]
+      ],
+      "source_project": "NPGS",
+      "source_authors": "baopinshui（待核实）",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/baopinshui/NPGS"
     },
     {
       "id": "NRR-2026-022",
@@ -1251,7 +1330,11 @@
           "label": "方法论提取方法论 — NPGS 证据卡",
           "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_npgs_external.md"
         }
-      ]
+      ],
+      "source_project": "NPGS",
+      "source_authors": "baopinshui（待核实）",
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/baopinshui/NPGS"
     }
   ],
   "stats": {

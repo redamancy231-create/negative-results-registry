@@ -11,11 +11,18 @@
   "actual_result": "PNG 在 DOCX 中 ~4 倍拉伸。根因链：(1) mmdc 没有 --dpi 参数，--width 只控制渲染宽度，不写入 PNG pHYs chunk；(2) python-docx 对无 DPI 元数据的图片默认按 72 DPI 计算嵌入尺寸（非 Word 96 DPI——python-docx 写入显式 EMU 尺寸，Word 直接使用）；(3) 300 DPI 像素 ÷ 72 DPI = 物理尺寸膨胀 ~4.17×。",
   "effect_size": "物理尺寸膨胀 ~4.17×（300 DPI 像素 ÷ 72 DPI python-docx 默认值）",
   "sample_size": "所有含 Mermaid 图表的 DOCX 文档（项目初期 100% 复现）",
-  "models_used": ["mermaid-cli (mmdc)", "python-docx v1.2.0", "Microsoft Word", "Pillow (修复)"],
+  "models_used": [
+    "mermaid-cli (mmdc)",
+    "python-docx v1.2.0",
+    "Microsoft Word",
+    "Pillow (修复)"
+  ],
   "interpretation": "工具链多层互操作契约中相邻环节的隐式假设不兼容。不是单点 bug：mmdc 正确渲染了指定宽度的像素，python-docx 正确按 72 DPI 默认值计算了嵌入尺寸。问题在工具之间缺少 DPI 注入步骤——管线设计者默认了'mmdc PNG 输出 = python-docx 可直接嵌入'。这是管线设计的方法论问题，非单个工具适用性问题。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["code"],
+    "artifacts_available": [
+      "code"
+    ],
     "notes": "可复现条件：mmdc + python-docx v1.2.0 + Pillow。python-docx 默认 DPI 行为(72)版本间一致，但 add_picture() 对 DPI 缺失图片的处理可能因版本而异。修复代码在 docx-pipeline 的 mermaid_renderer.py 中（_inject_dpi() 方法）。"
   },
   "related_positive_result": "修复成功。渲染后用 Pillow 读取 PNG → image.save(path, \"PNG\", dpi=(300,300)) 写入 pHYs chunk → python-docx 按 300 DPI 计算嵌入尺寸 → Word 中正确显示。",
@@ -25,7 +32,18 @@
     "隐式默认值是集成 bug 温床——mmdc 不写 pHYs chunk 和 python-docx 72 DPI 各自合理，组合即 bug",
     "修复只需一行 Pillow 代码——但诊断靠目视发现，发现成本远高于修复成本"
   ],
-  "tags": ["docx-pipeline", "mermaid-cli", "mmdc", "DPI", "PNG", "python-docx", "工具链互操作", "元数据", "端到端验证", "视觉bug"],
+  "tags": [
+    "docx-pipeline",
+    "mermaid-cli",
+    "mmdc",
+    "DPI",
+    "PNG",
+    "python-docx",
+    "工具链互操作",
+    "元数据",
+    "端到端验证",
+    "视觉bug"
+  ],
   "links": [
     {
       "label": "DOCX Pipeline 仓库",
@@ -35,5 +53,9 @@
       "label": "LLM 审查三类盲区（含渲染效果盲区）",
       "url": "https://github.com/redamancy231-create/methodology-handbook"
     }
-  ]
+  ],
+  "source_project": "docx-pipeline",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/docx-pipeline"
 }

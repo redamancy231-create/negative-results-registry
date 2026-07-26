@@ -11,11 +11,19 @@
   "actual_result": "LLM 审查（5 轮）完全漏掉了 3 个实际存在的 bug：(1) 渲染效果 bug——Mermaid PNG 在 Word 中 ~4× 拉伸，因为 mmdc 不写 DPI 元数据 + python-docx 默认 72 DPI——纯代码审查无法检测 DPI 元数据缺失；(2) 默认路径 bug——裸模板默认值 output/docx 无扩展名，'init→convert'路径不走已有配置，暴露 defaults.py 的路径缺陷——审查者看代码逻辑正确但端到端路径断裂；(3) 终端编码 bug——gh CLI 中文文件名上传在 Windows Git Bash 下反复失败，根因是 GBK/UTF-8 终端编码转换——审查者代码级审查看不到终端编码问题。",
   "effect_size": "3/3 类 bug 全部逃脱 LLM 审查（遗漏率 100%，非 <10%）",
   "sample_size": "5 轮审查 × 1 个项目 × 3 类实测 bug",
-  "models_used": ["GPT-5.6-Sol", "GPT-5.5", "Kimi-K2.7", "Claude Opus 4.8"],
+  "models_used": [
+    "GPT-5.6-Sol",
+    "GPT-5.5",
+    "Kimi-K2.7",
+    "Claude Opus 4.8"
+  ],
   "interpretation": "LLM 代码审查存在三类系统性盲区（按 bug 类型分类，非按模型分类）：(1) 渲染效果——代码正确不代表最终渲染正确，需目视验证；(2) 默认路径——裸默认值在'init→使用'的完整路径中可能断裂，审查只看单点逻辑；(3) 终端编码——跨平台字符编码问题只在真实环境中暴露。这三类盲区共享一个特征：bug 不出现在源代码的逻辑层面，而出现在相邻工具链的交互契约中。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["logs", "raw-output"],
+    "artifacts_available": [
+      "logs",
+      "raw-output"
+    ],
     "notes": "回顾分析记录在 docx-pipeline/_reviews/retrospect_2026-07-17.md。复现需要相同工具链版本（mmdc, python-docx v1.2.0, Windows Git Bash）。"
   },
   "related_positive_result": "三个 bug 事后全部修复：(1) Pillow DPI 注入、(2) 路径扩展名修正、(3) gh CLI 编码 workaround。但发现成本远高于修复成本——诊断靠人工端到端测试，非 LLM 审查。",
@@ -25,7 +33,16 @@
     "纯代码审查覆盖率 ≠ 真实 bug 检测率——审查者看到的是'代码说了什么'，看不到'代码在真实环境中做了什么'",
     "AI 辅助开发的测试策略需要补充'运行环境端到端测试'，不能仅依赖 LLM 代码审查"
   ],
-  "tags": ["LLM审查盲区", "代码审查", "渲染bug", "默认路径", "终端编码", "端到端验证", "目视确认", "审查覆盖率"],
+  "tags": [
+    "LLM审查盲区",
+    "代码审查",
+    "渲染bug",
+    "默认路径",
+    "终端编码",
+    "端到端验证",
+    "目视确认",
+    "审查覆盖率"
+  ],
   "links": [
     {
       "label": "DOCX Pipeline 仓库",
@@ -39,5 +56,9 @@
       "label": "LLM 审查三类盲区（methodology-handbook）",
       "url": "https://github.com/redamancy231-create/methodology-handbook"
     }
-  ]
+  ],
+  "source_project": "docx-pipeline",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/docx-pipeline"
 }

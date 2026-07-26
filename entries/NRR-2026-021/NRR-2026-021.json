@@ -11,11 +11,19 @@
   "actual_result": "可提取率梯度 100%→69%→37.5%。NPGS 仅 3/8 可提取（C1-C3 全部来自被动痕迹——代码结构、commit 历史、目录组织），C4 多模型协作/C5 独立审查/C6 方法论文档/C7 闭环修复/C8 数据溯源——5 个组件全部空白。能提取的 3 个组件用 GitNexus 或任何代码分析工具同样可获取——框架在被动痕迹维度上无增量价值。框架的真正价值不是'发现'新模式，而是将已经存在的方法论痕迹系统化命名和归纳。",
   "effect_size": "可提取率梯度 100%→69%→37.5%；NPGS 5/8 组件空白；最低梯度无增量价值",
   "sample_size": "3 个项目 × 3 梯度（方法论自觉 ★★★★★/★★★/★）× 8 组件",
-  "models_used": ["DeepSeek-V4-Pro", "GitNexus", "Codex GPT-5.5"],
+  "models_used": [
+    "DeepSeek-V4-Pro",
+    "GitNexus",
+    "Codex GPT-5.5"
+  ],
   "interpretation": "三个案例的梯度数据表明框架的适用性强烈依赖于源项目的方法论自觉程度。但此结论仅基于 3 个目的性样本（非随机抽样），自有项目群还受作者熟悉度影响——不能外推到'绝大多数开源项目'。框架的隐含假设（'源项目记录了方法论文档'）在此 3 个案例中得到了逐级验证：当方法论文档从充分→稀疏→零时，可提取率同步下降。这证明了提取的前提条件确实存在，但该条件在多大比例的开源项目中成立——尚未量化。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["logs", "analysis-script", "raw-output"],
+    "artifacts_available": [
+      "logs",
+      "analysis-script",
+      "raw-output"
+    ],
     "notes": "第三方分析条目。分析日期：2026-07-23。源快照：NPGS upstream commit 30d1c58（2026-07-25 最新），fork commit d0407f2（2026-07-22）。ml-quant-trading 源仓库为 initial-d/ml-quant-trading。证据卡在 methodology-extraction-methodology/explorations/。"
   },
   "related_positive_result": "框架在自有项目群（方法论自觉 ★★★★★）中可提取率接近 100%——证明框架本身设计有效，只是适用范围比初始假设窄。",
@@ -25,7 +33,15 @@
     "框架在被动痕迹维度无增量价值——能用 GitNexus 获取的，框架没有提供额外信息",
     "框架的价值定位应从'发现'修正为'归纳'——它不是探测器，是整理器"
   ],
-  "tags": ["方法论提取", "框架适用性", "梯度衰减", "NPGS", "ml-quant-trading", "被动痕迹", "第三方分析"],
+  "tags": [
+    "方法论提取",
+    "框架适用性",
+    "梯度衰减",
+    "NPGS",
+    "ml-quant-trading",
+    "被动痕迹",
+    "第三方分析"
+  ],
   "links": [
     {
       "label": "方法论提取方法论 — NPGS 证据卡",
@@ -35,5 +51,9 @@
       "label": "方法论提取方法论 — ml-quant-trading 证据卡",
       "url": "https://github.com/redamancy231-create/methodology-extraction-methodology/blob/main/explorations/evidence_card_ml_quant_trading.md"
     }
-  ]
+  ],
+  "source_project": "NPGS",
+  "source_authors": "baopinshui（待核实）",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/baopinshui/NPGS"
 }

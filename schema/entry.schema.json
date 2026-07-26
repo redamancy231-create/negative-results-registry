@@ -4,7 +4,7 @@
   "title": "Negative Results Registry Entry",
   "description": "Schema for a single negative/honest result entry in the AI Collaboration Negative Results Registry.",
   "type": "object",
-  "required": ["id", "title", "domain", "category", "submitted_by", "date", "hypothesis", "method", "expected_result", "actual_result", "interpretation"],
+  "required": ["id", "title", "domain", "category", "submitted_by", "date", "hypothesis", "method", "expected_result", "actual_result", "interpretation", "source_project", "source_authors", "analyst"],
   "properties": {
     "id": {
       "type": "string",
@@ -52,6 +52,25 @@
     "submitted_by": {
       "type": "string",
       "description": "GitHub username or real name of submitter"
+    },
+    "source_project": {
+      "type": "string",
+      "description": "Name of the project, paper, or repository this negative result originates from (e.g., 'prompt-tdd-methodology', 'Kuai et al. (2026)')",
+      "maxLength": 200
+    },
+    "source_authors": {
+      "type": "string",
+      "description": "Original authors/creators of the source project. Use 'self' or submitter's name for first-party entries; use original author names for third-party entries (e.g., 'Kuai et al.', 'baopinshui')",
+      "maxLength": 300
+    },
+    "analyst": {
+      "type": "string",
+      "description": "Person who analyzed this negative result (may differ from source_authors and submitted_by)"
+    },
+    "source_project_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the source project repository, paper, or homepage (optional but recommended)"
     },
     "date": {
       "type": "string",

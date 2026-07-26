@@ -130,8 +130,7 @@ negative-results-registry/
 │   ├── generate_registry.py     ← entries/ → registry.json
 │   ├── validate_ci.py           ← Schema + link + consistency checks
 │   ├── check_external_links.py  ← External link verification
-│   ├── update_readme.py         ← registry.json → README auto-update
-│   └── entry_sources.json       ← Entry ID → source name mapping
+│   └── update_readme.py         ← registry.json → README auto-update
 │
 ├── docs/
 │   ├── index.html               ← GitHub Pages browsable site

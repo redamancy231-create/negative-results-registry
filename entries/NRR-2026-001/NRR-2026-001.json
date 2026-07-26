@@ -11,11 +11,20 @@
   "actual_result": "两组在发现数量、严重程度分布、误报率上均无显著差异。d ≈ 0.03（trivial）。Qwen 复现 Δ = −0.014，方向一致（均为零）。",
   "effect_size": "d ≈ 0.03",
   "sample_size": "n=24/臂 × 2模型复现（GPT-5.5 + Qwen3.7-Max）",
-  "models_used": ["GPT-5.5", "Qwen3.7-Max"],
+  "models_used": [
+    "GPT-5.5",
+    "Qwen3.7-Max"
+  ],
   "interpretation": "任务类型决定了 prompt 变异的效应量上限。代码审查是结构化判别任务——当规范足够明确时，prompt 的'包装'（分段 vs 单段）对输出质量的影响远小于任务本身的约束力。",
   "reproducibility": {
     "level": "partially-reproducible",
-    "artifacts_available": ["prompts", "data", "code", "analysis-script", "raw-output"],
+    "artifacts_available": [
+      "prompts",
+      "data",
+      "code",
+      "analysis-script",
+      "raw-output"
+    ],
     "notes": "完整实验管线在 prompt-tdd-methodology 仓库。可重跑代码，但复现依赖于 GPT-5.5/Qwen3.7-Max 模型版本——API 模型别名指向的后端可能已升级，结果可能不同。区分 repeatable（代码可重跑）与 reproducible（结果可复现）。"
   },
   "related_positive_result": "无直接后续。阴性结果导致了'Prompt-TDD 方法论作为案例手册而非工具库发布'的决策。",
@@ -25,7 +34,15 @@
     "实验前应做 ceiling probe——如果早知道结构化判别的天花板效应，不会抱太大期望",
     "工程门/科学门拆分设计即使对阴性结果也有复用价值"
   ],
-  "tags": ["prompt-tdd", "GPT-5.5", "Qwen3.7-Max", "code-review", "对照实验", "零结果", "prep-exec-post"],
+  "tags": [
+    "prompt-tdd",
+    "GPT-5.5",
+    "Qwen3.7-Max",
+    "code-review",
+    "对照实验",
+    "零结果",
+    "prep-exec-post"
+  ],
   "links": [
     {
       "label": "Prompt-TDD 方法论仓库",
@@ -39,5 +56,9 @@
       "label": "NRR-2026-002（同项目 A3 阴性结果）",
       "url": "https://github.com/redamancy231-create/negative-results-registry/blob/main/entries/NRR-2026-002/NRR-2026-002.md"
     }
-  ]
+  ],
+  "source_project": "prompt-tdd-methodology",
+  "source_authors": "Acerolaorion",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/prompt-tdd-methodology"
 }
