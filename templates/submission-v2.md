@@ -8,7 +8,7 @@
 
 1. **Fork** 本仓库
 2. 复制本模板，按下方各节填写
-3. 创建 `entries/NRR-YYYY-NNN/` 目录（ID 用当前最大编号 +1，分配后告知维护者）
+3. 创建条目目录，使用临时标识命名（如 `temp-method-failure`）。正式 ID（`NRR-YYYY-NNN`）由维护者在合并 PR 时分配——防止并发 PR 产生 ID 冲突
 4. 保存为 `NRR-YYYY-NNN.md`，并创建对应的 `NRR-YYYY-NNN.json`（按 `schema/entry.schema.json` 校验）
 5. 运行 `python scripts/generate_registry.py` 更新 `registry.json`
 6. 提 **Pull Request**

@@ -698,7 +698,8 @@
       ],
       "source_project": "Kohli 2026 / CrossCheck",
       "source_authors": "Kohli",
-      "analyst": "Acerolaorion"
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://arxiv.org/abs/2605.29800"
     },
     {
       "id": "NRR-2026-012",
@@ -992,7 +993,8 @@
       ],
       "source_project": "Kuai et al. (2026)",
       "source_authors": "Kuai et al.",
-      "analyst": "Acerolaorion"
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://arxiv.org/abs/2604.07650"
     },
     {
       "id": "NRR-2026-017",
@@ -1043,7 +1045,8 @@
       ],
       "source_project": "Nájera et al. (2026)",
       "source_authors": "Nájera et al.",
-      "analyst": "Acerolaorion"
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://arxiv.org/abs/2605.29025"
     },
     {
       "id": "NRR-2026-018",
@@ -1159,7 +1162,8 @@
       ],
       "source_project": "GitNexus",
       "source_authors": "Abhigyan Patwari",
-      "analyst": "Acerolaorion"
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/abhigyanpatwari/GitNexus"
     },
     {
       "id": "NRR-2026-020",
@@ -1217,7 +1221,8 @@
       ],
       "source_project": "PocketFlow",
       "source_authors": "Zachary Huang",
-      "analyst": "Acerolaorion"
+      "analyst": "Acerolaorion",
+      "source_project_url": "https://github.com/typicalpenguin/PocketFlow"
     },
     {
       "id": "NRR-2026-021",

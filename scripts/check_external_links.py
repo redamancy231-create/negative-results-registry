@@ -15,6 +15,8 @@ broken > 0 时默认警告不阻塞（--strict 模式下阻塞）。
 """
 
 import re
+import socket
+import ssl
 import sys
 import urllib.request
 import urllib.error
@@ -37,7 +39,6 @@ def classify_url(url):
     """
     url = url.rstrip(".)")
 
-    # 限速主机
     for host in RATE_LIMITED_HOSTS:
         if host in url:
             return ("skipped", f"rate-limited ({host})")
@@ -51,16 +52,31 @@ def classify_url(url):
         if e.code in (403, 429):
             return ("skipped", str(e.code))
         return ("broken", str(e.code))
+    except urllib.error.URLError as e:
+        reason = e.reason
+        # DNS 解析失败、SSL 证书错误 → 可能是真死链
+        if isinstance(reason, socket.gaierror):
+            return ("broken", f"DNS: {reason}")
+        if isinstance(reason, ssl.SSLError):
+            return ("broken", f"SSL: {reason}")
+        # 连接超时/拒绝 → 可能是临时网络问题
+        return ("skipped", type(reason).__name__)
     except Exception as e:
-        # timeout / DNS / SSL — 网络问题，不判死
         return ("skipped", type(e).__name__)
 
 
 def main():
     strict = "--strict" in sys.argv
-    seen_urls = set()
 
-    entry_results = {}  # eid -> {verified: N, skipped: N, broken: N, details: [...]}
+    # Windows 默认 GBK 控制台无法输出 emoji
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
+    seen_urls = set()
+    entry_results = {}
     global_counts = {"verified": 0, "skipped": 0, "broken": 0}
 
     for entry_dir in sorted(ENTRIES_DIR.iterdir()):
@@ -73,23 +89,30 @@ def main():
 
         urls = url_pattern.findall(md.read_text(encoding="utf-8"))
         result = {"verified": 0, "skipped": 0, "broken": 0, "details": []}
+        # 条目级计数不受全局去重影响
+        entry_seen = set()
 
         for url in urls:
             url = url.rstrip(".)")
-            if url in seen_urls:
+            if url in entry_seen:
                 continue
-            seen_urls.add(url)
+            entry_seen.add(url)
 
             status, detail = classify_url(url)
+
+            # 全局去重（仅影响 global_counts——避免同一 URL 重复计数）
+            if url not in seen_urls:
+                seen_urls.add(url)
+                global_counts[status] += 1
+
+            # 条目级计数——不受全局去重影响
             result[status] += 1
-            global_counts[status] += 1
 
             if status != "verified":
                 result["details"].append((status, detail, url))
 
         entry_results[eid] = result
 
-    # ── Per-entry report ──
     clean = 0
     dirty = 0
 
@@ -98,10 +121,10 @@ def main():
         v, s, b = r["verified"], r["skipped"], r["broken"]
 
         if b == 0:
-            icon = "✅"
+            icon = "✅"  # ✅
             clean += 1
         else:
-            icon = "⚠️"
+            icon = "⚠️"  # ⚠️
             dirty += 1
 
         parts = [f"{v} verified", f"{s} skipped", f"{b} broken"]
@@ -111,8 +134,7 @@ def main():
             tag = {"skipped": "SKIP", "broken": "BROKEN"}[status]
             print(f"    {tag}  {detail:12s}  {url}")
 
-    # ── Summary ──
-    print(f"\n  Total: {global_counts['verified']} verified, "
+    print(f"\n  Total (unique URLs): {global_counts['verified']} verified, "
           f"{global_counts['skipped']} skipped, "
           f"{global_counts['broken']} broken")
     print(f"  Entries: {clean}/{len(entry_results)} clean")
