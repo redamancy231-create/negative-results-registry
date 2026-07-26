@@ -150,7 +150,7 @@ negative-results-registry/
 
 1. Copy `templates/submission-v2.md`
 2. Fill in your negative result using the template
-3. Create the `entries/NRR-YYYY-NNN/` directory
+3. Create an entry directory (use a temporary name; the official ID will be assigned by the maintainer)
 4. Add both `.md` and `.json` files (validate the JSON against `schema/entry.schema.json`)
 5. Submit a Pull Request
 

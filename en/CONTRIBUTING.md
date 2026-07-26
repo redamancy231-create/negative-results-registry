@@ -22,7 +22,7 @@
 
 1. **Fork** this repository
 2. Copy `templates/submission-v2.md` → complete it according to the template
-3. Create an `entries/NRR-YYYY-NNN/` directory (use the current highest number +1 for the ID; the ID will be assigned by the maintainer when merging the PR, so use a temporary slug first)
+3. Create an entry directory with a temporary name (e.g., `temp-method-failure`). The official ID (`NRR-YYYY-NNN`) will be assigned by the maintainer when merging the PR — this prevents ID collisions from concurrent PRs
 4. Add a `.md` file (human-readable) + a `.json` file (machine-readable; validate it against `schema/entry.schema.json`)
 5. Validate the JSON:
    ```bash
@@ -43,6 +43,18 @@
 | A particular tool/model failed on a specific task | An impressionistic judgment with no experimental conditions recorded |
 | A factor had no predictive power in a strategy backtest | Results from confidential/nonpublic projects |
 | A pattern in workflow orchestration produced counterproductive effects | Plagiarized/fabricated/unauthorized content |
+
+---
+
+## Evidence Thresholds
+
+All submissions must meet three hard thresholds. PRs that fail any of them will be returned:
+
+| # | Threshold | Criterion |
+|---|-----------|----------|
+| 1 | **Falsifiable hypothesis** | `hypothesis` contains a concrete prediction (subject + intervention + direction), not just "I wanted to try X" |
+| 2 | **Reproducible method** | `method` includes model/tool versions + sample description + evaluation metrics; third-party analyses additionally include a source snapshot (commit SHA) and access date |
+| 3 | **Traceable evidence** | `links` includes at least one item pointing to raw data, code, logs, or a paper — not purely from memory |
 
 ---
 
@@ -72,8 +84,10 @@
 
 If you are submitting an analysis of a negative result documented in someone else's project rather than your own experiment:
 
-- Set `submitted_by` to yourself (the analyst)
-- In `reproducibility.notes`, label it as a "third-party analysis entry" and identify the source project
+- `source_authors` — the original authors (GitHub username or real name). This is different from `submitted_by` (you)
+- `analyst` — yourself (the person who performed the analysis)
+- `submitted_by` — yourself
+- `source_project` — name of the source project; `source_project_url` — link to the source (recommended)
 - Requirement: the target project must have **publicly documented** the negative result itself (it cannot be inferred from silence)
 
 ---
@@ -91,13 +105,13 @@ If you are submitting an analysis of a negative result documented in someone els
 
 After you submit a PR, the maintainer will check:
 
-1. JSON Schema compliance (passes validation against `entry.schema.json`)
-2. Consistency between the entry content and the template
-3. Classification accuracy (domain + type)
-4. ID uniqueness
-5. Both the `.md` and `.json` files are present and their content is consistent
+1. **Evidence thresholds**: falsifiable hypothesis, reproducible method, traceable evidence (see "Evidence Thresholds" above)
+2. **Schema compliance**: JSON passes `entry.schema.json` validation (14 required fields)
+3. **Classification**: domain + type are accurate
+4. **Dual-file consistency**: `.md` and `.json` content matches
+5. **ID assignment**: the maintainer assigns the official `NRR-YYYY-NNN` ID before merging
 
-Once approved, the PR will be merged, and `registry.json` will be automatically updated with the entry.
+> Review SLA will be determined after the first external PR based on actual workflow. With no external contributions currently, estimated response time ≤ 1 week.
 
 ---
 

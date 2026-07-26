@@ -150,7 +150,7 @@ negative-results-registry/
 
 1. 复制 `templates/submission-v2.md`
 2. 按模板填写你的阴性结果
-3. 创建 `entries/NRR-YYYY-NNN/` 目录
+3. 创建条目目录（用临时标识命名；正式 ID 由维护者分配）
 4. 放入 `.md` + `.json` 双件（JSON 按 `schema/entry.schema.json` 校验）
 5. 提 Pull Request
 
