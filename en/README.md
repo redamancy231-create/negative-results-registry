@@ -5,11 +5,11 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 <!-- AUTO_GENERATED: entries_badge -->
-[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
 <!-- AUTO_GENERATED_END -->
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
-[![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
+[![English](https://img.shields.io/badge/lang-English-blue)](./)
 [![正體中文](https://img.shields.io/badge/lang-正體中文-green)](../zh-Hant/README.md)
 
 **Language**：English · [简体中文](../README.md) · [正體中文](../zh-Hant/README.md)
@@ -234,10 +234,10 @@ For more projects, see the [personal homepage](https://github.com/redamancy231-c
 
 ## Known Limitations
 
-- **Single submitter**: All 22 entries come from the same maintainer. The term "third-party analysis" in entries means the analyst is a third party **relative to the source project** (analyzing someone else's project), not that the analyst is independent of the registry maintainer — currently the analyst and submitter are the same person. Schema V2 will distinguish "source author / analyst / entry submitter" as separate roles.
-- **External link checks**: GitHub and arXiv domain links are skipped in CI due to platform rate limiting — evidence links on these domains require manual verification.
+- **Single submitter**: All 22 entries come from the same maintainer. The term "third-party analysis" in entries means the analyst is a third party **relative to the source project** (analyzing someone else's project), not that the analyst is independent of the registry maintainer — Schema V2 already distinguishes these roles via `source_authors` / `analyst` / `submitted_by`.
+- **External link checks**: GitHub and arXiv domain links are skipped in CI due to platform rate limiting — evidence links on these domains require manual verification. v0.2.0 added per-entry grading (verified/skipped/broken).
 - **Search capabilities**: The current site supports filtering by domain, category, and keyword (via GitHub Pages), but does not offer advanced full-text search or API export.
-- **Submission contract pending**: ID allocation, evidence thresholds, and review SLAs will be designed when real external contributions arise — the current submission process is a baseline version.
+- **Review SLA pending**: ID allocation and evidence thresholds were finalized in v0.2.0; review response time will be set after the first external PR, estimated ≤ 1 week.
 
 ---
 

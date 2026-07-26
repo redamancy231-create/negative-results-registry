@@ -188,6 +188,11 @@ def main():
     with open(REGISTRY_PATH, "w", encoding="utf-8") as f:
         json.dump(registry, f, ensure_ascii=False, indent=2)
 
+    # 同步到 docs/ 供 GitHub Pages 部署
+    docs_registry = PROJECT_ROOT / "docs" / "registry.json"
+    with open(docs_registry, "w", encoding="utf-8") as f:
+        json.dump(registry, f, ensure_ascii=False, indent=2)
+
     print(f"registry.json updated: {len(entries)} entries")
 
 

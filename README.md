@@ -5,10 +5,10 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 <!-- AUTO_GENERATED: entries_badge -->
-[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
 <!-- AUTO_GENERATED_END -->
 
-[![中文](https://img.shields.io/badge/lang-中文-red)]()
+[![中文](https://img.shields.io/badge/lang-中文-red)](./)
 [![English](https://img.shields.io/badge/lang-English-blue)](en/README.md)
 [![正體中文](https://img.shields.io/badge/lang-正體中文-green)](zh-Hant/README.md)
 
@@ -234,10 +234,10 @@ negative-results-registry/
 
 ## 已知局限
 
-- **提交者单一**：22 条目全部来自同一维护者。条目中的"第三方分析"指分析者相对于**源项目**是第三方（分析别人的项目），不表示分析者独立于登记册维护者——当前所有条目的分析者和提交者为同一人。未来将通过 Schema V2 区分"源项目作者 / 分析者 / 条目提交者"三种角色
-- **外部链接检查受限**：CI 对 GitHub 和 arXiv 域名的链接检查因平台限速而跳过——这两个域名上的证据链接需人工核查
+- **提交者单一**：22 条目全部来自同一维护者。条目中的"第三方分析"指分析者相对于**源项目**是第三方（分析别人的项目），不表示分析者独立于登记册维护者——Schema V2 已通过 `source_authors` / `analyst` / `submitted_by` 三角色区分了这三种身份
+- **外部链接检查受限**：CI 对 GitHub 和 arXiv 域名的链接检查因平台限速而跳过——这两个域名上的证据链接需人工核查。v0.2.0 已实现按条目分级报告（verified/skipped/broken）
 - **检索能力**：当前支持按领域/类型/全文关键词筛选（GitHub Pages），但不支持高级全文搜索或 API 导出
-- **提交合同未定稿**：ID 分配、证据门槛、审核 SLA 等机制将在有真实外部贡献场景时设计，当前提交流程为基础版
+- **审核 SLA 待定**：ID 分配和证据门槛已在 v0.2.0 中确定；审核响应时间将在首次外部 PR 后根据实际工作流设定，预估 ≤ 1 周
 
 ---
 

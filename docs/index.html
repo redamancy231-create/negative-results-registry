@@ -163,12 +163,12 @@
       <div class="tag-cloud" id="tag-cloud" aria-label="按标签筛选"></div>
     </section>
     <section class="entries" id="entries" aria-label="阴性结果条目">
-      <div class="load-state"><strong>正在读取 registry.json</strong><p>请稍候，登记册数据正在加载。</p></div>
+      <div class="load-state"><strong>正在加载条目数据…</strong><p>请稍候，登记册数据正在加载。</p></div>
     </section>
   </main>
   <footer>
     <div class="shell footer-inner">
-      <div>数据与文档采用 CC BY 4.0 · 页面生成：GPT-5.6-Sol · 2026-07-25</div>
+      <div>数据与文档采用 CC BY 4.0 · 2026-07-25 · 页面实现：GPT-5.6-Sol</div>
       <div class="footer-links">
         <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">许可协议</a>
         <a href="https://github.com/redamancy231-create/negative-results-registry" target="_blank" rel="noopener noreferrer">在 GitHub 查看</a>
@@ -445,7 +445,7 @@
       if (retry) retry.addEventListener("click", load);
     }
     async function load() {
-      elements.entries.innerHTML = "<div class=\"load-state\"><strong>正在读取 registry.json</strong><p>请稍候，登记册数据正在加载。</p></div>";
+      elements.entries.innerHTML = "<div class=\"load-state\"><strong>正在加载条目数据…</strong><p>请稍候，登记册数据正在加载。</p></div>";
       try { initializeRegistry(await fetchRegistry()); }
       catch (error) { showLoadError(error); }
     }

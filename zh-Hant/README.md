@@ -5,12 +5,12 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 <!-- AUTO_GENERATED: entries_badge -->
-[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)]()
+[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
 <!-- AUTO_GENERATED_END -->
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
 [![English](https://img.shields.io/badge/lang-English-blue)](../en/README.md)
-[![正體中文](https://img.shields.io/badge/lang-正體中文-green)](zh-Hant/README.md)
+[![正體中文](https://img.shields.io/badge/lang-正體中文-green)](./)
 
 **語言 / Languages**：[简体中文](../README.md) · [English](../en/README.md) · 正體中文（原文）
 
@@ -234,10 +234,10 @@ negative-results-registry/
 
 ## 已知局限
 
-- **提交者單一**：22 條目全部來自同一維護者。條目中的「第三方分析」指分析者相對於**源專案**是第三方（分析別人的專案），不表示分析者獨立於登記冊維護者——目前所有條目的分析者和提交者為同一人。未來將透過 Schema V2 區分「源專案作者 / 分析者 / 條目提交者」三種角色
-- **外部連結檢查受限**：CI 對 GitHub 和 arXiv 域名的連結檢查因平臺限速而跳過——這兩個域名上的證據連結需人工核查
+- **提交者單一**：22 條目全部來自同一維護者。條目中的「第三方分析」指分析者相對於**源專案**是第三方（分析別人的專案），不表示分析者獨立於登記冊維護者——Schema V2 已透過 `source_authors` / `analyst` / `submitted_by` 三角色區分這三種身分
+- **外部連結檢查受限**：CI 對 GitHub 和 arXiv 域名的連結檢查因平臺限速而跳過——這兩個域名上的證據連結需人工核查。v0.2.0 已實現按條目分級報告（verified/skipped/broken）
 - **檢索能力**：當前支援按領域/類型/全文關鍵字篩選（GitHub Pages），但不支援進階全文搜尋或 API 匯出
-- **提交合約未定稿**：ID 分配、證據門檻、審核 SLA 等機制將在有真實外部貢獻場景時設計，當前提交流程為基礎版
+- **審核 SLA 待定**：ID 分配和證據門檻已在 v0.2.0 中確定；審核回應時間將在首次外部 PR 後根據實際工作流設定，預估 ≤ 1 週
 
 ---
 

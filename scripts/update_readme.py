@@ -125,7 +125,7 @@ def load_json(path):
 def generate_badge(total_entries):
     return (
         f"[![Entries](https://img.shields.io/badge/Entries-{total_entries}"
-        f"-brightgreen.svg)]()"
+        f"-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)"
     )
 
 
