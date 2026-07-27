@@ -3,16 +3,21 @@
 
 用法:
     python scripts/generate_registry.py
+    python scripts/generate_registry.py --lang en
+    python scripts/generate_registry.py --lang zh-Hant
 
 读取 entries/ 下所有 NRR-YYYY-NNN/NRR-YYYY-NNN.json，
 校验后合并入 registry.json 的 entries 数组，更新 stats 计数。
+指定 --lang 时，从对应翻译 Markdown 提取内容字段并生成语言特定 registry。
 """
 
+import argparse
 import json
+import re
 import sys
+from collections import Counter
 from datetime import date
 from pathlib import Path
-from collections import Counter
 
 try:
     import jsonschema  # type: ignore[import-untyped]
@@ -25,6 +30,57 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ENTRIES_DIR = PROJECT_ROOT / "entries"
 REGISTRY_PATH = PROJECT_ROOT / "registry.json"
 SCHEMA_PATH = PROJECT_ROOT / "schema" / "entry.schema.json"
+
+TRANSLATABLE_FIELDS = (
+    "title",
+    "hypothesis",
+    "method",
+    "expected_result",
+    "actual_result",
+    "interpretation",
+    "lessons_learned",
+)
+
+LANGUAGE_CONFIG = {
+    "en": {
+        "title_label": "Title",
+        "sections": {
+            "hypothesis": "Original Hypothesis",
+            "method": "Method",
+            "expected_result": "Expected Result",
+            "actual_result": "Actual Result",
+            "interpretation": "Why Did It Fail?",
+            "lessons_learned": "What Did We Learn?",
+        },
+    },
+    "zh-Hant": {
+        "title_label": "標題",
+        "sections": {
+            "hypothesis": "原始假設",
+            "method": "方法",
+            "expected_result": "預期結果",
+            "actual_result": "實際結果",
+            "interpretation": "為什麼會失敗？",
+            "lessons_learned": "學到了什麼？",
+        },
+    },
+}
+
+
+def parse_args():
+    """解析命令列参数。"""
+    parser = argparse.ArgumentParser(description="Generate the aggregated registry JSON files.")
+    parser.add_argument(
+        "--lang",
+        choices=LANGUAGE_CONFIG,
+        help="Generate a localized registry from translated entry Markdown.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Generate output even when source entry validation fails.",
+    )
+    return parser.parse_args()
 
 
 def validate_entry(entry: dict, schema: dict) -> list[str]:
@@ -43,7 +99,6 @@ def validate_entry(entry: dict, schema: dict) -> list[str]:
     # Cross-field checks
     eid = entry.get("id", "")
     # ID pattern
-    import re
     if not re.match(r"^NRR-\d{4}-\d{3}$", eid):
         errors.append(f"  ID pattern mismatch: '{eid}' (expected NRR-YYYY-NNN)")
 
@@ -100,10 +155,18 @@ def load_schema():
     return None
 
 
-def load_existing_registry():
-    """加载现有 registry.json。"""
-    if REGISTRY_PATH.exists():
-        with open(REGISTRY_PATH, "r", encoding="utf-8") as f:
+def registry_path_for_lang(lang: str | None) -> Path:
+    """返回指定语言的根目录 registry 输出路径。"""
+    if lang is None:
+        return REGISTRY_PATH
+    return PROJECT_ROOT / f"registry-{lang}.json"
+
+
+def load_existing_registry(registry_path: Path):
+    """加载待更新的 registry；语言文件首次生成时复用默认 registry 元数据。"""
+    source_path = registry_path if registry_path.exists() else REGISTRY_PATH
+    if source_path.exists():
+        with open(source_path, "r", encoding="utf-8") as f:
             return json.load(f)
     return {"metadata": {"total_entries": 0}, "entries": [], "stats": {}}
 
@@ -140,6 +203,138 @@ def collect_entries():
     return entries
 
 
+def extract_title(markdown: str, label: str) -> str | None:
+    """从基本信息表格提取标题。"""
+    pattern = re.compile(
+        rf"^\|\s*\*\*{re.escape(label)}\*\*\s*\|\s*(.*?)\s*\|\s*$",
+        re.MULTILINE,
+    )
+    match = pattern.search(markdown)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
+def extract_section(markdown: str, heading: str) -> str | None:
+    """提取三级标题下、下一个二级或三级标题前的 Markdown 内容。"""
+    lines = markdown.splitlines()
+    header = f"### {heading}"
+    start = next((i + 1 for i, line in enumerate(lines) if line.strip() == header), None)
+    if start is None:
+        return None
+
+    content = []
+    for line in lines[start:]:
+        stripped = line.lstrip()
+        if stripped.startswith("### ") or stripped.startswith("## "):
+            break
+        content.append(line)
+
+    while content and content[0].strip() == "":
+        content.pop(0)
+    while content and content[-1].strip() in {"", "---"}:
+        content.pop()
+
+    result = "\n".join(content).strip()
+    return result or None
+
+
+def extract_blockquote(section: str | None) -> str | None:
+    """提取 section 开头的连续 Markdown 引用块。"""
+    if not section:
+        return None
+
+    quote_lines = []
+    started = False
+    for line in section.splitlines():
+        stripped = line.lstrip()
+        if stripped.startswith(">"):
+            started = True
+            quote_lines.append(re.sub(r"^>\s?", "", stripped))
+        elif started:
+            break
+        elif stripped:
+            break
+
+    result = "\n".join(quote_lines).strip()
+    return result or None
+
+
+def extract_ordered_list(section: str | None) -> list[str] | None:
+    """从 section 提取 Markdown 或 HTML 有序列表项。"""
+    if not section:
+        return None
+
+    matches = re.findall(
+        r"^\s*\d+\.\s+(.*?)(?=^\s*\d+\.\s+|\Z)",
+        section,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    lessons = [match.strip() for match in matches if match.strip()]
+    if lessons:
+        return lessons
+
+    html_matches = re.findall(r"<li\b[^>]*>(.*?)</li>", section, flags=re.IGNORECASE | re.DOTALL)
+    lessons = [re.sub(r"\s+", " ", match).strip() for match in html_matches if match.strip()]
+    return lessons or None
+
+
+def parse_translated_fields(markdown: str, lang: str) -> dict:
+    """从指定语言的 Markdown 中解析可翻译字段。"""
+    config = LANGUAGE_CONFIG[lang]
+    sections = config["sections"]
+
+    hypothesis_section = extract_section(markdown, sections["hypothesis"])
+    expected_section = extract_section(markdown, sections["expected_result"])
+    lessons_section = extract_section(markdown, sections["lessons_learned"])
+
+    return {
+        "title": extract_title(markdown, config["title_label"]),
+        "hypothesis": extract_blockquote(hypothesis_section),
+        "method": extract_section(markdown, sections["method"]),
+        "expected_result": extract_blockquote(expected_section),
+        "actual_result": extract_section(markdown, sections["actual_result"]),
+        "interpretation": extract_section(markdown, sections["interpretation"]),
+        "lessons_learned": extract_ordered_list(lessons_section),
+    }
+
+
+def localize_entries(entries: list[dict], lang: str) -> list[dict]:
+    """使用对应语言 Markdown 覆盖条目的内容字段，解析失败时保留源 JSON 值。"""
+    localized_entries = []
+    for source_entry in entries:
+        entry = dict(source_entry)
+        entry_id = entry["id"]
+        markdown_path = ENTRIES_DIR / entry_id / f"{entry_id}-{lang}.md"
+
+        if not markdown_path.exists():
+            print(
+                f"WARNING: {entry_id}: missing translation Markdown {markdown_path.name}; "
+                "using source JSON content",
+                file=sys.stderr,
+            )
+            localized_entries.append(entry)
+            continue
+
+        with open(markdown_path, "r", encoding="utf-8") as f:
+            translated = parse_translated_fields(f.read(), lang)
+
+        for field in TRANSLATABLE_FIELDS:
+            value = translated.get(field)
+            if value is None:
+                print(
+                    f"WARNING: {entry_id}: could not parse '{field}' from "
+                    f"{markdown_path.name}; using source JSON value",
+                    file=sys.stderr,
+                )
+                continue
+            entry[field] = value
+
+        localized_entries.append(entry)
+
+    return localized_entries
+
+
 def compute_stats(entries):
     """计算聚合统计。"""
     domains = Counter()
@@ -163,37 +358,50 @@ def compute_stats(entries):
     }
 
 
+def write_registry(registry: dict, output_path: Path):
+    """写入根目录 registry，并同步到 docs/。"""
+    with open(output_path, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(registry, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+    docs_registry = PROJECT_ROOT / "docs" / output_path.name
+    with open(docs_registry, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(registry, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+    return docs_registry
+
+
 def main():
+    args = parse_args()
     schema = load_schema()
-    registry = load_existing_registry()
     entries = collect_entries()
 
-    # Validate before proceeding
+    # 始终先校验权威 JSON 源；翻译 Markdown 可能包含更长的展示文本。
     if schema:
         error_count = validate_all(entries, schema)
         if error_count > 0:
             print(f"\n{error_count} validation error(s) found. Aborting.", file=sys.stderr)
             print("Fix errors above or run with --force to override.", file=sys.stderr)
-            if "--force" not in sys.argv:
+            if not args.force:
                 sys.exit(1)
     else:
         print("WARNING: schema/entry.schema.json not found; skipping validation", file=sys.stderr)
 
+    if args.lang:
+        entries = localize_entries(entries, args.lang)
+
+    output_path = registry_path_for_lang(args.lang)
+    registry = load_existing_registry(output_path)
     today = date.today().isoformat()
     registry["metadata"]["last_updated"] = today
     registry["metadata"]["total_entries"] = len(entries)
     registry["entries"] = entries
     registry["stats"] = compute_stats(entries)
 
-    with open(REGISTRY_PATH, "w", encoding="utf-8") as f:
-        json.dump(registry, f, ensure_ascii=False, indent=2)
-
-    # 同步到 docs/ 供 GitHub Pages 部署
-    docs_registry = PROJECT_ROOT / "docs" / "registry.json"
-    with open(docs_registry, "w", encoding="utf-8") as f:
-        json.dump(registry, f, ensure_ascii=False, indent=2)
-
-    print(f"registry.json updated: {len(entries)} entries")
+    docs_registry = write_registry(registry, output_path)
+    print(f"{output_path.name} updated: {len(entries)} entries")
+    print(f"{docs_registry.relative_to(PROJECT_ROOT)} synchronized")
 
 
 if __name__ == "__main__":
