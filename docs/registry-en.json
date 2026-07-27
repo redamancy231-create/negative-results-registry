@@ -783,7 +783,7 @@
         "DeepSeek-V4-Pro",
         "GPT-5.5"
       ],
-      "interpretation": "这是'医生的孩子没人治'（physician, heal thyself）问题的直接实例。框架花费大量篇幅论证多后端独立审查的必要性，并将此要求编码为 §2.6 的硬约束——但在框架自身的版本升级中，这个约束被静默地绕过了。问题不在于'没有能力做多后端审查'——框架项目有多后端审查的基础设施和流程——而在于'操作者自己就是审查流程的设计者和执行者，缺乏外部强制力'。这正是框架 §1.8 局限 #9（作者-读者同构性）的直接体现。",
+      "interpretation": "This is a direct instance of the “physician, heal thyself” problem. The framework devotes substantial attention to establishing the necessity of independent, multi-backend review and encodes that requirement as a hard constraint in §2.6; yet the constraint was silently bypassed during an upgrade of the framework itself. The issue was not a lack of capacity—the project already had the infrastructure and procedures for multi-backend review—but rather that the operator was simultaneously the designer and executor of the review process, leaving no external enforcement mechanism. This is a direct manifestation of limitation #9 in §1.8: author–reader isomorphism.",
       "reproducibility": {
         "level": "fully-reproducible",
         "artifacts_available": [
@@ -840,7 +840,7 @@
         "OpenCC",
         "Qwen3.7-Max"
       ],
-      "interpretation": "这是'说一套做一套'的直接实例——不是恶意，而是执行惯性。操作者在翻译管道的执行中回到了'自己觉得最快的方式'（单模型+自检），而非 Spec 规定的'更严谨但更慢的方式'（多模型+异后端校译）。这揭示了 Spec Coding 的核心挑战：Spec 的价值在执行中才会被检验，而执行者有天然的'走捷径'倾向。框架主张的 Human Gate 机制本应在此处拦截——Human Gate 要求在执行偏离 Spec 时停下来确认，但操作者（同时也是 Human Gate）在'效率优先'的心理下跳过了这个 Gate。",
+      "interpretation": "This is a direct instance of “saying one thing and doing another,” driven not by malice but by execution inertia. While running the translation pipeline, the operator reverted to the method that seemed fastest—a single model plus self-checking—instead of the more rigorous but slower procedure specified by the Spec: multiple models plus proofreading by a different backend. This exposes the central challenge of Spec Coding: a specification proves its value only in execution, while executors have a natural tendency to take shortcuts. The framework's Human Gate should have intercepted the deviation by requiring a pause and confirmation whenever execution departed from the Spec; instead, the operator—who was also the Human Gate—skipped it under an efficiency-first mindset.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -899,7 +899,7 @@
         "DeepSeek-V4-Pro",
         "GPT-5.5"
       ],
-      "interpretation": "这三次误报不是操作不仔细——是同一后端同一搜索策略的结构性盲区。操作者用自己写的 grep pattern 扫自己编辑过的文件——大脑已经在编辑过程中建立了'我已经处理过了'的认知，grep 只是确认这个认知。异后端独立扫描使用不同的搜索策略（不同的关键字选择、不同的文件范围假设），自然会命中操作者盲区中的残留。第四次修复后，项目启动检查清单新增了 O7 'no_self_reported_zero_residue'——规定清理类任务不得基于自有 grep pattern 声称零残留，必须由异后端/异工具独立确认。",
+      "interpretation": "The three false “zero residue” declarations were not simply the result of careless operation; they arose from a structural blind spot created by using the same backend and the same search strategy. The operator applied a self-authored grep pattern to files they had edited themselves. During editing, the operator had already formed the belief that the material had been handled, so grep merely confirmed that prior belief. An independent scan by a different backend used a different search strategy—including different keyword choices and assumptions about file scope—and therefore naturally detected residues in the operator's blind spots. After the fourth remediation, the project startup checklist added O7, `no_self_reported_zero_residue`: cleanup tasks may not claim zero residue on the basis of the operator's own grep pattern and must instead be independently verified by a different backend or tool.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -960,7 +960,7 @@
       "models_used": [
         "多种 LLM（详见 Kuai et al., 2026-04）"
       ],
-      "interpretation": "这是对'多模型=多独立视角'直觉假设的系统性证伪。行为纠缠的三个来源——共享训练数据（所有模型都在相似的互联网语料上训练）、知识蒸馏（小模型从大模型学习）、对齐管道（RLHF/DPO 使用相似的人类偏好数据）——意味着即使来自不同公司、不同架构的模型，也可能因为共享上游数据而产生系统相关的错误模式。对于 AI 协作方法论而言，这意味着'换模型'的独立性增益被高估了。",
+      "interpretation": "This systematically falsifies the intuitive assumption that “multiple models” provide “multiple independent perspectives.” Behavioral entanglement arises from three sources: shared training data (models are trained on similar Internet corpora), knowledge distillation (smaller models learn from larger ones), and alignment pipelines (RLHF/DPO rely on similar human-preference data). Consequently, even models from different companies or with different architectures can exhibit systematically correlated error patterns because they share upstream data. For methodologies of AI collaboration, the implication is that the independence gained by “switching models” has been overestimated.",
       "reproducibility": {
         "level": "not-assessed",
         "artifacts_available": [
@@ -1012,7 +1012,7 @@
         "GPT-5.5",
         "Qwen3.7-Max"
       ],
-      "interpretation": "这个阴性发现对多模型审查方法论有直接影响：不能简单地用'模型之间意见不一致'来判断内容质量。分歧本身需要被分类——是标准模糊导致的分歧（rubrics 写得不够好）、是任务固有歧义（换了谁都可能给出不同判断）、还是真正的深度分歧（内容确实复杂）？在没有对分歧进行分类的情况下，'多模型一致性高=质量好'和'多模型分歧大=质量差'都是过度简化。",
+      "interpretation": "This negative finding has direct implications for multi-model review methodology: content quality cannot be inferred merely from the fact that models disagree. As Nájera's (2026) four-category taxonomy indicates, disagreement must itself be classified. Does it arise from ambiguous standards (poorly specified rubrics), from ambiguity inherent in the task (reasonable reviewers could reach different judgments), or from genuine deep disagreement because the content is truly complex? Without such classification, both “high multi-model agreement means high quality” and “large multi-model disagreement means poor quality” are oversimplifications.",
       "reproducibility": {
         "level": "not-assessed",
         "artifacts_available": [
@@ -1063,7 +1063,7 @@
         "Codex CLI",
         "Gemini CLI"
       ],
-      "interpretation": "这不是说 CrossCheck 的设计不好——它的 Swiss Cheese Model 和 Skills 体系是自有项目之外最丰富的 AI 协作架构设计。但设计与执行之间存在断层：多层质量保障的设计本身无法保证每一层都被实际执行和记录。这是'被动合规'(git hooks)和'主动自觉'(记录审查过程)之间的张力——hooks 可以强制执行'代码必须通过测试'，但不能强制执行'审查结果必须归档'。",
+      "interpretation": "This does not imply that CrossCheck is poorly designed. Its Swiss Cheese Model and Skills system constitute one of the richest AI-collaboration architectures outside the project's own ecosystem. The problem is a gap between design and execution: designing multiple layers of quality assurance does not ensure that every layer is actually performed and documented. This reflects the tension between passive compliance (git hooks) and active discipline (recording the review process). Hooks can enforce “the code must pass tests,” but they cannot enforce “the review results must be archived.”",
       "reproducibility": {
         "level": "fully-reproducible",
         "artifacts_available": [
