@@ -1,0 +1,69 @@
+{
+  "id": "NRR-2026-023",
+  "title": "C++ vs Rust benchmark 中的四项阴性发现：二进制尺寸超标、预期方向被推翻、亚微秒测量失效、GPU 小批量加速比为负",
+  "domain": "benchmarking",
+  "category": "hypothesis-falsified",
+  "submitted_by": "Acerolaorion",
+  "date": "2026-07-29",
+  "hypothesis": "四项冻结预登记预期——(1) Rust 二进制 < C++ ×1.5，(2) DTW/standardize/pattern single 单线程性能打平（±10%），(3) 100 次采样足够区分 ±10% 性能差异，(4) GPU cupy 加速在任意批量下均有正向收益。",
+  "method": "按 NRR 门 2 预登记（hash 454873aa）执行 C++ vs Rust benchmark：20 组合成 corpus + 5 组 edge corpus，预热 5 次/计时 100 次，wrapper-internal 层计时，±10% 阈值。GPU 测试使用 RTX 4060 Laptop + cupy 14.1.1，N = 100/500/1000/5000。",
+  "expected_result": "二进制 <1.5×，单线程性能打平（0.90 ≤ ratio ≤ 1.10），100 次采样可区分 10% 差异，GPU 全批量加速比 >1.0。",
+  "actual_result": "(1) 二进制 1.94×，不满足 <1.5×。(2) DTW ratio 0.29–0.39（Rust 快 2.6–3.5 倍），standardize 0.67，pattern single 0.53——全部远超出 ±10% 打平区间。(3) cosine median=0 ns（100 ns 量化），所有核心指标 CoV >5% 致结论降级为倾向性。(4) N=100 时 GPU 端到端 0.2×，N=500 时 0.7×，拐点 N≈1000。",
+  "effect_size": "二进制偏差 +29%；DTW 实际 ratio 比预登记预期低 61–71%；cosine 100% 不可判定；GPU N=100 加速比 −80%",
+  "sample_size": "20 组标准 corpus + 5 组 edge corpus，3 次独立实验，100 次计时/组",
+  "models_used": [
+    "rustc 1.97.1",
+    "MSVC 19.51",
+    "pyo3 0.23.5",
+    "cupy 14.1.1",
+    "RTX 4060 Laptop GPU"
+  ],
+  "interpretation": "预登记的方向预测在跨语言 benchmark 中系统性偏乐观——同算法不等于同性能。亚微秒测量需要循环放大而非独立采样。GPU 加速比为负是教科书级事实，但在实际项目中亲眼看到 0.2× 仍具有教育意义。",
+  "reproducibility": {
+    "level": "reproducible",
+    "artifacts_available": [
+      "preregistration",
+      "corpus",
+      "benchmark-script",
+      "raw-results"
+    ],
+    "notes": "预登记文档 docs/nrr_gate2_preregistration.md（hash 454873aa）。完整 NRR 报告 docs/NRR-2026-023_cpp_vs_rust_comparison.md。原始结果因含本地环境路径未直接公开推送，SHA-256 为 25339709471FDD8D20620A8946CADB4C2CF5FB4E6A5EB51EE6596BFB98691EC5——可在 GitHub Release asset 获取或联系维护者。"
+  },
+  "related_positive_result": "Rust 在 DTW/standardize/pattern single 上更快（wrapper-internal median ratio 0.29–0.67），16 线程 batch 5.33× 自身加速。这些是阳性发现，不纳入本条目。",
+  "lessons_learned": [
+    "预登记不是预测——是暴露盲区：4/12 指标预期被推翻，证明'先验认为 X'需要被检验",
+    "跨语言 benchmark 中同算法不等同性能：Rust 和 C++ 在 allocator、exception 语义、numpy 桥接上的差异会累积",
+    "基准测试方法需要分层：毫秒级（独立采样够用）、微秒级（需要循环放大）、亚微秒级（需要 Criterion 型统计）",
+    "GPU 加速有明确数据规模下限：N<1000 时 kernel launch + PCIe 传输主导耗时，加速比可能为负",
+    "二进制尺寸的预登记预期必须在了解调优参数的前提下设定——未做 LTO/strip 不应假设与 C++ 等大"
+  ],
+  "tags": [
+    "Rust",
+    "C++",
+    "benchmark",
+    "预登记",
+    "GPU",
+    "二进制尺寸",
+    "亚微秒测量",
+    "跨语言对比",
+    "方向预测失败"
+  ],
+  "links": [
+    {
+      "label": "etf-pattern-match-pyo3 NRR-2026-023 完整报告",
+      "url": "https://github.com/redamancy231-create/etf-pattern-match-pyo3/blob/main/docs/NRR-2026-023_cpp_vs_rust_comparison.md"
+    },
+    {
+      "label": "NRR 门 2 预登记",
+      "url": "https://github.com/redamancy231-create/etf-pattern-match-pyo3/blob/main/docs/nrr_gate2_preregistration.md"
+    },
+    {
+      "label": "etf-pattern-match-pyo3 仓库",
+      "url": "https://github.com/redamancy231-create/etf-pattern-match-pyo3"
+    }
+  ],
+  "source_project": "etf-pattern-match-pyo3",
+  "source_authors": "redamancy231-create",
+  "analyst": "Acerolaorion",
+  "source_project_url": "https://github.com/redamancy231-create/etf-pattern-match-pyo3"
+}
