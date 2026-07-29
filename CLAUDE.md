@@ -95,6 +95,10 @@ negative-results-registry/
 6. 运行 `python scripts/build_all.py --check` 确认无漂移（CI 使用同一入口）
 7. 更新 `docs/existing-negative-results.md`（如条目源自自有项目）
 
+## 已知局限与未来计划
+
+- **P2: 迁移到单一 nested-i18n registry**。当前使用 3 个独立 JSON（`registry.json` + `registry-en.json` + `registry-zh-Hant.json`）分别服务三种语言，需通过 `build_all.py` 和 CI 校验保持 ID 集合一致。长期推荐合并为单一 JSON，通过嵌套 `i18n.en`/`i18n.zh-Hant` 字段存放译文，前端按字段级 fallback 选择语言。决策依据见 R7 审查报告（`_review/`）。
+
 ### 收到外部提交（未来）
 1. 验证 JSON Schema 合规
 2. 检查条目内容与模板一致性
