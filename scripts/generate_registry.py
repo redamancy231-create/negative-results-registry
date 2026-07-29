@@ -16,7 +16,6 @@ import json
 import re
 import sys
 from collections import Counter
-from datetime import date
 from pathlib import Path
 
 try:
@@ -392,8 +391,9 @@ def main_impl(lang=None, force=False):
 
     output_path = registry_path_for_lang(lang)
     registry = load_existing_registry(output_path)
-    today = date.today().isoformat()
-    registry["metadata"]["last_updated"] = today
+    # Use latest entry date as deterministic timestamp (not build machine clock)
+    latest_date = max((e.get("date", "1970-01-01") for e in entries), default="1970-01-01")
+    registry["metadata"]["last_updated"] = latest_date
     registry["metadata"]["total_entries"] = len(entries)
     registry["entries"] = entries
     registry["stats"] = compute_stats(entries)

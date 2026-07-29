@@ -26,5 +26,8 @@ jobs:
       - name: README consistency with registry.json
         run: python scripts/update_readme.py --check
 
+      - name: Cross-locale ID set + root/docs mirror validation
+        run: python scripts/build_all.py --check
+
       - name: External link check (advisory only)
         run: python scripts/check_external_links.py
