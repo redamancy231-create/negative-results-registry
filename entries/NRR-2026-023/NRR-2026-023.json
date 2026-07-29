@@ -20,12 +20,12 @@
   ],
   "interpretation": "预登记的方向预测在跨语言 benchmark 中系统性偏乐观——同算法不等于同性能。亚微秒测量需要循环放大而非独立采样。GPU 加速比为负是教科书级事实，但在实际项目中亲眼看到 0.2× 仍具有教育意义。",
   "reproducibility": {
-    "level": "reproducible",
+    "level": "partially-reproducible",
     "artifacts_available": [
-      "preregistration",
-      "corpus",
-      "benchmark-script",
-      "raw-results"
+      "data",
+      "data",
+      "code",
+      "raw-output"
     ],
     "notes": "预登记文档 docs/nrr_gate2_preregistration.md（hash 454873aa）。完整 NRR 报告 docs/NRR-2026-023_cpp_vs_rust_comparison.md。原始结果因含本地环境路径未直接公开推送，SHA-256 为 25339709471FDD8D20620A8946CADB4C2CF5FB4E6A5EB51EE6596BFB98691EC5——可在 GitHub Release asset 获取或联系维护者。"
   },

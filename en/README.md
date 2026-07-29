@@ -5,7 +5,7 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 <!-- AUTO_GENERATED: entries_badge -->
-[![Entries](https://img.shields.io/badge/Entries-22-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
+[![Entries](https://img.shields.io/badge/Entries-23-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
 <!-- AUTO_GENERATED_END -->
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
@@ -175,7 +175,7 @@ negative-results-registry/
 ## Entry Overview
 
 <!-- AUTO_GENERATED: summary_line -->
-The registry currently contains **22 entries** spanning 10 domains × 4 types (out of a 12-domain × 9-type schema), drawn from 7 of our own public projects + 7 external sources (academic papers + open-source projects):
+The registry currently contains **23 entries** spanning 10 domains × 5 types (out of a 12-domain × 9-type schema), drawn from 7 of our own public projects + 8 external sources (academic papers + open-source projects):
 <!-- AUTO_GENERATED_END -->
 
 <!-- AUTO_GENERATED: entry_table -->
@@ -203,6 +203,7 @@ The registry currently contains **22 entries** spanning 10 domains × 4 types (o
 | NRR-2026-020 | PocketFlow | Methodology Extraction | Ceiling Effect |
 | NRR-2026-021 | NPGS | Methodology Extraction | Methodology Failure |
 | NRR-2026-022 | NPGS | Methodology Extraction | Methodology Failure |
+| NRR-2026-023 | etf-pattern-match-pyo3 | Benchmarking | Hypothesis Falsified |
 <!-- AUTO_GENERATED_END -->
 
 ---
