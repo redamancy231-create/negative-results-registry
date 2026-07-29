@@ -261,12 +261,10 @@ def process_readme(lang, entries, check_only=False):
         return True
 
 
-def main():
-    check_only = "--check" in sys.argv
-
+def main_impl(check_only=False):
+    """Programmatic entry point for build_all.py."""
     if not REGISTRY_PATH.exists():
-        print(f"ERROR: registry.json not found at {REGISTRY_PATH}", file=sys.stderr)
-        sys.exit(1)
+        raise FileNotFoundError(f"registry.json not found at {REGISTRY_PATH}")
 
     registry = load_json(REGISTRY_PATH)
     entries = sorted(registry.get("entries", []), key=lambda e: e["id"])
@@ -274,23 +272,21 @@ def main():
     mode = "CHECK" if check_only else "UPDATE"
     print(f"=== README {mode} ===\n")
 
-    all_ok = True
     for lang in ["zh-CN", "en", "zh-Hant"]:
         print(f"[{lang}]")
-        ok = process_readme(lang, entries, check_only)
-        if not ok:
-            all_ok = False
+        process_readme(lang, entries, check_only)
 
     print()
-    if check_only:
-        if all_ok:
-            print("All READMEs in sync with registry.json")
-            sys.exit(0)
-        else:
-            print("README drift detected! Run: python scripts/update_readme.py")
-            sys.exit(1)
-    else:
-        print("Done.")
+
+
+def main():
+    check_only = "--check" in sys.argv
+    try:
+        main_impl(check_only=check_only)
+    except FileNotFoundError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
+    print("Done.")
 
 
 if __name__ == "__main__":

@@ -372,26 +372,25 @@ def write_registry(registry: dict, output_path: Path):
     return docs_registry
 
 
-def main():
-    args = parse_args()
+def main_impl(lang=None, force=False):
+    """Programmatic entry point for build_all.py."""
     schema = load_schema()
     entries = collect_entries()
 
-    # 始终先校验权威 JSON 源；翻译 Markdown 可能包含更长的展示文本。
     if schema:
         error_count = validate_all(entries, schema)
         if error_count > 0:
             print(f"\n{error_count} validation error(s) found. Aborting.", file=sys.stderr)
             print("Fix errors above or run with --force to override.", file=sys.stderr)
-            if not args.force:
+            if not force:
                 sys.exit(1)
     else:
         print("WARNING: schema/entry.schema.json not found; skipping validation", file=sys.stderr)
 
-    if args.lang:
-        entries = localize_entries(entries, args.lang)
+    if lang:
+        entries = localize_entries(entries, lang)
 
-    output_path = registry_path_for_lang(args.lang)
+    output_path = registry_path_for_lang(lang)
     registry = load_existing_registry(output_path)
     today = date.today().isoformat()
     registry["metadata"]["last_updated"] = today
@@ -402,6 +401,11 @@ def main():
     docs_registry = write_registry(registry, output_path)
     print(f"{output_path.name} updated: {len(entries)} entries")
     print(f"{docs_registry.relative_to(PROJECT_ROOT)} synchronized")
+
+
+def main():
+    args = parse_args()
+    main_impl(lang=args.lang, force=args.force)
 
 
 if __name__ == "__main__":
