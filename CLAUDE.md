@@ -12,7 +12,7 @@
 
 这是一个**文档/知识类项目**，非软件项目。核心交付物：
 - `registry.json` — 机器可读登记册（权威数据源，脚本自动生成）
-- `entries/` — 22 条目，.md（人读）+ .json（机读）双件
+- `entries/` — 23 条目，.md（人读）+ .json（机读）双件
 - `methodology.md` — 分类体系与价值论述（三语）
 - `templates/submission-v2.md` — 标准化提交模板
 - `docs/index.html` — GitHub Pages 可浏览页面
@@ -56,7 +56,7 @@ negative-results-registry/
 │   ├── submission-v2.md         # 提交模板（推荐使用）
 │   └── submission.md            # 旧版模板（保留参考）
 │
-├── entries/                     # 22 条目（NRR-2026-001 ~ 022）
+├── entries/                     # 23 条目（NRR-2026-001 ~ 023）
 │   └── NRR-YYYY-NNN/            # 每条目独立目录
 │       ├── NRR-YYYY-NNN.md      # 人读报告
 │       └── NRR-YYYY-NNN.json    # 机读数据（权威源）
@@ -103,7 +103,7 @@ negative-results-registry/
 
 ## 条目来源
 
-项目启动时已收录 22 个条目（NRR-2026-001–022），来自 6 个自有公开项目 + 7 个外部来源（学术论文 + 开源项目）。完整列表见 `README.md` §条目概览，或运行 `scripts/generate_registry.py` 查看最新状态。
+项目启动时已收录 23 个条目（NRR-2026-001–023），来自 6 个自有公开项目 + 7 个外部来源（学术论文 + 开源项目）。完整列表见 `README.md` §条目概览，或运行 `scripts/generate_registry.py` 查看最新状态。
 
 ---
 

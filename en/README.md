@@ -30,7 +30,7 @@ The scientific community has a "file drawer problem": positive results get publi
 - **Honesty builds trust**—someone who says "all my experiments succeeded" either has never run an experiment or is lying
 - **When dead ends are mapped, those who follow will not run into the same wall**
 - **Precise failure conditions are more informative than vague declarations of success**
-- **This is currently a structured prototype of the maintainer's personal failure log**—22 entries, one submitter, and one ecosystem. It cannot yet claim to have "combated the file drawer problem"; it needs external submissions and independent entries before it can serve as a community registry
+- **This is currently a structured prototype of the maintainer's personal failure log**—23 entries, one submitter, and one ecosystem. It cannot yet claim to have "combated the file drawer problem"; it needs external submissions and independent entries before it can serve as a community registry
 
 ---
 
@@ -38,7 +38,7 @@ The scientific community has a "file drawer problem": positive results get publi
 
 There are 18 million AI-related repositories on GitHub, the vast majority of which are code projects—showcases proclaiming "I used AI to do X." If you want to build a new tool, framework, or model, a quick search will turn up dozens of competitors.
 
-**But this registry is not a code project.** It is a structured set of methodological data—22 entries backed by independent review experience spanning 5 LLM backends and multiple public projects. A single project (the AI Collaboration Framework) alone accumulated 50+ rounds of independent review; add the review chains from the other projects, and the total—never tallied—far exceeds that. Every concrete number in these entries (d=0.03, n=24 per arm, 33 findings with zero overlap) is traceable to a source file and review chain. None of it was fabricated in a vacuum.
+**But this registry is not a code project.** It is a structured set of methodological data—23 entries backed by independent review experience spanning 5 LLM backends and multiple public projects. A single project (the AI Collaboration Framework) alone accumulated 50+ rounds of independent review; add the review chains from the other projects, and the total—never tallied—far exceeds that. Every concrete number in these entries (d=0.03, n=24 per arm, 33 findings with zero overlap) is traceable to a source file and review chain. None of it was fabricated in a vacuum.
 
 **The differentiation is not in the code—it is in the density of experience.** Someone can fork this repository, copy the schema, change the name, and ship it—but they cannot write the data that fills the entries. Code can be copied. Experience cannot.
 
@@ -121,7 +121,7 @@ negative-results-registry/
 │   ├── submission-v2.md         ← Submission template (recommended)
 │   └── submission.md            ← Legacy template (kept for reference)
 │
-├── entries/                     ← 22 entries (NRR-2026-001 ~ 022)
+├── entries/                     ← 23 entries (NRR-2026-001 ~ 023)
 │   └── NRR-YYYY-NNN/
 │       ├── NRR-YYYY-NNN.md      ← Human-readable report
 │       └── NRR-YYYY-NNN.json    ← Machine-readable data (authoritative)
@@ -235,7 +235,7 @@ For more projects, see the [personal homepage](https://github.com/redamancy231-c
 
 ## Known Limitations
 
-- **Single submitter**: All 22 entries come from the same maintainer. The term "third-party analysis" in entries means the analyst is a third party **relative to the source project** (analyzing someone else's project), not that the analyst is independent of the registry maintainer — Schema V2 already distinguishes these roles via `source_authors` / `analyst` / `submitted_by`.
+- **Single submitter**: All 23 entries come from the same maintainer. The term "third-party analysis" in entries means the analyst is a third party **relative to the source project** (analyzing someone else's project), not that the analyst is independent of the registry maintainer — Schema V2 already distinguishes these roles via `source_authors` / `analyst` / `submitted_by`.
 - **External link checks**: GitHub and arXiv domain links are skipped in CI due to platform rate limiting — evidence links on these domains require manual verification. v0.2.0 added per-entry grading (verified/skipped/broken).
 - **Search capabilities**: The current site supports filtering by domain, category, and keyword (via GitHub Pages), but does not offer advanced full-text search or API export.
 - **Review SLA pending**: ID allocation and evidence thresholds were finalized in v0.2.0; review response time will be set after the first external PR, estimated ≤ 1 week.
