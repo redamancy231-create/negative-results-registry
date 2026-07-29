@@ -1339,16 +1339,16 @@
     },
     {
       "id": "NRR-2026-023",
-      "title": "Four negative findings from C++ vs Rust benchmark: binary size exceeded, direction prediction overturned, sub-microsecond measurement failed, GPU small-batch speedup negative",
+      "title": "Four negative findings from a C++–Rust benchmark: the binary-size target was missed, preregistered performance-direction expectations were overturned, sub-microsecond measurements were inconclusive, and the GPU was slower at small batch sizes",
       "domain": "benchmarking",
       "category": "hypothesis-falsified",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-29",
-      "hypothesis": "Four frozen pre-registration expectations: (1) Rust binary < C++ ×1.5, (2) single-thread DTW/standardize/pattern single performance within ±10%, (3) 100 samples sufficient to distinguish ±10% performance difference, (4) GPU cupy acceleration yields positive speedup at any batch size.",
-      "method": "C++ vs Rust benchmark executed per NRR Gate 2 pre-registration (hash 454873aa): 20 synthetic corpus groups + 5 edge corpus groups, 5 warmup + 100 timed iterations, wrapper-internal layer timing, ±10% threshold. GPU testing on RTX 4060 Laptop + cupy 14.1.1, N = 100/500/1000/5000.",
-      "expected_result": "Binary <1.5×, single-thread performance within ±10% (0.90 ≤ ratio ≤ 1.10), 100 samples sufficient for 10% discrimination, GPU speedup >1.0 at all batch sizes.",
-      "actual_result": "(1) Binary ratio 1.94×, does not satisfy <1.5×. (2) DTW ratio 0.29–0.39 (Rust 2.6–3.5× faster), standardize 0.67, pattern single 0.53—all far beyond ±10% tie range. (3) cosine median=0 ns (100 ns quantization), all core indicators CoV >5% → conclusions downgraded to indicative. (4) GPU N=100 end-to-end 0.2×, N=500 0.7×, break-even N≈1000.",
-      "effect_size": "二进制偏差 +29%；DTW 实际 ratio 比预登记预期低 61–71%；cosine 100% 不可判定；GPU N=100 加速比 −80%",
+      "hypothesis": "This entry focuses on three preregistered assumptions: (1) the Rust binary would be less than 1.5× the size of the C++ binary; (2) the single-threaded performance of DTW, `standardize`, and `pattern_match_single` would remain within the preregistered equivalence range; and (3) 100 timed samples would be sufficient to resolve a 10% performance difference. The GPU experiment was added later and had no preregistered threshold.",
+      "method": "Following the NRR Gate 2 preregistration (hash `454873aa`), the C++–Rust benchmark used 20 synthetic-corpus groups and five edge-case corpus groups, five warm-up iterations, 100 timed iterations per case, wrapper-internal timing, and a ±10% equivalence threshold. A separate exploratory GPU test was run on an RTX 4060 Laptop GPU with CuPy 14.1.1 at N = 100, 500, 1,000, and 5,000.",
+      "expected_result": "The relevant preregistered targets were a binary-size ratio below 1.5×, single-threaded results within the defined equivalence range, and sufficient timing resolution to distinguish a 10% difference. No GPU speedup threshold was preregistered.",
+      "actual_result": "(1) The binary-size ratio was 1.94×, above the preregistered limit of 1.5×. (2) DTW ratios were 0.29–0.39 (Rust was 2.6–3.5× faster); `standardize` was 0.67 and `pattern_match_single` was 0.53, all well outside the expected range. (3) Both cosine medians were 0 ns because of 100 ns timer quantization, and CoV exceeded 5% for the core metrics, so the conclusions were downgraded to indicative. (4) In the exploratory GPU test, end-to-end speedup was 0.2× at N = 100 and 0.7× at N = 500, with break-even near N = 1,000.",
+      "effect_size": "二进制偏差 +29%；DTW 实际 ratio 比预登记预期低 61–71%；cosine 100% 不可判定；探索性 GPU 测试 N=100 加速比 0.2×",
       "sample_size": "20 组标准 corpus + 5 组 edge corpus，3 次独立实验，100 次计时/组",
       "models_used": [
         "rustc 1.97.1",
@@ -1357,7 +1357,7 @@
         "cupy 14.1.1",
         "RTX 4060 Laptop GPU"
       ],
-      "interpretation": "Pre-registration direction predictions were systematically over-optimistic in cross-language benchmarks—same algorithm ≠ same performance. Sub-microsecond measurement requires loop amplification, not independent sampling. GPU speedup being negative is a textbook fact, but seeing 0.2× firsthand remains educational.",
+      "interpretation": "Pre-registration direction predictions were overly confident in this cross-language benchmark—same algorithm does not guarantee the same performance. Fixed launch and transfer overhead commonly makes GPUs slower for small workloads (0.2× at N = 100 is a textbook case, but seeing it firsthand remains educational). Sub-microsecond measurements require loop amplification rather than independent sampling; at the 100 ns quantization level, 100 samples were insufficient to distinguish a 10% difference.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -1368,13 +1368,13 @@
         ],
         "notes": "预登记文档 docs/nrr_gate2_preregistration.md（hash 454873aa）。完整 NRR 报告 docs/NRR-2026-023_cpp_vs_rust_comparison.md。原始结果因含本地环境路径未直接公开推送，SHA-256 为 25339709471FDD8D20620A8946CADB4C2CF5FB4E6A5EB51EE6596BFB98691EC5——可在 GitHub Release asset 获取或联系维护者。"
       },
-      "related_positive_result": "Rust 在 DTW/standardize/pattern single 上更快（wrapper-internal median ratio 0.29–0.67），16 线程 batch 5.33× 自身加速。这些是阳性发现，不纳入本条目。",
+      "related_positive_result": "Rust 在 DTW/standardize/pattern_single 上更快（wrapper-internal median ratio 0.29–0.67），16 线程 batch 5.33× 自身加速。这些是阳性发现，不纳入本条目。",
       "lessons_learned": [
-        "Pre-registration is not prediction—it exposes blind spots: 4/12 expectations were overturned",
-        "In cross-language benchmarks, same algorithm ≠ same performance: Rust/C++ differences in allocator, exception semantics, and numpy bridging accumulate",
-        "Benchmark methodology needs tiering: millisecond-level (independent sampling), microsecond-level (loop amplification), sub-microsecond (Criterion-style stats)",
-        "GPU acceleration has a clear minimum data threshold: N<1000, kernel launch + PCIe transfer dominate and speedup can be negative",
-        "Binary size expectations must be set with tuning parameters in mind—should not assume Rust ≈ C++ size without LTO/strip"
+        "Pre-registration is not prediction—it exposes blind spots: expectations were overturned for the binary-size ratio, DTW, `standardize`, and `pattern_match_single`",
+        "In cross-language benchmarks, same algorithm ≠ same performance: differences in allocation behavior, exception-handling semantics, and NumPy interoperability may accumulate as possible contributors",
+        "Benchmark methodology needs tiering: millisecond tasks (independent sampling works), microsecond tasks (loop amplification needed), sub-microsecond tasks (Criterion-style statistical analysis needed)",
+        "GPU acceleration has a clear minimum data threshold: at N < 1,000, kernel-launch and PCIe transfer overhead dominate and speedup can fall below 1.0",
+        "Binary-size expectations must be set with tuning parameters in mind—should not assume Rust ≈ C++ in size without LTO and symbol stripping"
       ],
       "tags": [
         "Rust",
