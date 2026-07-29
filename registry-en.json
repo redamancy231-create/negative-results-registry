@@ -9,22 +9,22 @@
   "entries": [
     {
       "id": "NRR-2026-001",
-      "title": "Prompt 三段式分段（prep/exec/post）对代码审查质量无显著影响",
+      "title": "Three-stage prompt segmentation (prep/exec/post) had no significant effect on code-review quality",
       "domain": "prompt-engineering",
       "category": "null-result",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-22",
-      "hypothesis": "将代码审查 prompt 按 prep（规范加载）/ exec（逐文件审查）/ post（交叉校验）三段结构化分段，预期能提升 GPT-5.5 在多文件代码审查中的发现质量——相比单段基线 prompt。",
-      "method": "Prompt-TDD 对照实验：实验组=prep/exec/post 三段式，对照组=单段综合 prompt。任务=同一代码库多文件审查。n=24/臂，GPT-5.5 主实验 + Qwen3.7-Max 独立复现。双 LLM 异后端盲评。",
-      "expected_result": "三段式 prompt 应产生更多高质量发现、更少误报。预期效应量 d ≥ 0.3。",
-      "actual_result": "两组在发现数量、严重程度分布、误报率上均无显著差异。d ≈ 0.03（trivial）。Qwen 复现 Δ = −0.014，方向一致（均为零）。",
+      "hypothesis": "Structuring a code-review prompt into three stages—prep (loading specifications), exec (reviewing files one by one), and post (cross-checking)—was expected to improve the quality of GPT-5.5 findings in multi-file code review relative to a single-block baseline prompt that reviewed all specifications and all files together.",
+      "method": "Prompt-TDD controlled experiment design:\n- **Experimental group**: three-stage prep/exec/post prompt (A2 variant)\n- **Control group**: single-block comprehensive prompt (A2 baseline)\n- **Task**: review the same codebase across multiple files and record the number of findings, severity, and false-positive rate\n- **Sample size**: n=24/arm\n- **Cross-model replication**: primary experiment with GPT-5.5 plus independent replication with Qwen3.7-Max\n- **Evaluation**: blinded evaluation by two LLMs using separate backends (reviewers did not know which group was experimental)",
+      "expected_result": "The three-stage prompt should produce more high-quality findings and fewer false positives. Expected effect size: d ≥ 0.3 (small to medium).",
+      "actual_result": "The two groups showed no significant differences in the number of findings, severity distribution, or false-positive rate.\n\n| Metric | Value |\n|------|------|\n| Effect size | d ≈ 0.03 (trivial) |\n| Sample size | n=24/arm × replication with 2 models |\n| Models used | GPT-5.5, Qwen3.7-Max |\n| Replication consistency | Qwen replication Δ = −0.014, directionally consistent (both null) |",
       "effect_size": "d ≈ 0.03",
       "sample_size": "n=24/臂 × 2模型复现（GPT-5.5 + Qwen3.7-Max）",
       "models_used": [
         "GPT-5.5",
         "Qwen3.7-Max"
       ],
-      "interpretation": "任务类型决定了 prompt 变异的效应量上限。代码审查是结构化判别任务——当规范足够明确时，prompt 的'包装'（分段 vs 单段）对输出质量的影响远小于任务本身的约束力。",
+      "interpretation": "The most likely explanation is that **the task type determines the upper bound on the effect size of prompt variations**. Code review is a structured classification task: the reviewer checks explicit specifications item by item. In such tasks, prompt “packaging” (segmented versus single-block) has much less influence on output quality than the constraints imposed by the task itself. Put differently, when the specifications are sufficiently explicit, how the prompt is written matters much less.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -38,10 +38,11 @@
       },
       "related_positive_result": "无直接后续。阴性结果导致了'Prompt-TDD 方法论作为案例手册而非工具库发布'的决策。",
       "lessons_learned": [
-        "结构化判别任务上 prompt 变异效应近零——规范本身比 prompt 结构更重要",
-        "阴性结果需要跨模型复现——GPT-5.5 零效应经 Qwen 复现确认非单模型噪声",
-        "实验前应做 ceiling probe——如果早知道结构化判别的天花板效应，不会抱太大期望",
-        "工程门/科学门拆分设计即使对阴性结果也有复用价值"
+        "**Prompt-variation effects are near zero on structured classification tasks**—unlike open-ended generation tasks such as translation and writing, where prompt variations have larger effects",
+        "**The specification itself matters more than prompt structure**—invest effort in writing strong review criteria rather than organizing prompt paragraphs",
+        "**Negative results require cross-model replication**—the null effect with GPT-5.5 could have been single-model noise; the Qwen replication confirmed that the effect was indeed null",
+        "**Separating the experiment's “engineering gate” from its “scientific gate” is valuable**—even with a negative result, the experimental structure itself remains reusable",
+        "**Effect sizes should be estimated with a ceiling probe before the experiment**—had the ceiling effect for structured classification been known, expectations for this direction would likely have been lower"
       ],
       "tags": [
         "prompt-tdd",
@@ -73,21 +74,21 @@
     },
     {
       "id": "NRR-2026-002",
-      "title": "声明式 action routing 比自然语言 routing 在 agent 路由决策上无优势",
+      "title": "Declarative action routing offered no advantage over natural-language routing in agent routing decisions",
       "domain": "prompt-engineering",
       "category": "null-result",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-22",
-      "hypothesis": "声明式 action routing（YAML 结构定义 actions → 精确匹配）预期优于自然语言 routing（自然语言描述 actions → 语义匹配），因为声明式格式减少了 LLM 对 action 语义的歧义解读空间。",
-      "method": "Prompt-TDD Pilot 对照实验（Tier 0）：实验组=声明式 YAML routing，对照组=自然语言 routing。任务=Claude Code agent 多步任务中自主选择 action。15 cases Pilot，未进入 Tier 1 推断统计。",
-      "expected_result": "声明式 routing 应减少 action 选择错误率，路由准确率提升 ≥10%。",
-      "actual_result": "Pilot 15 cases 中两组路由准确率和任务完成率无显著差异。效应量不足以支持进入 Tier 1 全规模实验。",
+      "hypothesis": "Declarative action routing (defining available actions in YAML/JSON → exact matching) was expected to outperform natural-language routing (describing available actions in natural language → semantic matching), because the declarative format reduces room for ambiguous LLM interpretation of action semantics.",
+      "method": "Prompt-TDD controlled experiment design (pilot stage):\n- **Experimental group**: declarative action-routing prompt (actions defined in YAML, strict matching)\n- **Control group**: natural-language routing prompt (actions described in natural language, semantic matching)\n- **Task**: a Claude Code agent autonomously selected actions during multi-step tasks (file operations, search, execution, and so on)\n- **Sample size**: 15 pilot cases (experimental-design stage—Tier 0; did not proceed to Tier 1 inferential statistics)\n- **Evaluation**: routing accuracy + task-completion rate",
+      "expected_result": "Declarative routing should reduce action-selection errors, with an expected improvement in routing accuracy of ≥10%.",
+      "actual_result": "Across the 15 pilot cases, the two groups showed no significant difference in routing accuracy or task-completion rate. The effect size was insufficient to justify proceeding to a full-scale Tier 1 experiment.\n\n| Metric | Value |\n|------|------|\n| Effect size | Difference not significant at the pilot stage (did not proceed to inferential statistics) |\n| Sample size | 15 cases (pilot) |\n| Models used | GPT-5.5 (via Codex CLI) |",
       "effect_size": "Pilot 阶段差异不显著（未进入推断统计）",
       "sample_size": "15 cases（Pilot，Tier 0）",
       "models_used": [
         "GPT-5.5"
       ],
-      "interpretation": "两个可能解释：(1) LLM 已是足够好的语义路由器——自然语义理解足以消除 action 歧义，声明式精度是冗余的；(2) Pilot 样本太小，但 Pilot 的目标就是在低成本阶段判断是否值得投入全规模——答案是'不值得'。",
+      "interpretation": "Two possible explanations:\n1. **The LLM was already a sufficiently capable semantic router**—when actions were described in natural language, the LLM's semantic understanding was sufficient to resolve ambiguity, making the extra precision of the declarative format redundant\n2. **The pilot sample was too small**—15 cases may have been insufficient to detect a small effect. But the purpose of the pilot was precisely to determine at low cost whether a full-scale experiment was worth the investment; the answer was “no”",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -98,10 +99,10 @@
       },
       "related_positive_result": "无直接后续。A3 被用作'如何闭合无信号实验'的教学反例。",
       "lessons_learned": [
-        "'格式=精度'的直觉假设不全对——LLM 作为语义引擎反而可能消化自然语言更自然",
-        "Pilot 的价值在于止损——15 cases 节省了 ~4h 实验 + ~2h 审查",
-        "阴性 Pilot 也是成功——A3 作为反例案例的教学价值比阳性结果更独特",
-        "A2（n=24对照）和 A3（n=15 Pilot）在各自条件下均未检出差异——形成待检验的元假设：prompt 结构变异效应量可能低于预期；需预注册、多任务、充分功效的汇总研究验证"
+        "**The intuition that “format equals precision” is only partly correct**—declarative formats outperform natural language in conventional programming, but an LLM acting as a semantic engine may process natural language more naturally",
+        "**A pilot's value lies in stopping losses early**—15 cases were enough to decide against Tier 1, saving approximately 4 hours of experiment execution and 2 hours of review time",
+        "**A negative pilot is still a success**—A3 was labeled in the methodology handbook as a **counterexample case** showing how to close an experiment with no signal; this teaching value is more distinctive than a positive result",
+        "**Consistency with A2 is noteworthy but does not establish a domain-level conclusion**—A2 (n=24 controlled) and A3 (n=15 pilot) each detected no difference under their respective conditions, creating a meta-hypothesis for future testing; an aggregate study would require preregistration, multiple tasks, and adequate power before drawing a general conclusion"
       ],
       "tags": [
         "prompt-tdd",
@@ -133,15 +134,15 @@
     },
     {
       "id": "NRR-2026-003",
-      "title": "22 个源项目系统提取可复用方法论模式——无一达到 ≥3 源稳定门槛",
+      "title": "Systematic extraction of reusable methodology patterns from 22 source projects—none met the ≥3-source stability threshold",
       "domain": "methodology-extraction",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-16",
-      "hypothesis": "从 22 个项目（11 外部分析 + 7 自建公开 + 4 自建未公开）中系统提取 AI 协作方法论模式。预期至少可识别 5–8 个跨 ≥3 源项目的稳定模式，形成'方法论提取框架 v0.1'。",
-      "method": "八阶段系统提取（Phase 0-7）：每个项目独立出证据卡 → 跨项目聚类 → 模式候选 → G5 追溯审计。稳定门槛=≥3 个源项目独立出现。10 轮审查跨 GPT-5.5/Kimi-K2.7/Qwen3.7-Max/GLM-5.2。元审查按 Kohli (2026-05) 独立性框架评估有效独立视角约 2-3。",
-      "expected_result": "5-8 个方法论模式达到 ≥3 源稳定门槛，形成可发布的框架 v0.1。",
-      "actual_result": "G5 可追溯审计：所有 5 个组件均未达到 ≥3 源稳定门槛。22 个项目不足以支撑泛化的方法论模式提取。",
+      "hypothesis": "Systematically extract methodology patterns for AI collaboration from 22 projects (11 external analyses, 7 self-built public projects, and 4 self-built nonpublic projects). At least 5–8 stable patterns were expected to appear across ≥3 source projects and form “Methodology Extraction Framework v0.1.”",
+      "method": "Eight-stage systematic extraction process (Phase 0-7):\n- **Source projects**: 22 (11 external open-source/paper analyses + 11 self-built projects)\n- **Extraction method**: create an independent evidence card for each project → cross-project clustering → pattern candidates → G5 traceability audit\n- **Stability threshold**: independently present in ≥3 source projects\n- **Review**: 10 review rounds across four backends—GPT-5.5 / Kimi-K2.7 / Qwen3.7-Max / GLM-5.2\n- **Meta-review**: Kohli (2026-05) independence framework → approximately 2–3 effectively independent perspectives",
+      "expected_result": "Five to eight methodology patterns would meet the ≥3-source stability threshold, producing a publishable “Methodology Extraction Framework v0.1.”",
+      "actual_result": "**G5 traceability audit conclusion: none of the five components met the ≥3-source stability threshold.** The 22 source projects were insufficient to support extraction of generalizable methodology patterns.\n\n| Metric | Value |\n|------|------|\n| Effect size | N/A (threshold not met—0/5 components passed) |\n| Sample size | 22 projects (11 external + 11 self-built) |\n| Models used | GPT-5.5, Kimi-K2.7, Qwen3.7-Max, GLM-5.2 |\n| Review findings | 33 findings from two orthogonal Phase 5 review rounds with **zero overlap** |\n| Effectively independent perspectives | Approximately 2–3 (under the Kohli 2026-05 framework) |",
       "effect_size": "N/A（阈值未达到——0/5 组件通过）",
       "sample_size": "22 个项目（11 外部开源/论文分析 + 7 自建公开 + 4 自建未公开）",
       "models_used": [
@@ -150,7 +151,7 @@
         "Qwen3.7-Max",
         "GLM-5.2"
       ],
-      "interpretation": "三个系统性问题叠加：(1) 样本同质性——所有提取和审查由同一操作者执行，认知偏好系统性约束模式发现；(2) n=22 太小——跨项目模式提取需要远大于 22 的样本；(3) ≥3 源稳定门槛可能对方法论文献提取来说太严。但'提取不出来'≠'不存在'——是方法不够好，不是没有模式。",
+      "interpretation": "Three systemic problems compounded one another:\n1. **Sample homogeneity**: the same operator extracted and reviewed every project. Although the source projects spanned different domains (quantitative finance, code review, and document generation), their level of methodological self-awareness was highly correlated through the operator; there was no independent “control sample”\n2. **n=22 was too small**: extracting cross-project patterns requires a sample far larger than 22, especially when projects differ substantially (some contain tens of thousands of lines of code; others are documentation only)\n3. **The stability threshold was too strict**: ≥3 sources may be too demanding for methodology-literature extraction; cross-study pattern extraction in academic literature commonly requires 30–50 papers",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -163,11 +164,11 @@
       },
       "related_positive_result": "无直接后续。项目在 v0.1 trial 封存。框架作为'不可行性证明'有独立价值。",
       "lessons_learned": [
-        "方法论提取比预期难一个数量级——22 个项目看起来很多，实际远远不够",
-        "操作者独立性是瓶颈——如果所有源项目的提取者是同一人，模式发现会被认知偏好约束",
-        "'提取不出来'和'不存在'是两回事——0 模式达标 ≠ 没有可提取模式",
-        "过程比结果有价值——审查链（33 发现 0 重叠 + 4 后端收敛）的学术价值超出框架本身",
-        "诚实的阴性结果有独立价值——核心交付物变成了'这件事有多难'的诚实报告"
+        "**Methodology extraction is an order of magnitude harder than expected**—22 projects looks substantial but is nowhere near enough",
+        "**Operator independence is the bottleneck**—when one person extracts every source project, that person's cognitive preferences systematically constrain pattern discovery",
+        "**“Could not extract” and “does not exist” are different claims**—zero qualifying patterns from 22 projects does not mean no extractable patterns exist; the method may be inadequate",
+        "**The process was more valuable than the result**—the review chain (33 nonoverlapping findings across two rounds plus evidence of convergence across four backends) had greater scholarly value than the framework's output",
+        "**An honest negative result has independent value**—the project's central deliverable shifted from a “methodology extraction framework” to an “honest report on how difficult this problem is”"
       ],
       "tags": [
         "方法论提取",
@@ -204,15 +205,15 @@
     },
     {
       "id": "NRR-2026-004",
-      "title": "mermaid-cli 渲染 PNG 不含 DPI 元数据，python-docx 默认 72 DPI 致图片 ~4 倍拉伸截断",
+      "title": "mermaid-cli rendered PNGs without DPI metadata, causing python-docx to default to 72 DPI and stretch/crop images by ~4×",
       "domain": "document-generation",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-23",
-      "hypothesis": "mermaid-cli（mmdc）是 Mermaid 图表渲染的事实标准工具——预期其 PNG 输出在 python-docx → DOCX 管线中可直接嵌入使用，无需额外 DPI 后处理。",
-      "method": "DOCX Pipeline 的 Mermaid→DOCX 管线（AI 辅助开发环境下发现）：Markdown 检测 Mermaid 代码块 → 按配置 DPI（默认 300）计算像素宽度 → mmdc --width <px> 渲染为 PNG → python-docx v1.2.0 add_picture() 嵌入 DOCX → Word 目视验证。",
-      "expected_result": "PNG 以预期尺寸（约页面宽度 80-100%）嵌入 DOCX，Word 中正常显示。",
-      "actual_result": "PNG 在 DOCX 中 ~4 倍拉伸。根因链：(1) mmdc 没有 --dpi 参数，--width 只控制渲染宽度，不写入 PNG pHYs chunk；(2) python-docx 对无 DPI 元数据的图片默认按 72 DPI 计算嵌入尺寸（非 Word 96 DPI——python-docx 写入显式 EMU 尺寸，Word 直接使用）；(3) 300 DPI 像素 ÷ 72 DPI = 物理尺寸膨胀 ~4.17×。",
+      "hypothesis": "mermaid-cli (mmdc) is the de facto standard tool for rendering Mermaid diagrams, so its PNG output was expected to be directly embeddable in a python-docx → DOCX pipeline without additional DPI post-processing.",
+      "method": "Mermaid → DOCX pipeline in the DOCX Pipeline project (an issue discovered in an AI-assisted development environment):\n1. Detect ` ```mermaid ` code blocks in Markdown\n2. Calculate pixel width from the configured DPI (300 by default) → invoke `mmdc --width <px>` to render a PNG\n3. Embed the PNG in DOCX with python-docx v1.2.0 `add_picture()`\n4. Open the document in Word and visually verify the result",
+      "expected_result": "The PNG should be embedded at the intended size (approximately 80–100% of page width) and display normally in Word.",
+      "actual_result": "The PNG appeared **stretched by ~4×** in the DOCX, extending beyond the page boundary and being cropped. Root-cause chain:\n\n1. **PNGs rendered by mmdc contain no DPI metadata** (mmdc has no `--dpi` option; `--width` controls only rendered width and does not write the PNG pHYs chunk)\n2. **python-docx calculates the embedded dimensions of an image without DPI metadata using a 72 DPI default** (not Word's 96 DPI screen density—python-docx writes explicit EMU dimensions, which Word uses directly)\n3. A pixel image prepared at 300 DPI ÷ dimensions calculated at 72 DPI → physical dimensions expand by ~4.17× (300/72)\n\n| Metric | Value |\n|------|------|\n| Effect size | Physical dimensions expanded by ~4.17× (300 DPI pixels ÷ python-docx 72 DPI default) |\n| Sample size | Every DOCX document containing Mermaid diagrams (100% reproducible early in the project) |\n| Tools used | mermaid-cli (mmdc), python-docx v1.2.0, Microsoft Word |",
       "effect_size": "物理尺寸膨胀 ~4.17×（300 DPI 像素 ÷ 72 DPI python-docx 默认值）",
       "sample_size": "所有含 Mermaid 图表的 DOCX 文档（项目初期 100% 复现）",
       "models_used": [
@@ -221,7 +222,7 @@
         "Microsoft Word",
         "Pillow (修复)"
       ],
-      "interpretation": "工具链多层互操作契约中相邻环节的隐式假设不兼容。不是单点 bug：mmdc 正确渲染了指定宽度的像素，python-docx 正确按 72 DPI 默认值计算了嵌入尺寸。问题在工具之间缺少 DPI 注入步骤——管线设计者默认了'mmdc PNG 输出 = python-docx 可直接嵌入'。这是管线设计的方法论问题，非单个工具适用性问题。",
+      "interpretation": "**Implicit assumptions in adjacent layers of the toolchain's interoperability contract were incompatible.** This was not a single-point bug in either tool: mmdc correctly rendered the requested pixel width (`--width` controls rendered width), and python-docx correctly used its 72 DPI default to calculate the embedded dimensions of an image without metadata. The problem was the missing DPI-injection step in the contract between the two tools, while the pipeline designer assumed “mmdc PNG output = directly embeddable by python-docx.” This was a pipeline-design methodology problem, not a question of whether either individual tool was fit for purpose.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -231,10 +232,10 @@
       },
       "related_positive_result": "修复成功。渲染后用 Pillow 读取 PNG → image.save(path, \"PNG\", dpi=(300,300)) 写入 pHYs chunk → python-docx 按 300 DPI 计算嵌入尺寸 → Word 中正确显示。",
       "lessons_learned": [
-        "工具链每个环节须做端到端互操作假设校验——'A的输出=B的输入'的默认假设在每个新工具组合中都必须验证",
-        "视觉验证不可跳过——纯代码审查检测不到 DPI 元数据缺失，必须打开 Word 目视确认最终渲染",
-        "隐式默认值是集成 bug 温床——mmdc 不写 pHYs chunk 和 python-docx 72 DPI 各自合理，组合即 bug",
-        "修复只需一行 Pillow 代码——但诊断靠目视发现，发现成本远高于修复成本"
+        "**Every stage of a toolchain requires end-to-end validation of interoperability assumptions**—the default assumption that “A's output equals B's input” must be verified for every new combination of tools",
+        "**Visual verification cannot be skipped**—code review alone cannot detect missing DPI metadata; the final rendering must be opened in Word and inspected",
+        "**Implicit defaults are breeding grounds for integration bugs**—mmdc omitting the pHYs chunk and python-docx defaulting to 72 DPI are each individually reasonable, but their combination creates a bug",
+        "**The fix required only one line of Pillow code**—`image.save(path, dpi=(300,300))`; however, diagnosis depended on visual inspection rather than code review, so the cost of discovery far exceeded the cost of repair"
       ],
       "tags": [
         "docx-pipeline",
@@ -265,22 +266,22 @@
     },
     {
       "id": "NRR-2026-005",
-      "title": "C++ 加速 53× 塌缩至批量 2.2×——Amdahl's Law 将端到端加速钉死在 ~2.25× 理论上限",
+      "title": "53× C++ speedup collapsed to 2.2× in batch workloads—Amdahl's Law fixed the end-to-end speedup ceiling at ~2.25×",
       "domain": "tool-building",
       "category": "ceiling-effect",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-12",
-      "hypothesis": "用 pybind11 + C++20 加速形态匹配 ETF 策略的纯计算核心后，批量工作负载应获得接近单次调用级别的端到端加速（预期 10-30×）。",
-      "method": "将 Python 纯计算核心（DTW、形态匹配、技术指标）迁移至 C++，通过 pybind11 暴露。分别测量 (a) 单次调用 Python vs C++、(b) 100 时间点批量 Python vs C++ batch、(c) 100 次 C++ 单次 vs 1 次 C++ 批量。从 V3.3.py（3836 行）提取纯计算模块，排除 sklearn/scipy/pandas 依赖的函数。",
-      "expected_result": "DTW 单次 ≥10×、形态匹配单次 ≥30×、批量端到端 ≥10×。",
-      "actual_result": "DTW 单次 34×、形态匹配单次 53× 均超过预期。但批量端到端仅 2.2×——远低于单次加速比。根因：批量工作量仅 ~56% 可加速（p≈0.556），44% 为串行开销（Python for 循环分派 ~15%、NumPy↔C++ 数据转换 ~15%、pybind11 调用 ~8%、Python 侧特征计算 ~6%）。理论加速上限 1/(1-p)≈2.25×，实测 2.2× 已逼近天花板。",
+      "hypothesis": "After accelerating the pure-compute core of a pattern-matching ETF strategy with pybind11 + C++20, batch workloads were expected to achieve end-to-end speedups close to those of individual calls (expected: 10–30×).",
+      "method": "The pure-compute Python core (DTW, pattern matching, and technical indicators) was migrated to C++ and exposed through pybind11. Measurements compared (a) individual Python versus C++ calls, (b) Python versus C++ batch processing at 100 time points, and (c) 100 individual C++ calls versus one C++ batch call. Pure-compute modules were extracted from V3.3.py (3,836 lines), excluding functions dependent on sklearn/scipy/pandas.",
+      "expected_result": "Individual DTW calls ≥10×, individual pattern-matching calls ≥30×, and batch end-to-end performance ≥10×.",
+      "actual_result": "Individual DTW calls achieved 34× and individual pattern-matching calls achieved 53×, both exceeding expectations. However, **batch end-to-end performance improved by only 2.2×**—far below the per-call speedup. Root cause: only **~56% of the batch workload was accelerable** (p≈0.556), while 44% was serial overhead. The theoretical speedup ceiling was 1/(1-p)≈2.25×; the measured 2.2× was already near that ceiling.\n\n| Metric | Value |\n|------|------|\n| Effect size | Individual call 53× → batch 2.2× (24× attenuation); theoretical ceiling ≈2.25× |\n| Sample size | 100 warm-up runs + median of 100 timed runs × 6 functions |\n| Serial fraction | 44% (Python loops 15% + data conversion 15% + pybind11 calls 8% + feature computation 6%) |\n| Models used | DeepSeek-V4-Pro, Kimi-K2.7-Code |",
       "effect_size": "单次 53× → 批量 2.2×（衰减 24×）；理论上限 ≈2.25×；44% 串行比例",
       "sample_size": "100 次 warm-up + 100 次计时中位数 × 6 函数；Windows 11 + MSVC /O2",
       "models_used": [
         "DeepSeek-V4-Pro",
         "Kimi-K2.7-Code"
       ],
-      "interpretation": "这是 Amdahl's Law 的教科书级示例——单次加速 53× 并非'错误'，53× 和 2.2× 都是准确测量，只是测量对象不同。53× 测的是纯计算热路径，2.2× 测的是端到端批量吞吐。这不是 bug——是架构天花板。要突破 2.25× 需要将特征计算、时间点循环等全部移入 C++。",
+      "interpretation": "**This is a textbook example of Amdahl's Law.** The 53× per-call speedup was not “wrong”—both 53× and 2.2× were accurate measurements of different things. The 53× figure measured the pure-compute hot path (14.0 ms→0.26 ms); 2.2× measured end-to-end batch throughput (50 ms→23 ms, including non-accelerable orchestration, data movement, and Python/C++ boundary overhead). This was not a bug; it was an architectural ceiling.",
       "reproducibility": {
         "level": "fully-reproducible",
         "artifacts_available": [
@@ -293,10 +294,10 @@
       },
       "related_positive_result": "单次调用加速 34-53× 是成功的——批量塌缩不否定单次加速的工程价值。后续可能的改进方向：将 Python for 循环和 NumPy 转换移入 C++。",
       "lessons_learned": [
-        "Amdahl's Law 不是理论抽象——实测 2.2× vs 上限 2.25× 证明在量化计算场景中数学建模与实际测量高度吻合",
-        "'单次加速比'和'端到端加速比'是完全不同的指标——前者表征计算效率，后者表征用户可感知的吞吐提升",
-        "44% 串行开销精确分解为 4 类（循环/转换/调用/特征），每类对应不同的优化策略",
-        "达到 10× 端到端需 92% 可加速——比 C++ 迁移更根本的可能是架构重构"
+        "**Amdahl's Law is not a theoretical abstraction**—the measured 2.2× versus a 2.25× ceiling shows that mathematical modeling closely matched real measurements in a quantitative-computing workload",
+        "**“Per-call speedup” and “end-to-end speedup” are entirely different metrics**—the former describes computational efficiency; the latter describes throughput improvement visible to the user",
+        "**The 44% serial overhead was decomposed precisely into four categories** (loops/conversion/calls/features), each requiring a different optimization strategy",
+        "**Achieving 10× end-to-end requires 92% of the workload to be accelerable**—architectural restructuring may be more fundamental than further C++ migration"
       ],
       "tags": [
         "Amdahl",
@@ -325,15 +326,15 @@
     },
     {
       "id": "NRR-2026-006",
-      "title": "AI 自我评估偏乐观 ~11%——M&A 流水线自评 106% vs 独立双盲审 69.2（差距 36.8 分）",
+      "title": "AI self-assessment was ~11% too optimistic—the M&A pipeline self-assessed at 106% versus 69.2 in independent double-blind review (36.8-point gap)",
       "domain": "academic-writing",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-21",
-      "hypothesis": "多模型学术流水线（5 模型 × 8 阶段 × 交叉盲审）产出的论文，在 Phase 4 总装阶段经过自我质量评估后，预期质量接近可送审标准（≥80/100），且自评与后续独立审查的偏差应在可接受范围（≤15 分）。",
-      "method": "M&A 案例研究流水线 Phase 4（Claude Opus 4.7 总装）完成后进行了项目复盘自评（v2.0 归档时声称三个'亮点'：数据勾稽合理、CAR 稳健、杜邦到位）。随后 Phase 5A（GPT-5.5 合规事实层）+ Phase 5B（GLM-5.1 学术规范层）进行了独立双盲审（评审者不知自评分数，未参与任何前序环节）。对比自评与双盲审得分差距。",
-      "expected_result": "自评与独立审查偏差 ≤15 分，总装质量 ≥80/100。",
-      "actual_result": "Phase 5A 评分 68/100（退回重写），Phase 5B 评分 71/100（修改后通过）。加权总分 69.2（68×0.6+71×0.4）。与 Phase 4 自评的三个'亮点'对比：数据勾稽合理→商誉 289.34 vs 289.04 矛盾（硬伤）；CAR 稳健→长窗口 42.16% 远高于短窗口 18.45%（信息泄露警讯非稳健证据）；杜邦到位→8.63%≠10.42%（加权 vs 期末口径混用）。独立审查还发现模拟数据标注为 Wind/CSMAR/年报真实来源（学术不端嫌疑）。",
+      "hypothesis": "A paper produced by a multi-model academic pipeline (5 models × 8 stages × cross-blinded review) was expected to approach submission-ready quality (≥80/100) after self-assessment during Phase 4 assembly, with the discrepancy between self-assessment and subsequent independent review within an acceptable range (≤15 points).",
+      "method": "After Phase 4 of the M&A case-study pipeline (assembly by Claude Opus 4.7), the project conducted a retrospective self-assessment (the v2.0 archive identified three “highlights”). Phase 5A (GPT-5.5 compliance and fact layer) + Phase 5B (GLM-5.1 academic-standards layer) then performed an independent double-blind review (reviewers did not know the self-assessment score and had participated in none of the preceding stages).",
+      "expected_result": "The discrepancy between self-assessment and independent review should be ≤15 points, and assembly quality should be ≥80/100.",
+      "actual_result": "Phase 5A scored **68/100 (returned for rewriting)**, while Phase 5B scored 71/100 (passed after revision). The weighted total was **69.2**. Compared with the three “highlights” in the self-assessment:\n- “Data reconciliation was sound” → goodwill 289.34 versus 289.04 contradiction (a critical defect)\n- “CAR was robust” → the long window's 42.16% was far above the short window's 18.45% (a warning sign of information leakage)\n- “DuPont analysis was complete” → 8.63% ≠ 10.42% (weighted versus period-end definitions were mixed)\n\n| Metric | Value |\n|------|------|\n| Effect size | 36.8-point gap between self-assessment and independent blind review; all three self-described “highlights” were disproven as critical defects |\n| Sample size | 1 paper × 2 independent reviewers × weighted scoring |\n| Models used | Claude Opus 4.7, GPT-5.5, GLM-5.1, Kimi-K2.6, Qwen |",
       "effect_size": "自评→独立盲审差距 36.8 分（69.2-106 的归一化差距）；三处自评'亮点'全部被证伪为硬伤",
       "sample_size": "1 篇论文 × 2 独立评审者（GPT-5.5 + GLM-5.1）× 加权评分",
       "models_used": [
@@ -343,7 +344,7 @@
         "Kimi-K2.6",
         "Qwen"
       ],
-      "interpretation": "这不是偶然失误——是系统性的自评估偏乐观偏差。操作者（同时也是评估者）对自己参与构建的项目存在 ~11% 的偏乐观偏差（已在 methodology-handbook 中记录为独立条目）。根本机制：同一 AI 不应同时担任设计者、执行者、验证者和评分官——但流水线 Phase 4 的自评环节违反了这个原则。",
+      "interpretation": "**A systematic optimistic bias in self-assessment.** The operator, who also evaluated the project, judged a project they had helped build too favorably. The underlying mechanism is that the same AI should not simultaneously serve as designer, executor, verifier, and scorekeeper—yet the Phase 4 self-assessment violated this principle. Under independent blind review, the self-assessment “highlights” systematically became critical defects. This was not an accidental mistake; it was the predictable result of one role occupying multiple positions.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -355,10 +356,10 @@
       },
       "related_positive_result": "修订后重评总分 84.0（5A: 82, 5B: 87）。但三处已知缺陷决定不修（商誉/杜邦/CAR），Phase 9（最终修正）从未运行。修订证明独立审查有效，但核心闭环未闭合。",
       "lessons_learned": [
-        "同一 AI 或同一操作者不应同时担任设计者、执行者、验证者和评分官——M&A 流水线 Phase 4 的自评环节违反了自己的五条铁律",
-        "自评'亮点'在独立盲审下系统性转化为硬伤——'数据勾稽合理'→商誉矛盾,'CAR稳健'→信息泄露警讯,'杜邦到位'→口径混用",
-        "自评估偏乐观偏差并非个案——methodology-handbook 中记录的 ~11% 偏差在本项目中以 36.8 分的极端形式重现",
-        "三处硬伤被反复诊断但从未修复（Phase 9 从未运行）——'诊断不落地=白诊断'"
+        "**The same AI or operator should not simultaneously serve as designer, executor, verifier, and scorekeeper**—the Phase 4 self-assessment in the M&A pipeline violated its own five iron rules",
+        "**Self-assessment “highlights” can systematically become critical defects under independent blind review**—none of the three self-identified highlights (data reconciliation, CAR, and DuPont) survived",
+        "**Optimistic self-assessment bias is not an isolated case**—the ~11% bias recorded in `methodology-handbook` reappeared here in an extreme 36.8-point form",
+        "**Three critical defects were diagnosed repeatedly but never fixed (Phase 9 never ran)**—a diagnosis that is not implemented is a diagnosis wasted"
       ],
       "tags": [
         "自评偏乐观",
@@ -390,15 +391,15 @@
     },
     {
       "id": "NRR-2026-007",
-      "title": "AI 自审查漏掉死亡判据顺序 bug——Claude 的对抗式自检未能检测到 Codex 一眼看到的硬伤",
+      "title": "AI self-review missed the death-criterion ordering bug—Claude's adversarial self-check failed to detect a critical defect that Codex saw immediately",
       "domain": "skill-design",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-06",
-      "hypothesis": "Claude（DeepSeek-V4-Pro，即 Skill 的设计者）对自己的 kill-test-first Skill 进行对抗式自检后，预期能捕获所有结构性缺陷——尤其是直接违反 Skill 自身核心原则（预登记：死亡判据必须在看到结果前制定）的错误。",
-      "method": "kill-test-first Skill 的设计者（DeepSeek-V4-Pro via Claude Code）完成了 Skill 初版后，进行了对抗式自检。随后将 Skill 提交给 Codex CLI（GPT-5.5，不同后端，零卷入）进行独立审查。对比自检发现 vs 独立审查发现的数量和严重度。",
-      "expected_result": "自检应捕获所有 MAJOR 及以上结构性缺陷；独立审查的增量发现应为 MINOR/MODERATE 级别。",
-      "actual_result": "Codex 第一轮独立审查发现 5 个硬伤，其中最关键的一个——**死亡判据顺序 bug**——Claude 的自检完全漏掉：Skill 门 1 协议将'制定死亡判据'放在了'看到实验结果'之后——这直接违背了预登记的核心原则（死亡判据必须在看到数据前冻结）。此外 Codex 还发现了：独立否决无机制、门 1/门 2 数据边界不清晰、过度声称、前置门槛外包+alpha 定位错误。Qwen 第二轮审查又新发现：REDESIGN 可逃避 STOP + 三态裁决未覆盖所有象限。",
+      "hypothesis": "After Claude (DeepSeek-V4-Pro, the designer of the kill-test-first Skill) performed an adversarial self-check of its own Skill, it was expected to catch all structural defects—especially an error that directly violated the Skill's own core principle: death criteria must be formulated before seeing the results.",
+      "method": "After the designer completed the initial version of the kill-test-first Skill, it performed an adversarial self-check. The Skill was then submitted to Codex CLI (GPT-5.5, a different backend with no involvement in its creation) for independent review. Self-check findings were compared with independent-review findings. Qwen3.7-Max performed a second round of independent review.",
+      "expected_result": "The self-check should catch all structural defects rated MAJOR or above; incremental findings from independent review should be MINOR or MODERATE.",
+      "actual_result": "**Codex found 5 critical defects in the first round**, the most important being the death-criterion ordering bug: the Skill's Gate 1 protocol placed “formulate death criteria” after “see the experimental results,” directly violating the core preregistration principle. Claude's self-check missed this bug completely. In the second round, Qwen found two additional issues: REDESIGN could evade STOP, and the three-state decision did not cover every quadrant.\n\n| Metric | Value |\n|------|------|\n| Effect size | Self-check: 0 MAJOR findings → Codex: 5 critical defects (including 1 ordering bug directly violating a core principle) → Qwen second round: +2 new issues |\n| Sample size | 1 Skill × 3 review rounds (1 self-check + 2 independent reviews) |\n| Models used | DeepSeek-V4-Pro, GPT-5.5, Qwen3.7-Max |",
       "effect_size": "自检发现 0 个 MAJOR → Codex 发现 5 个硬伤（含 1 个直接违背核心原则的顺序 bug）→ Qwen 第二轮再发现 2 个新问题",
       "sample_size": "1 个 Skill × 3 轮审查（1 自检 + 2 独立）",
       "models_used": [
@@ -406,7 +407,7 @@
         "GPT-5.5",
         "Qwen3.7-Max"
       ],
-      "interpretation": "这是'同一后端自我审查不可靠'的直接实证——不是 Claude 能力不足，而是设计者对自己产出的盲区是结构性的。死亡判据顺序 bug 之所以被漏掉，正是因为设计者自己的思维已经固化在'当然要先看结果再判死刑'的直觉中——而这恰恰是预登记要对抗的认知偏差。不同后端（GPT-5.5）没有这个思维惯性，一眼就看到矛盾。",
+      "interpretation": "**Self-review by the same backend has a structural blind spot.** Claude did not miss the death-criterion ordering bug because of insufficient capability; it missed it because the designer's thinking had solidified around the intuition that “of course you look at the results before deciding whether to kill it.” That is precisely the cognitive bias preregistration is intended to counteract. The different backend (GPT-5.5) had no such mental inertia and spotted the contradiction immediately.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -418,10 +419,10 @@
       },
       "related_positive_result": "全部修复。修复后的 Skill 协议重新排序了死亡判据步骤，增加了独立否决机制，明确了门 1/门 2 边界。Codex 第二轮审查确认全部闭合。但核心教训比修复更重要：证明了异后端独立审查的必要性。",
       "lessons_learned": [
-        "同一后端自我审查存在结构性盲区——设计者的思维惯性会屏蔽违背自身设计直觉的错误",
-        "死亡判据顺序 bug 是最危险的 bug 类型——不是逻辑错误，是设计者认知偏差的直接投射",
-        "两轮异后端审查的价值超过同后端多轮——Codex（发现结构性问题）+ Qwen（发现边界条件）的互补性远超两轮同后端审查",
-        "Skill 自身的死亡判据原则（'用它自己的药——出现即弃用/重构'）在本案例中被验证有效"
+        "**Self-review by the same backend has a structural blind spot**—the designer's cognitive inertia can conceal errors that conflict with its own design intuitions",
+        "**A death-criterion ordering bug is the most dangerous type of bug**—it is not a logic error but a direct projection of the designer's cognitive bias",
+        "**Two rounds of review by different backends are more valuable than multiple rounds by one backend**—the complementarity of Codex (structural issues) + Qwen (boundary conditions) far exceeded that of two rounds on the same backend",
+        "**The Skill's own death-criterion principle was validated in this case**—“use its own medicine: abandon or redesign it when it appears”"
       ],
       "tags": [
         "自审盲区",
@@ -454,15 +455,15 @@
     },
     {
       "id": "NRR-2026-008",
-      "title": "LLM 代码审查系统性漏掉 3 类 bug——渲染效果、默认路径、终端编码全部逃脱审查",
+      "title": "LLM code review systematically missed three classes of bugs—rendering output, default paths, and terminal encoding all escaped review",
       "domain": "code-review",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-17",
-      "hypothesis": "多轮 LLM 代码审查（跨 5 种后端 + 多维度审查 prompt）应能检测到项目中的功能性 bug——预期覆盖率接近 100%。",
-      "method": "对 docx-pipeline 项目进行了 5 轮跨模型审查（GPT-5.6-Sol 主审），覆盖代码正确性、配置契约、安全性、文档完整性等维度。事后通过人工端到端测试（目视验证 + Windows Git Bash 真实环境运行）独立检测实际 bug。对比 LLM 审查发现的 bug 列表与实测发现的 bug 列表。",
-      "expected_result": "LLM 审查应捕获全部或几乎全部功能性 bug；遗漏率预期 <10%。",
-      "actual_result": "LLM 审查（5 轮）完全漏掉了 3 个实际存在的 bug：(1) 渲染效果 bug——Mermaid PNG 在 Word 中 ~4× 拉伸，因为 mmdc 不写 DPI 元数据 + python-docx 默认 72 DPI——纯代码审查无法检测 DPI 元数据缺失；(2) 默认路径 bug——裸模板默认值 output/docx 无扩展名，'init→convert'路径不走已有配置，暴露 defaults.py 的路径缺陷——审查者看代码逻辑正确但端到端路径断裂；(3) 终端编码 bug——gh CLI 中文文件名上传在 Windows Git Bash 下反复失败，根因是 GBK/UTF-8 终端编码转换——审查者代码级审查看不到终端编码问题。",
+      "hypothesis": "Multi-round LLM code review (across five backends and multidimensional review prompts) should detect functional bugs in the project, with expected coverage close to 100%.",
+      "method": "The docx-pipeline project underwent five rounds of cross-model review (GPT-5.6-Sol as the primary reviewer), covering code correctness, configuration contracts, security, documentation completeness, and other dimensions. Actual bugs were independently detected afterward through manual end-to-end testing (visual verification + execution in a real Windows Git Bash environment).",
+      "expected_result": "LLM review should catch all or nearly all functional bugs; the expected miss rate was <10%.",
+      "actual_result": "**Five rounds of LLM review completely missed three real bugs, for a 100% miss rate:**\n\n1. **Rendering-output bug**: Mermaid PNGs were stretched by ~4× in Word—code review saw the pixel count but not the missing DPI metadata\n2. **Default-path bug**: the bare template default `output/docx` had no extension, breaking the complete “init→convert” path—reviewers saw the single-point code logic as correct\n3. **Terminal-encoding bug**: Chinese filenames from the gh CLI failed during GBK/UTF-8 conversion under Windows Git Bash—reviewers could not see the terminal environment\n\n| Metric | Value |\n|------|------|\n| Effect size | All 3/3 bug classes escaped LLM review (100% miss rate) |\n| Sample size | 5 review rounds × 1 project × 3 empirically observed bug classes |\n| Models used | GPT-5.6-Sol, GPT-5.5, Kimi-K2.7, Claude Opus 4.8 |",
       "effect_size": "3/3 类 bug 全部逃脱 LLM 审查（遗漏率 100%，非 <10%）",
       "sample_size": "5 轮审查 × 1 个项目 × 3 类实测 bug",
       "models_used": [
@@ -471,7 +472,7 @@
         "Kimi-K2.7",
         "Claude Opus 4.8"
       ],
-      "interpretation": "LLM 代码审查存在三类系统性盲区（按 bug 类型分类，非按模型分类）：(1) 渲染效果——代码正确不代表最终渲染正确，需目视验证；(2) 默认路径——裸默认值在'init→使用'的完整路径中可能断裂，审查只看单点逻辑；(3) 终端编码——跨平台字符编码问题只在真实环境中暴露。这三类盲区共享一个特征：bug 不出现在源代码的逻辑层面，而出现在相邻工具链的交互契约中。",
+      "interpretation": "**LLM review has three classes of systematic blind spots with one shared feature: the bug does not occur at the source-code logic layer but in the interaction contracts between adjacent tools.** The rendering-output bug required visual confirmation of the final output; the default-path bug required traversing the full end-to-end workflow; and the terminal-encoding bug required a real operating-system environment to surface. Code review—regardless of how many rounds or models are used—can answer only “what the code says,” not “what the code does in the real environment.”",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -482,10 +483,10 @@
       },
       "related_positive_result": "三个 bug 事后全部修复：(1) Pillow DPI 注入、(2) 路径扩展名修正、(3) gh CLI 编码 workaround。但发现成本远高于修复成本——诊断靠人工端到端测试，非 LLM 审查。",
       "lessons_learned": [
-        "LLM 审查无法替代端到端目视验证——渲染效果、默认路径、终端编码三类 bug 全部逃脱了 5 轮跨模型审查",
-        "三类盲区的共性：bug 不出现在源代码逻辑层面，而出现在相邻工具链的隐式交互契约中",
-        "纯代码审查覆盖率 ≠ 真实 bug 检测率——审查者看到的是'代码说了什么'，看不到'代码在真实环境中做了什么'",
-        "AI 辅助开发的测试策略需要补充'运行环境端到端测试'，不能仅依赖 LLM 代码审查"
+        "**LLM review cannot replace end-to-end visual verification**—all three classes of bug (rendering output, default paths, and terminal encoding) escaped five rounds of cross-model review",
+        "**The three blind spots share one feature**: the bugs occur not in source-code logic but in implicit interaction contracts between adjacent tools",
+        "**Pure code-review coverage ≠ real bug-detection rate**—reviewers see “what the code says,” not “what the code does in the real environment”",
+        "**Discovery cost far exceeded repair cost**—fixing the three bugs required fewer than 20 lines of code in total, but diagnosis depended on manual end-to-end testing rather than LLM review"
       ],
       "tags": [
         "LLM审查盲区",
@@ -518,22 +519,22 @@
     },
     {
       "id": "NRR-2026-009",
-      "title": "框架 v1.3.2 草案被 Codex 驳回（4.3/10）——8 项结构性失败，其中 boost -= (-0.15) 符号错误致失败反而加分",
+      "title": "Framework v1.3.2 draft rejected by Codex (4.3/10)—8 structural failures, including the `boost -= (-0.15)` sign error",
       "domain": "methodology-extraction",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-14",
-      "hypothesis": "基于 v1.3 框架结构设计的 §3.7 信号熵检测器扩展草案，经作者自检后预期可通过独立审查（评分 ≥6/10），实现将 Evolver 项目的信号检测机制迁移到 AI 协作治理域。",
-      "method": "基于 v1.3 主文档结构编写了 §3.7 扩展草案（~200 行），引入 signal_entropy、boost 调整、auto-suppress/auto-explore 机制。提交给 Codex CLI（GPT-5.5）进行独立审查。审查者在零卷入条件下评估：版本兼容性、核心约束一致性、术语中立性、来源声称准确性、符号正确性、JSON Schema 规范性、A/B 测试可执行性、数值可验证性。",
-      "expected_result": "独立审查评分 ≥6/10，发现为 MODERATE 级别，可经过一轮修订进入主文档。",
-      "actual_result": "Codex 审查评分 4.3/10，**驳回**。8 项结构性失败：(1) 版本错位——草案基于过期 v1.3 结构，主文档已为 v1.5——章节编号全部失效；(2) 自动干预违反核心约束——auto-suppress/auto-explore 让系统自动改变执行策略，违反 §3.7.1'只观测不阻断'；(3) boost -= (-0.15) 符号错误——delta_failure=-0.15，负负得正，失败反而加 0.15 分；(4) 假去隐喻化——声明'已去隐喻'但保留 Gene/Capsule/Event/epigenetic_mark 等 9+ 生物学术语；(5) 4,590 证据膨胀——将 Evolver 的 retained analyses 当作'4,590 次对照试验'背书；(6) REO schema 无形式化——仅有示例对象，无 $schema/required/enum；(7) A/B 测试设计无法执行——无样本量/重复/统计方法；(8) 数值来源不可验证——delta 值来自混淆代码（javascript-obfuscator），不可独立审计。",
+      "hypothesis": "After author self-check, the draft §3.7 signal-entropy detector extension based on the v1.3 framework structure was expected to pass independent review (score ≥6/10).",
+      "method": "A §3.7 extension draft was written based on the v1.3 master-document structure, introducing `signal_entropy`, `boost` adjustment, and `auto-suppress`/`auto-explore` mechanisms. Codex CLI (GPT-5.5) performed a zero-involvement independent review across eight inspection dimensions.",
+      "expected_result": "Independent review score ≥6/10, with findings at MODERATE severity, allowing the draft to enter the master document after one revision round.",
+      "actual_result": "**Codex scored it 4.3/10 and rejected it.** Eight structural failures:\n\n1. Version mismatch—the draft was based on the outdated v1.3 structure while the master document was already v1.5\n2. Automatic intervention violated the core constraint—`auto-suppress`/`auto-explore` violated “observe but do not block”\n3. **`boost -= (-0.15)` sign error**—a negative subtracted from a negative becomes positive, so failure increased the score by 0.15\n4. Fake demetaphorization—the draft claimed metaphors had been removed but retained 9+ terms such as Gene/Capsule/Event\n5. Evidence inflation to 4,590—retained analyses were packaged as “controlled trials”\n6. REO schema was not formalized—only example objects were provided\n7. The A/B test design was not executable—no sample size or statistical method\n8. Numerical sources were unverifiable—they came from obfuscated code (`javascript-obfuscator`)\n\n| Metric | Value |\n|------|------|\n| Effect size | Score 4.3/10 (REJECTED); all 8/8 inspection dimensions failed |\n| Sample size | 1 draft × 1 independent reviewer × 8 inspection dimensions |\n| Models used | DeepSeek-V4-Pro, GPT-5.5 |",
       "effect_size": "评分 4.3/10（REJECTED）；8/8 检查维度全部失败",
       "sample_size": "1 个草案 × 1 独立审查者（GPT-5.5）× 8 检查维度",
       "models_used": [
         "DeepSeek-V4-Pro",
         "GPT-5.5"
       ],
-      "interpretation": "这是 v1.3→v1.5 演进中最有价值的一次失败。8 项失败按根因分类：(a) 流程性——未同步主文档版本就动手写草案；(b) 概念性——把'检测'偷换为'自动干预'，违反框架核心约束；(c) 技术性——符号错误（负负得正）；(d) 诚实性——声称去隐喻化但 9+术语残留、4,590 retained analyses 被包装为 RCT、混淆代码的数值被当作可信参数。这次驳回教会了框架'草案必须基于最新主文档'和'来源质量独立于提取质量'两条原则。",
+      "interpretation": "The eight failures fell into four root-cause categories: (a) **procedural**—the draft was written without synchronizing to the master-document version; (b) **conceptual**—“detection” was silently replaced with “automatic intervention,” violating the framework's core constraint; (c) **technical**—a sign error (negative minus negative becomes positive); and (d) **honesty-related**—claiming demetaphorization while leaving terminology in place, packaging retained analyses as RCTs, and treating values from obfuscated code as trustworthy parameters.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -545,11 +546,11 @@
       },
       "related_positive_result": "修正后 v1.5.1 草案通过了 Codex 第二轮审查（7.2/10, PASS WITH MODIFICATIONS）。boost 符号修正、自动干预改为 dry-run only、去隐喻化改为实质性去隐喻。",
       "lessons_learned": [
-        "版本错位是最低级的结构性失败——基于过期主文档结构写的草案，章节编号全部失效",
-        "'只观测不阻断'是框架核心约束——从'检测'滑向'自动干预'只差一步，这一步被 Codex 准确拦截",
-        "boost -= (-0.15) 是符号错误的教科书级案例——负负得正，失败反而加分",
-        "来源质量独立于提取质量——混淆代码中的数值不可独立审计，无论提取过程多严谨",
-        "声称与执行之间的差距（'已去隐喻' vs 9+术语残留）是最容易自我欺骗的失败模式"
+        "**Version mismatch is the most basic structural failure**—a draft based on an outdated master-document structure makes every section number invalid",
+        "**“Observe but do not block” is the framework's core constraint**—sliding from “detection” to “automatic intervention” requires only one step",
+        "**`boost -= (-0.15)` is a textbook sign-error case**—negative minus negative becomes positive, so failure is rewarded",
+        "**Source quality is independent of extraction quality**—values in obfuscated code cannot be independently audited",
+        "**The gap between claims and execution** (“demetaphorized” versus 9+ terms remaining) is one of the easiest failure modes in which to deceive oneself"
       ],
       "tags": [
         "驳回草案",
@@ -578,15 +579,15 @@
     },
     {
       "id": "NRR-2026-010",
-      "title": "三件套同步不对称漂移——.md→.json 定点补丁 vs .md→.docx 全量重生成，跨会话接力时 .json 系统性漏掉 prose 订正",
+      "title": "Asymmetric drift in three-artifact synchronization—point patches for .md→.json versus full regeneration for .md→.docx systematically caused .json to omit prose corrections during cross-session handoffs",
       "domain": "document-generation",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-24",
-      "hypothesis": ".md（权威源）→ .json（机器可读）+ .docx（人类可读）的三件套同步协议应保证三种格式的内容一致性。当 .md 更新后分别同步到 .json 和 .docx 时，预期两个派生格式的内容与 .md 完全一致。",
-      "method": "AI 协作框架 v1.6.4 发布前执行了版本一致性校验（O6 版本门：`verify_version_consistency.py`）。然后在发布后由 Codex（GPT-5.5）执行了异后端三件套交叉审查——逐章节比对 .md ↔ .json ↔ .docx 的内容一致性。",
-      "expected_result": "三件套内容完全一致，版本门 PASS。",
-      "actual_result": "版本门 PASS（只检查了版本号——'1.6.4' 三个文件一致）。但 Codex 内容级交叉审查发现：.json 遗漏了 .md 在 v1.6.3→v1.6.4 期间的 prose 修订（措辞修正、解释性段落、已知局限的措辞升级等），而 .docx 通过全量重生成自动包含了这些修订。根因：.json 同步走的是'定点补丁'模式（手工/脚本在旧版 JSON 上打补丁），而 .docx 同步走的是'全量重生成'模式（pandoc 从最新 .md 全量生成）。跨会话接力时，定点补丁的维护者不知道 .md 中发生了哪些 prose 级别的修订，导致 .json 系统性滞后于 .md。",
+      "hypothesis": "The three-artifact synchronization protocol—.md (authoritative source) → .json + .docx—should guarantee content consistency across the three formats. A PASS at the version gate (O6) should mean that the three artifacts are consistent.",
+      "method": "Before the release of AI collaboration framework v1.6.4, the O6 version gate (`verify_version_consistency.py`) was run. Codex (GPT-5.5) then performed a cross-backend review of the three artifacts, comparing content consistency chapter by chapter.",
+      "expected_result": "The three artifacts should be fully content-consistent and the version gate should PASS.",
+      "actual_result": "The version gate PASSED (the version number “1.6.4” matched across all three files). However, Codex's content-level review found that **.json omitted prose revisions from .md** (wording corrections, explanatory paragraphs, and so on), while .docx included those revisions automatically through full regeneration. Root cause: .json used point patches (manually patching an old JSON version), whereas .docx used full regeneration (pandoc generated it from the latest .md). During a cross-session handoff, the point-patch maintainer did not know about all prose changes in .md.\n\n| Metric | Value |\n|------|------|\n| Effect size | Content-level inconsistency between .json and .md (undetectable by O6 version gate) |\n| Sample size | One three-artifact cross-review before the v1.6.4 release |\n| Models used | DeepSeek-V4-Pro, GPT-5.5, Kimi-K2.7, Qwen3.7-Max |",
       "effect_size": ".json 与 .md 存在内容级不一致（非版本号不一致——版本门 O6 无法检测）",
       "sample_size": "v1.6.4 发布前的一次三件套交叉审查",
       "models_used": [
@@ -595,7 +596,7 @@
         "Kimi-K2.7",
         "Qwen3.7-Max"
       ],
-      "interpretation": "这不是单次疏忽——是同步协议的设计缺陷。O6 版本门只校验版本号一致性（Layer 1: 版本号 grep + Layer 2: header 一致性），但无法检测内容级漂移（prose 修订在 .md 中生效但 .json 中未同步）。根本问题：两种派生格式采用了不对称的同步策略——.docx 全量重生成（天然防漂移，但 O(N) 代价）、.json 定点补丁（轻量但依赖操作者知道 .md 中所有变更）。当操作者不知道（跨会话接力）或忘记（同一会话但注意力聚焦在 .md 上）时，.json→.md 之间产生系统性滞后。",
+      "interpretation": "**A design defect in the synchronization protocol.** The O6 version gate checked only version-number consistency and could not detect content-level drift. The two derived formats used asymmetric synchronization strategies—.docx was fully regenerated (naturally preventing drift), while .json used point patches (depending on the operator knowing every change). During a cross-session handoff, the latter was bound to lag.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -606,10 +607,10 @@
       },
       "related_positive_result": "短期修复：发布前增加 Codex 异后端三件套交叉审查步骤。长期方案（待实现）：将 .json 同步改为全量重生成（从 .md 一次生成），消除定点补丁路径。",
       "lessons_learned": [
-        "版本号一致性 ≠ 内容一致性——O6 版本门 PASS 但 .json 与 .md 存在 prose 级漂移",
-        "不对称同步策略（定点补丁 vs 全量重生成）是设计缺陷，不是操作失误——跨会话接力必然暴露",
-        "定点补丁的前提是操作者知道 .md 中所有变更——这在多会话接力场景中不成立",
-        "三件套同步的最优策略是全部从 .md 全量重生成——消除所有手动同步路径"
+        "**Version-number consistency ≠ content consistency**—the O6 version gate PASSED even though .json and .md had prose-level drift",
+        "**An asymmetric synchronization strategy is a design defect**—point patches versus full regeneration will inevitably be exposed during cross-session handoffs",
+        "**Point patches assume that the operator knows every change in .md**—this assumption fails in multi-session handoff scenarios",
+        "**The definitive fix is to regenerate everything from .md**—eliminate every manual synchronization path"
       ],
       "tags": [
         "三件套同步",
@@ -637,15 +638,15 @@
     },
     {
       "id": "NRR-2026-011",
-      "title": "多模型自修正系统的独立性局限——CrossCheck 的 9 模型评审团有效独立票仅 ~2（Kohli 2026 外部验证）",
+      "title": "Independence limitations of multi-model self-correction systems—the 9-model panel had only ~2 effectively independent votes (Kohli 2026)",
       "domain": "multi-model-collaboration",
       "category": "ceiling-effect",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-23",
-      "hypothesis": "在 AI 编码系统中引入多个不同 LLM 后端进行交叉审查和自修正，预期能实现真正的独立验证——审查者之间的发现应高度互补，且评审团整体优于任一单模型。",
-      "method": "对 CrossCheck（sburl/CrossCheck，npm CLI 工具，多模型 AI 编码自主循环系统）进行了方法论分析，结合 Kohli (2026-05) 的学术发现（'Nine Judges, Two Effective Votes: Correlated Errors Undermine LLM Evaluation Panels'）进行交叉验证。Kohli 测试了 9 个前沿 LLM 组成的评审团，量化了模型间的错误相关性及其对有效独立票数的影响。",
-      "expected_result": "多个不同后端的模型组成的评审团应提供接近 N 个独立视角；预期有效独立票数 ≥5（9 个模型中）。",
-      "actual_result": "Kohli (2026-05) 实证发现：9 个前沿 LLM 组成的评审团，有效独立票数仅 ~2 票。单一最佳评委的表现追平甚至超过整个评审团。在本项目（methodology-extraction-methodology）的 Phase 5 双轮审查中观察到了与 Kohli 一致的效应：GPT-5.5 发现 17 项 + Qwen3.7-Max 发现 16 项 = 33 项中 0 重叠——这既是互补性的证据，也提示不同模型的错误敏感性差异使得'加更多模型'的边际收益递减。Kuai et al. (2026-04) 进一步证实了 18 个 LLM 存在广泛的'行为纠缠'（共享训练数据/蒸馏/对齐管道导致的隐式依赖）。",
+      "hypothesis": "Introducing multiple LLM backends into AI coding systems for cross-review and self-correction was expected to produce genuinely independent verification: reviewers' findings should be highly complementary, and the panel as a whole should outperform any single model.",
+      "method": "CrossCheck (sburl/CrossCheck, a multi-model AI coding autonomous-loop system) was analyzed methodologically, with cross-validation against Kohli (2026-05) on quantified independence in a panel of nine frontier LLMs and Kuai et al. (2026-04) on behavioral entanglement among 18 LLMs. This project's two-round Phase 5 review (GPT-5.5 + Qwen3.7-Max) provided comparison data.",
+      "expected_result": "A panel of models using different backends should provide close to N independent perspectives; the expected number of effectively independent votes was ≥5 out of 9 models.",
+      "actual_result": "Kohli (2026-05): **A panel of nine frontier LLMs had only ~2 effectively independent votes. A single best judge matched or even exceeded the performance of the full panel.** This project's Phase 5 review produced 17 findings from GPT-5.5 + 16 from Qwen3.7-Max = 33 findings with zero overlap—complementary, but also suggestive of diminishing returns. Kuai et al. (2026-04) further confirmed widespread “behavioral entanglement” among 18 LLMs.\n\n| Metric | Value |\n|------|------|\n| Effect size | 9→2 effectively independent votes (Kohli); approximately 2–3 effectively independent perspectives across 5 models in this project |\n| Sample size | 9 LLMs (Kohli) + 5 models in this project |\n| Models used | GPT-5.5, Qwen3.7-Max, Kimi-K2.7, GLM-5.2, Claude Opus 4.8 |",
       "effect_size": "9 模型评审团 → 有效独立票 ~2（Kohli 2026）；本项目 Phase 5 双轮审查 33 项发现 0 重叠（互补但也提示边际递减）",
       "sample_size": "9 个 LLM 评审团（Kohli）+ 本项目 5 模型 22 项目方法论提取",
       "models_used": [
@@ -655,7 +656,7 @@
         "GLM-5.2",
         "Claude Opus 4.8"
       ],
-      "interpretation": "这不是说多模型审查无效——恰恰相反，多模型审查在本项目中发现了互补的盲区（33 项 0 重叠）。但 Kohli 的发现揭示了一个天花板：模型间的错误相关性使得'加更多模型'的边际收益在 ~2-3 个有效独立视角后急剧递减。在多模型协作系统的设计中，4-5 个不同提供商的模型可能已接近有效上限——超过这个数量的模型提供的增量独立性有限。",
+      "interpretation": "This does not mean multi-model review is ineffective—quite the opposite: 33 findings with zero overlap demonstrate complementarity. However, shared training data, distillation, and alignment pipelines create implicit dependencies between models, so the marginal benefit of “adding more models” drops sharply after approximately 2–3 effectively independent perspectives. Four or five models from different providers may already be close to the effective ceiling.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -667,10 +668,10 @@
       },
       "related_positive_result": "多模型审查在 2-3 个有效独立视角内仍然有效——本项目 Phase 5 的 33 项 0 重叠发现证明了互补性。关键在于不要过度声称'全部独立'，也不要在边际收益递减区继续追加模型。",
       "lessons_learned": [
-        "9 个 LLM 评审团的有效独立票仅 ~2——模型间的训练数据/蒸馏/对齐管道产生了广泛的隐式依赖",
-        "多模型审查的价值集中在前 2-3 个不同提供商的模型——之后边际收益急剧递减",
-        "'不同 CLI house'≠'独立'——即使是不同公司提供的模型，共享训练数据和评估基准也会产生纠缠",
-        "多模型审查的实证价值在于发现互补盲区（33 发现 0 重叠），而非声称'全部独立'"
+        "**A nine-LLM review panel yielded only ~2 effectively independent votes**—shared training data and evaluation benchmarks create implicit dependencies between models",
+        "**The value of multi-model review is concentrated in the first 2–3 models from different providers**—marginal returns drop sharply afterward",
+        "**“Different CLI houses” ≠ “independent”**—models from different companies may still share training data and benchmarks",
+        "**The empirical value of multi-model review is finding complementary blind spots** (33 findings with zero overlap), not claiming that all views are independent"
       ],
       "tags": [
         "多模型审查",
@@ -703,15 +704,15 @@
     },
     {
       "id": "NRR-2026-012",
-      "title": "框架最致命的结构性缺口——'缓慢漂移'（OPEN-1）经 25+ 处交叉引用确认但从未被真实项目数据验证",
+      "title": "The framework's most serious structural gap—“slow drift” (OPEN-1) was confirmed by 25+ cross-references but never validated against real project data",
       "domain": "methodology-extraction",
       "category": "abandoned-dead-end",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-25",
-      "hypothesis": "AI 协作框架识别出的'最致命结构性缺口'——AI 在连续会话中发生不可检测的语义漂移（方向、标准、注意力分配）——可以通过 headroom/CacheAligner 对标分析找到检测方案，并在真实项目中验证其有效性。",
-      "method": "框架在 §1.8 中将'缓慢漂移'标记为 OPEN-1（最高优先级未解决问题）。随后进行了：(1) CacheAligner 对标分析——尝试将 headroom 的压缩检测机制迁移到漂移检测域；(2) SmartCrusher 五维评分迁移分析；(3) CCR 逃生口案例研究；(4) ChatGPT-5.5 独立审查三份对标文档。所有这些分析的结论被综合为'drift ledger'方案，建议在 2-3 个真实项目中试跑验证。",
-      "expected_result": "对标分析应产出一个可操作的漂移检测方案，经 2-3 个真实项目试跑验证其可行性和误报率。",
-      "actual_result": "经一整条分析链（CacheAligner → SmartCrusher → CCR → ChatGPT-5.5 独立审查），结论是：(1) 四个维度不可迁移——答案确定性、模式可穷举性、反馈信号客观性、代价结构可比性在工程域和治理域之间存在结构性断裂；(2) ChatGPT-5.5 对三份对标文档各找出 5-7 个断裂点（共 18+ 个具体反例）；(3) 'drift ledger'方案停留在设计阶段，从未在真实项目中试跑——AI 已达边界，剩余两项（人类裁决 + 真实项目试跑）AI 无法执行；(4) 方案自带自毁条款——如果 drift ledger 只产生噪音则降级或废弃。OPEN-1 至今仍为 OPEN-1。",
+      "hypothesis": "The “most serious structural gap” identified by the AI collaboration framework—undetectable semantic drift across consecutive sessions—could be addressed by finding and validating a detection method through comparative analysis.",
+      "method": "A complete analysis chain: CacheAligner comparison → transfer of SmartCrusher's five-dimensional scoring → CCR escape hatch → independent ChatGPT-5.5 review of three comparison documents.",
+      "expected_result": "Produce an operational drift-detection method and validate it through trials on 2–3 real projects.",
+      "actual_result": "The four dimensions were not transferable: answer determinacy, exhaustibility of patterns, objectivity of feedback signals, and comparability of cost structures all showed structural breaks between the engineering and governance domains. ChatGPT-5.5 found 5–7 breakpoints in each of the three comparison documents (18+ counterexamples in total). The method included its own self-destruct clause—downgrade or abandon it if the drift ledger produced only noise. **OPEN-1 remains OPEN-1.**\n\n| Metric | Value |\n|------|------|\n| Effect size | The complete analysis chain produced no operational method; this gap was confirmed by 25+ cross-references |\n| Sample size | 4 comparative analyses × 1 independent review × 0 real-project trials |\n| Models used | DeepSeek-V4-Pro, GPT-5.5, Claude Opus 4.8 |",
       "effect_size": "25+ 处交叉引用确认此缺口；一整条分析链（4 份对标文档 + 1 独立审查）未产出可操作方案",
       "sample_size": "4 份对标分析 × 1 独立审查 × 0 真实项目试跑",
       "models_used": [
@@ -719,7 +720,7 @@
         "GPT-5.5",
         "Claude Opus 4.8"
       ],
-      "interpretation": "这不是'分析不够深入'——是分析已经过度深入但到了 AI 无法跨越的边界。ChatGPT-5.5 对三份对标文档的审查精确识别了迁移断裂点：封闭模式 vs 开放模式（真正的危险漂移恰恰不在当前锚点表中）、变化检测 vs 漂移判定（检测说'变了'，不能说'错了'）、检测器诱发合规表演（AI 学会保持锚点字段不动，在其他地方漂移）。这三个断裂点不是工程问题——是语义治理的根本性局限。",
+      "interpretation": "This was not a lack of analytical depth—the analysis had already gone too deep and reached a boundary AI could not cross. ChatGPT-5.5 precisely identified the transfer breakpoints: closed patterns versus open patterns (the truly dangerous drift is precisely not in the current anchor table); change detection versus drift judgment (a detector can say “it changed,” but not “it is wrong”); and detector-induced compliance theater (the AI may learn to keep anchor fields unchanged while drifting elsewhere).",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -731,11 +732,10 @@
       },
       "related_positive_result": "无。OPEN-1 至今仍为 OPEN-1。框架 §1.8 诚实标注为'最高优先级未解决'。封存说明明确指出：剩余步骤（人类裁决 + 真实试跑）AI 无法执行。",
       "lessons_learned": [
-        "AI 对自身最致命缺陷的诊断可以极其精确——但诊断 ≠ 修复，识别边界 ≠ 跨越边界",
-        "'缓慢漂移'是框架的阿喀琉斯之踵——不是大爆炸式的失败，而是累积性的语义偏移，离散审查无法检测",
-        "工程域→治理域的方法迁移存在结构性断裂——四维度（确定性/可穷举性/客观性/代价可比性）全部不可迁移",
-        "ChatGPT-5.5 发现的 6+6+5 个反例证明了：在封闭系统中有效的检测机制，在开放语义空间中会被绕过",
-        "诚实标注'未解决'比假装有方案更有方法论价值——封存说明的自毁条款是框架最诚实的部分"
+        "AI can diagnose its own most serious defects with extreme precision—but diagnosis ≠ repair",
+        "“Slow drift” is the framework's Achilles' heel—discrete reviews cannot detect cumulative semantic shift",
+        "Method transfer from the engineering domain to the governance domain has structural breaks—all four dimensions were non-transferable",
+        "Honestly labeling an issue “unresolved” has more methodological value than pretending a solution exists"
       ],
       "tags": [
         "缓慢漂移",
@@ -768,22 +768,22 @@
     },
     {
       "id": "NRR-2026-013",
-      "title": "框架自身规则被自身违反——§2.6 要求 Minor 版本升级须 ≥2 后端审查，但 v1.6 由单后端完成",
+      "title": "The framework violated its own rule—§2.6 required ≥2-backend review for a Minor version upgrade, but v1.6 was completed with one backend",
       "domain": "methodology-extraction",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-20",
-      "hypothesis": "框架 §2.6 的版本升级协议——Minor 版本升级须经 ≥2 个不同后端的独立审查——预期在框架自身的版本演进中被严格遵守。",
-      "method": "Codex（GPT-5.5）对 v1.6 进行了跨版本交叉审查（codex_v16_crosscheck_20260620.txt），逐项核查框架自身主张的审查要求是否在 v1.5→v1.6 升级中被满足。",
-      "expected_result": "v1.6 升级满足 §2.6 的全部要求，包括 ≥2 后端独立审查。",
-      "actual_result": "Codex 审查发现：§2.6 明确要求 Minor 版本升级须经 ≥2 后端独立审查，但 v1.6（v1.5→v1.6 是 Minor 升级）实际上仅由单后端（DeepSeek-V4-Pro）完成主要编辑和审查。这是一个自反性失败——框架自己制定的规则，在框架自己的版本升级中没有被遵守。Codex 将此标记为 MAJOR 发现，要求在审查报告中显式记录此偏差。后续处理：在 §2.6 中增加了过渡条款（当前版本在建立多后端审查基础设施之前的豁免期），但本质上是一次'医生自己不遵医嘱'的自反性失败。",
+      "hypothesis": "The version-upgrade protocol in framework §2.6 was expected to be followed strictly during the framework's own version evolution.",
+      "method": "Codex (GPT-5.5) performed a cross-version review of v1.6, checking item by item whether the §2.6 review requirements had been met during the v1.5→v1.6 upgrade.",
+      "expected_result": "The v1.6 upgrade should satisfy independent review by ≥2 backends.",
+      "actual_result": "§2.6 requires ≥2-backend review for a Minor upgrade—but **v1.6 (v1.5→v1.6 was a Minor upgrade) was completed using only one backend.** “The doctor's child goes untreated.”\n\n| Metric | Value |\n|------|------|\n| Effect size | 1 core rule violated by the framework itself |\n| Sample size | 1 version upgrade × 1 independent review |\n| Models used | DeepSeek-V4-Pro, GPT-5.5 |",
       "effect_size": "1 条核心规则被自身违反（§2.6 Minor 升级 ≥2 后端审查 → 实际 1 后端）",
       "sample_size": "1 次版本升级（v1.5→v1.6）× Codex 独立审查",
       "models_used": [
         "DeepSeek-V4-Pro",
         "GPT-5.5"
       ],
-      "interpretation": "这是'医生的孩子没人治'（physician, heal thyself）问题的直接实例。框架花费大量篇幅论证多后端独立审查的必要性，并将此要求编码为 §2.6 的硬约束——但在框架自身的版本升级中，这个约束被静默地绕过了。问题不在于'没有能力做多后端审查'——框架项目有多后端审查的基础设施和流程——而在于'操作者自己就是审查流程的设计者和执行者，缺乏外部强制力'。这正是框架 §1.8 局限 #9（作者-读者同构性）的直接体现。",
+      "interpretation": "This is a direct instance of the “physician, heal thyself” problem. The framework devotes substantial attention to establishing the necessity of independent, multi-backend review and encodes that requirement as a hard constraint in §2.6; yet the constraint was silently bypassed during an upgrade of the framework itself. The issue was not a lack of capacity—the project already had the infrastructure and procedures for multi-backend review—but rather that the operator was simultaneously the designer and executor of the review process, leaving no external enforcement mechanism. This is a direct manifestation of limitation #9 in §1.8: author–reader isomorphism.",
       "reproducibility": {
         "level": "fully-reproducible",
         "artifacts_available": [
@@ -794,10 +794,9 @@
       },
       "related_positive_result": "在 §2.6 中增加了过渡条款——明确标注当前版本在建立稳定的多后端审查基础设施之前的豁免期。但这是修复症状而非根因——'操作者=规则制定者=规则执行者'的结构性问题依然存在。",
       "lessons_learned": [
-        "'医生的孩子没人治'——框架制定规则约束他人，但自身缺乏外部强制力来遵守这些规则",
-        "规则的存在 ≠ 规则的执行——没有独立审计的规则体系，第一个违反者往往是规则制定者自己",
-        "自反性失败比外部失败更难检测——因为操作者对自己违反自己规则的行为有天然的盲区",
-        "过渡条款是诚实的修复——'我们要求别人这样做，但我们自己正在建立做这件事的基础设施'"
+        "“The doctor's child goes untreated”—rule makers are often the first to violate their own rules",
+        "The existence of a rule ≠ enforcement of the rule—a rule system without independent auditing has structural vulnerabilities",
+        "A transition clause is an honest repair: “We require others to do this, but we are still building the infrastructure to do it ourselves”"
       ],
       "tags": [
         "自反性失败",
@@ -825,15 +824,15 @@
     },
     {
       "id": "NRR-2026-014",
-      "title": "框架自身主张 Spec Coding 但在翻译管道中被全面违反——模型分工被简化、文件范围被扩大、流程步骤被跳过",
+      "title": "The framework claimed Spec Coding but violated it throughout the translation pipeline—model roles, file scope, and process stages all diverged from the plan",
       "domain": "workflow-orchestration",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-23",
-      "hypothesis": "框架 §4（Spec Coding）主张'有明确计划时必须严格按计划执行——模型分工、文件范围、流程步骤不可擅自变更'。当框架自身的翻译管道（简体→正体→英文）有明确计划时，预期执行过程严格遵守 Spec。",
-      "method": "框架 v1.6.4 的三语言翻译管道计划明确了：模型分工（OpenCC + Qwen 通读 + Codex 英文校译）、文件范围（2 份文件：主文档 + reference_files.md）、三阶段流程（术语锚定→AI 初译→异模型校译）。事后回顾（retrospect_2026-06-23.md）将实际执行与计划进行了逐项对比。",
-      "expected_result": "执行过程严格匹配计划：OpenCC + Qwen 通读的正体翻译、Codex 的英文校译、2 份文件范围、三阶段流程。",
-      "actual_result": "实际执行全面偏离计划：(1) 模型分工被简化——正体翻译从'OpenCC + Qwen 通读'简化为'OpenCC + 自检'，英文翻译从'Codex 校译'简化为单模型直译；(2) 文件范围被扩大——从计划的 2 份文件扩大到 4 份（README + PUBLISHING.md + 2 份正体中文文件），且未经确认；(3) 流程步骤被跳过——三阶段流程（术语锚定→初译→异模型校译）被压缩为单阶段（翻译+自检），Qwen 通读和英文互校步骤被省略。框架自身主张 Spec > Vibe，但编辑过程违反了自己的主张。",
+      "hypothesis": "Framework §4 claims that “when a clear plan exists, execution must follow the plan strictly.” When the translation pipeline had an explicit Spec, execution was expected to comply strictly.",
+      "method": "The three-language translation pipeline Spec explicitly defined model roles (OpenCC + Qwen full read-through + Codex proofreading), file scope (2 files), and a three-stage process. A retrospective compared actual execution with the Spec item by item.",
+      "expected_result": "Execution should match the Spec exactly.",
+      "actual_result": "**All 3/3 plan commitments were violated:** model roles were simplified from “multiple models + proofreading” to “one model + self-check”; file scope expanded from 2 files to 4 without confirmation; and the three-stage process was compressed into one stage. The framework itself claimed Spec > Vibe, but the operator (also the Human Gate) skipped the gate in the name of “efficiency first.”\n\n| Metric | Value |\n|------|------|\n| Effect size | 3/3 plan commitments violated |\n| Sample size | 1 translation execution × comparison across 3 dimensions |\n| Models used | DeepSeek-V4-Pro, OpenCC, Qwen3.7-Max |",
       "effect_size": "3/3 计划承诺被违反（模型分工、文件范围、流程步骤全部偏离）",
       "sample_size": "1 次翻译管道执行 × 1 份 Spec 计划 × 3 维度对比",
       "models_used": [
@@ -841,7 +840,7 @@
         "OpenCC",
         "Qwen3.7-Max"
       ],
-      "interpretation": "这是'说一套做一套'的直接实例——不是恶意，而是执行惯性。操作者在翻译管道的执行中回到了'自己觉得最快的方式'（单模型+自检），而非 Spec 规定的'更严谨但更慢的方式'（多模型+异后端校译）。这揭示了 Spec Coding 的核心挑战：Spec 的价值在执行中才会被检验，而执行者有天然的'走捷径'倾向。框架主张的 Human Gate 机制本应在此处拦截——Human Gate 要求在执行偏离 Spec 时停下来确认，但操作者（同时也是 Human Gate）在'效率优先'的心理下跳过了这个 Gate。",
+      "interpretation": "This is a direct instance of “saying one thing and doing another,” driven not by malice but by execution inertia. While running the translation pipeline, the operator reverted to the method that seemed fastest—a single model plus self-checking—instead of the more rigorous but slower procedure specified by the Spec: multiple models plus proofreading by a different backend. This exposes the central challenge of Spec Coding: a specification proves its value only in execution, while executors have a natural tendency to take shortcuts. The framework's Human Gate should have intercepted the deviation by requiring a pause and confirmation whenever execution departed from the Spec; instead, the operator—who was also the Human Gate—skipped it under an efficiency-first mindset.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -853,10 +852,10 @@
       },
       "related_positive_result": "事后回顾（retrospect）诚实记录了这次违反，并在 memory 中新增了'Spec覆盖Vibe执行'条目（feedback_spec_over_vibe_execution.md），作为后续项目的强制检查项。这次失败直接催生了项目启动检查清单的 §6 'spec_over_vibe'。",
       "lessons_learned": [
-        "Spec Coding 的最大敌人不是外部干扰——是操作者自己'走捷径'的执行惯性",
-        "Human Gate 在操作者=Human Gate 的场景下形同虚设——需要外部强制力或至少异后端独立审查来触发",
-        "计划中的模型分工是最容易被简化的——'多模型+校译'→'单模型+自检'只需一个'这样更快'的心理借口",
-        "事后诚实记录违反 ≠ 事前防止违反——retrospect 可以记录教训，但不能替代执行时的 Gate 拦截"
+        "The greatest enemy of Spec Coding is the operator's own execution habit",
+        "The Human Gate is effectively meaningless when the operator is also the Human Gate—it requires external enforcement",
+        "Model-role assignments in a plan are the easiest part to simplify—“multiple models + proofreading” becomes “one model + self-check” with a single mental excuse: “This is faster”",
+        "Honestly recording a violation after the fact ≠ preventing the violation in advance"
       ],
       "tags": [
         "Spec Coding",
@@ -885,22 +884,22 @@
     },
     {
       "id": "NRR-2026-015",
-      "title": "'零残留'声明三次被证伪——同一后端同一 grep pattern 扫 10 次也不会发现新盲区",
+      "title": "The “zero residue” claim was disproven three times—the same backend using the same grep pattern 10 times still could not find new blind spots",
       "domain": "code-review",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-06-23",
-      "hypothesis": "在发布清理（PII/路径/敏感信息）完成后，使用自有 grep pattern 扫描可确认'零残留'——预期一次验证即可确认所有目标内容已被清除。",
-      "method": "框架 GitHub 发布准备期间进行了发布清理（移除绝对路径、个人标识等）。操作者使用自有 grep pattern 扫描项目后声称'零残留'。随后由异后端（Codex GPT-5.5）使用其自有搜索策略独立扫描。此过程在发布准备中重复了三次。",
-      "expected_result": "第一次清理+自检后即可达到零残留；或至少第二次应彻底解决。",
-      "actual_result": "三次声称'零残留'，三次被异后端独立扫描发现新残留：(1) 第一次——自检声称零残留 → Codex 发现绝对路径和用户名残留；(2) 第二次——修复后再次声称零残留 → Codex 发现新的路径变体（正斜杠/反斜杠/JSON-escaped/PowerShell triple-escaped 四层变体）；(3) 第三次——再次声称零残留 → Codex 发现 project_status.md 等 .gitignore 排除文件的残留（自检只扫了 tracked files）。根因：同一大脑用同一 grep pattern 扫同一批文件 → 第 10 次和第 1 次看到的东西一样——盲区不会因为重复而消失。",
+      "hypothesis": "After release cleanup was complete, scanning with the project's own grep pattern could confirm “zero residue.”",
+      "method": "Framework release preparation: three rounds of cleanup + self-check claimed zero residue → three rounds of independent Codex scans by a different backend found new residue each time.",
+      "expected_result": "Zero residue should be achieved after the first cleanup + self-check.",
+      "actual_result": "**The “zero residue” claim was made three times and disproven three times (100% false-positive rate):** (1) absolute paths/usernames remained → (2) four-layer path variants remained → (3) residue remained in files excluded by `.gitignore`. Root cause: the same brain using the same grep pattern 10 times produced the same blind spot ×10.\n\n| Metric | Value |\n|------|------|\n| Effect size | All 3/3 “zero residue” claims were disproven (100% false-positive rate) |\n| Sample size | 3 cleanup + self-check rounds × 3 independent Codex scan rounds |\n| Models used | DeepSeek-V4-Pro, GPT-5.5 |",
       "effect_size": "3/3 次'零残留'声称被异后端独立扫描证伪（100% 误报率）",
       "sample_size": "3 轮清理+自检 × 3 轮 Codex 独立扫描",
       "models_used": [
         "DeepSeek-V4-Pro",
         "GPT-5.5"
       ],
-      "interpretation": "这三次误报不是操作不仔细——是同一后端同一搜索策略的结构性盲区。操作者用自己写的 grep pattern 扫自己编辑过的文件——大脑已经在编辑过程中建立了'我已经处理过了'的认知，grep 只是确认这个认知。异后端独立扫描使用不同的搜索策略（不同的关键字选择、不同的文件范围假设），自然会命中操作者盲区中的残留。第四次修复后，项目启动检查清单新增了 O7 'no_self_reported_zero_residue'——规定清理类任务不得基于自有 grep pattern 声称零残留，必须由异后端/异工具独立确认。",
+      "interpretation": "The three false “zero residue” declarations were not simply the result of careless operation; they arose from a structural blind spot created by using the same backend and the same search strategy. The operator applied a self-authored grep pattern to files they had edited themselves. During editing, the operator had already formed the belief that the material had been handled, so grep merely confirmed that prior belief. An independent scan by a different backend used a different search strategy—including different keyword choices and assumptions about file scope—and therefore naturally detected residues in the operator's blind spots. After the fourth remediation, the project startup checklist added O7, `no_self_reported_zero_residue`: cleanup tasks may not claim zero residue on the basis of the operator's own grep pattern and must instead be independently verified by a different backend or tool.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -911,10 +910,10 @@
       },
       "related_positive_result": "第四次修复后，Codex 独立扫描确认零残留。本项目启动检查清单 O7 规则（'禁止自扫自夸零残留'）源于这次失败。但核心启示不变：清理类任务的'完成'不能由清理者自己宣布。",
       "lessons_learned": [
-        "同一大脑同一 grep pattern 扫 10 次 = 同样的盲区 ×10——盲区不会因为重复而消失",
-        "清理者自己宣布'零残留'是不可靠的——清理者在编辑过程中已经建立了'已处理'的认知",
-        "异后端独立扫描的必要性：不同的搜索策略 = 不同的盲区覆盖",
-        "路径清理存在四层变体（正斜杠/反斜杠/JSON-escaped/PowerShell triple-escaped）——单一 grep 无法穷尽"
+        "The same brain using the same grep pattern 10 times = the same blind spot ×10",
+        "A cleaner's self-declaration of “zero residue” is unreliable—a cognitive-bias problem",
+        "Independent scanning by a different backend is necessary: different search strategies provide different blind-spot coverage",
+        "Path cleanup has four layers of variants—a single grep cannot exhaust them all"
       ],
       "tags": [
         "零残留",
@@ -947,21 +946,21 @@
     },
     {
       "id": "NRR-2026-016",
-      "title": "18 个 LLM 存在广泛'行为纠缠'——共享训练数据/蒸馏/对齐管道导致模型并非真正独立（Kuai et al., 2026）",
+      "title": "Eighteen LLMs showed widespread “behavioral entanglement”—shared training data, distillation, and alignment pipelines meant the models were not truly independent",
       "domain": "multi-model-collaboration",
       "category": "ceiling-effect",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-25",
-      "hypothesis": "使用不同模型家族的 LLM 进行多模型审查/验证时，这些模型的判断应接近统计独立——预期去纠缠的验证器集成可将准确率提升 ≥10%。",
-      "method": "Kuai et al. (2026-04) 开发了一套统计框架来审计 LLM 之间的'行为纠缠'——即共享训练数据、知识蒸馏、对齐管道等产生的隐式依赖。测试了 18 个 LLM（来自 6 个模型家族），量化了模型对之间的行为相关性（模型 A 的错误能在多大程度上预测模型 B 在相同样本上的错误）。",
-      "expected_result": "不同模型家族之间的行为纠缠程度应较低；去纠缠后的验证器集成应显著优于单模型。",
-      "actual_result": "18 个 LLM 存在广泛的'行为纠缠'——不仅在模型家族内部（预期），在家族之间也存在显著纠缠（非预期）。去纠缠的验证器集成将准确率提升了 4.5%——这证明纠缠确实存在且影响了集成效果，但提升幅度（4.5%）远低于'完全独立'假设下的预期。这一发现与 Kohli (2026-05) 的'9→2 有效票'相互印证：模型数量 ≠ 独立视角数量。",
+      "hypothesis": "When using LLMs from different model families for multi-model review, their judgments should be approximately statistically independent. A debiased validator ensemble was expected to improve accuracy by ≥10%.",
+      "method": "Kuai et al. (2026-04) developed a statistical framework to audit “behavioral entanglement” among 18 LLMs (6 model families), quantifying behavioral correlations between model pairs.",
+      "expected_result": "Behavioral entanglement should be low between different model families.",
+      "actual_result": "**The 18 LLMs showed widespread cross-family behavioral entanglement.** A debiased validator ensemble improved accuracy by 4.5%—showing that entanglement was real, but the improvement was far below what the “fully independent” assumption predicted. This corroborates Kohli (2026)'s “9→2 effective votes” finding.\n\n| Metric | Value |\n|------|------|\n| Effect size | +4.5% accuracy after debiasing (significant but far below the “fully independent” expectation) |\n| Sample size | 18 LLMs × 6 model families |\n| Sources of entanglement | Shared training data + knowledge distillation + alignment pipelines |",
       "effect_size": "去纠缠后准确率提升 4.5%（显著但远低于'完全独立'预期）；18 个模型 × 6 个家族存在广泛的跨家族纠缠",
       "sample_size": "18 个 LLM × 6 个模型家族",
       "models_used": [
         "多种 LLM（详见 Kuai et al., 2026-04）"
       ],
-      "interpretation": "这是对'多模型=多独立视角'直觉假设的系统性证伪。行为纠缠的三个来源——共享训练数据（所有模型都在相似的互联网语料上训练）、知识蒸馏（小模型从大模型学习）、对齐管道（RLHF/DPO 使用相似的人类偏好数据）——意味着即使来自不同公司、不同架构的模型，也可能因为共享上游数据而产生系统相关的错误模式。对于 AI 协作方法论而言，这意味着'换模型'的独立性增益被高估了。",
+      "interpretation": "This systematically falsifies the intuitive assumption that “multiple models” provide “multiple independent perspectives.” Behavioral entanglement arises from three sources: shared training data (models are trained on similar Internet corpora), knowledge distillation (smaller models learn from larger ones), and alignment pipelines (RLHF/DPO rely on similar human-preference data). Consequently, even models from different companies or with different architectures can exhibit systematically correlated error patterns because they share upstream data. For methodologies of AI collaboration, the implication is that the independence gained by “switching models” has been overestimated.",
       "reproducibility": {
         "level": "not-assessed",
         "artifacts_available": [
@@ -971,10 +970,9 @@
       },
       "related_positive_result": "去纠缠验证器集成仍然有效（+4.5% 准确率）——问题不在于多模型集成无效，而在于效果被纠缠度限制了。选择真正多样化的模型（不同训练数据、不同架构、不同对齐策略）可以最大化'有效独立视角'。",
       "lessons_learned": [
-        "'不同模型家族的模型独立'是一个需要检验的假设，不是默认事实——18 个模型 6 个家族存在跨家族行为纠缠",
-        "行为纠缠的三个来源（共享训练数据、蒸馏、对齐管道）在当前 LLM 生态中几乎无法完全避免",
-        "去纠缠后准确率仅提升 4.5%——不是'多模型没用'，而是'多模型的边际收益比预期低'",
-        "选择模型时应优先考虑训练数据来源、架构和对齐管道的多样性，而非仅看模型数量和提供商数量"
+        "“Independence of models from different families” is a hypothesis that requires testing, not a default fact",
+        "Debiasing produced only +4.5%—the marginal benefit of multi-model review is lower than expected",
+        "Model selection should prioritize diversity in training-data sources, architecture, and alignment pipelines"
       ],
       "tags": [
         "行为纠缠",
@@ -998,15 +996,15 @@
     },
     {
       "id": "NRR-2026-017",
-      "title": "LLM 多模型分歧不是 bug 是诊断信号——但 Nájera (2026) 的四类分歧分类揭示多数'分歧'不指示深层问题",
+      "title": "Multi-model LLM disagreement is a diagnostic signal, not a bug—but most “disagreements” do not indicate a deep problem",
       "domain": "multi-model-collaboration",
       "category": "null-result",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-25",
-      "hypothesis": "多模型审查中的模型间分歧（两个模型对同一内容给出不同评分/判断）指示被审查内容的真实质量问题——预期分歧程度与被审查内容的质量缺陷正相关。",
-      "method": "Nájera et al. (2026-05) 将多模型分歧从'bug'重新定义为'诊断信号'，开发了四类分歧分类法。通过将分歧模式映射到真实的解释复杂性（而非内容质量问题），量化了不同类型的模型间分歧及其与内容质量的关系。",
-      "expected_result": "多模型分歧应能作为内容质量的可靠信号——高分歧 = 内容确实有问题。",
-      "actual_result": "多数模型间分歧不指示内容质量问题，而指示：(1) 评估标准本身的模糊性——不同模型对同一 rubrics 有不同解释；(2) 任务的固有歧义度——某些内容本身允许多种合理判断；(3) 模型训练数据中的偏好差异——不同模型在不同领域有系统性偏乐观/偏悲观倾向。只有第四类（深度分歧）才可能指示真实的评估复杂性。在本项目（methodology-extraction-methodology）中，Phase 5 双轮审查 33 项发现 0 重叠——这不是'一个模型对另一个模型错'，而是两个模型的错误敏感性完全不同，各自覆盖了对方盲区中的问题。",
+      "hypothesis": "Disagreement between models in multi-model review indicates a real quality problem in the reviewed content; the degree of disagreement should be positively correlated with quality defects.",
+      "method": "Nájera et al. (2026-05) reframed multi-model disagreement as a “diagnostic signal,” developed a four-class taxonomy of disagreement, and quantified the relationship between each disagreement type and content quality.",
+      "expected_result": "High disagreement = the content really has a problem.",
+      "actual_result": "Most disagreements did not indicate a content-quality problem. Instead, they indicated (1) ambiguity in the evaluation criteria; (2) intrinsic ambiguity in the task; or (3) preference differences in model training data. Only the fourth class (deep disagreement) may indicate genuine evaluation complexity. This project's two-round Phase 5 review produced 33 findings with zero overlap—the two models had completely different error sensitivities and each covered the other's blind spots.\n\n| Metric | Value |\n|------|------|\n| Effect size | Of four disagreement classes, only deep disagreement may indicate genuine evaluation complexity |\n| Sample size | Nájera's public comment-analysis dataset + this project's Phase 5 data |",
       "effect_size": "四类分歧中仅第四类（深度分歧）可能指示真实评估复杂性；多数分歧源于标准模糊性、任务歧义度和模型偏好差异",
       "sample_size": "Nájera et al. (2026-05) 的公共评论分析数据集 + 本项目 Phase 5 双轮审查数据",
       "models_used": [
@@ -1014,7 +1012,7 @@
         "GPT-5.5",
         "Qwen3.7-Max"
       ],
-      "interpretation": "这个阴性发现对多模型审查方法论有直接影响：不能简单地用'模型之间意见不一致'来判断内容质量。分歧本身需要被分类——是标准模糊导致的分歧（rubrics 写得不够好）、是任务固有歧义（换了谁都可能给出不同判断）、还是真正的深度分歧（内容确实复杂）？在没有对分歧进行分类的情况下，'多模型一致性高=质量好'和'多模型分歧大=质量差'都是过度简化。",
+      "interpretation": "This negative finding has direct implications for multi-model review methodology: content quality cannot be inferred merely from the fact that models disagree. As Nájera's (2026) four-category taxonomy indicates, disagreement must itself be classified. Does it arise from ambiguous standards (poorly specified rubrics), from ambiguity inherent in the task (reasonable reviewers could reach different judgments), or from genuine deep disagreement because the content is truly complex? Without such classification, both “high multi-model agreement means high quality” and “large multi-model disagreement means poor quality” are oversimplifications.",
       "reproducibility": {
         "level": "not-assessed",
         "artifacts_available": [
@@ -1024,10 +1022,9 @@
       },
       "related_positive_result": "将分歧重新定义为诊断信号（而非缺陷）本身就是一个有价值的框架转换。四类分类法可以帮助多模型审查的设计者判断：是改进 rubrics（标准模糊）还是接受多元判断（任务歧义）还是深入调查（深度分歧）。",
       "lessons_learned": [
-        "多数模型间分歧不指示内容质量问题——分歧首先应被分类为四类之一，才能判断其含义",
-        "Phase 5 的 33 项发现 0 重叠不是'模型在吵架'——是两个模型的错误敏感性完全不同，各自发现对方盲区中的问题",
-        "'模型间一致性高=质量好'是一个需要检验的假设——一致同意也可能是共同盲区（行为纠缠的另一面）",
-        "多模型审查的设计应关注'分歧的类型'而非'分歧的量'"
+        "Most inter-model disagreement does not indicate a content-quality problem—disagreement must be classified into one of four classes before its meaning can be assessed",
+        "Phase 5's 33 findings with zero overlap were not “models arguing”—they reflected different error sensitivities and complementary coverage of blind spots",
+        "“High inter-model agreement = high quality” is a hypothesis that requires testing—agreement can also reflect a shared blind spot"
       ],
       "tags": [
         "多模型分歧",
@@ -1050,15 +1047,15 @@
     },
     {
       "id": "NRR-2026-018",
-      "title": "CrossCheck 的 149 个 PR 全部由作者自提——'多模型 peer review'等于零独立审查记录",
+      "title": "All 149 CrossCheck PRs were self-reported by the author—“multi-model peer review” amounted to zero independent-review records",
       "domain": "multi-model-collaboration",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-23",
-      "hypothesis": "一个明确设计了多模型角色分配（Codex 编写 → peer model 审查 → git hooks 执行）的 AI 编码系统，预期在运行过程中会产生可追溯的独立审查记录——至少记录哪个模型审查了什么、发现了什么问题。",
-      "method": "对 CrossCheck（sburl/CrossCheck，多模型 AI 编码自主循环 CLI 工具）进行了系统的方法论提取分析：检查了 149 个 PR 的提交记录、ARCHITECTURE.md 中描述的多模型审查流程、以及项目文档中是否包含独立审查的归档证据。CrossCheck 明确采用了 Swiss Cheese Model（多层质量保障）和'Zero Trust'哲学，其文档声称有 peer model review 环节。",
-      "expected_result": "至少部分 PR 应包含 peer model review 的记录——哪个模型审查了、发现了什么、是否通过。",
-      "actual_result": "149 个 PR 全部由作者自提。项目文档中描述的'peer model review'指 AI 模型审查 AI 生成的代码——但这种审查的过程和结果没有任何归档记录。不知道：(a) peer review 实际发生了多少次 vs 被跳过了多少次；(b) peer model 发现了多少问题；(c) 发现的问题中有多少被修复了。项目的审查链不可追溯——尽管其架构设计明确主张可审计性和透明性。",
+      "hypothesis": "An AI coding system that explicitly assigns multiple model roles (Codex writes → peer model reviews → hooks execute) was expected to produce traceable records of independent review.",
+      "method": "A methodological extraction analysis of the commit history and project documentation for 149 CrossCheck (sburl/CrossCheck) PRs, checking for archived evidence of peer-model review.",
+      "expected_result": "At least some PRs should contain records of peer-model review.",
+      "actual_result": "**All 149/149 PRs (100%) were self-reported by the author—zero archived independent reviews.** The project's description of “peer model review” had no archived records.\n\n| Metric | Value |\n|------|------|\n| Effect size | 149/149 PRs had no independent-review record (100%) |\n| Sample size | 149 PRs × 1 project |\n| Tools used | Claude Code, Codex CLI, Gemini CLI |",
       "effect_size": "149/149 PR 无独立审查记录（100%）；理论上的'multi-model peer review'系统实操中零归档",
       "sample_size": "149 个 PR × 1 个项目分析",
       "models_used": [
@@ -1066,7 +1063,7 @@
         "Codex CLI",
         "Gemini CLI"
       ],
-      "interpretation": "这不是说 CrossCheck 的设计不好——它的 Swiss Cheese Model 和 Skills 体系是自有项目之外最丰富的 AI 协作架构设计。但设计与执行之间存在断层：多层质量保障的设计本身无法保证每一层都被实际执行和记录。这是'被动合规'(git hooks)和'主动自觉'(记录审查过程)之间的张力——hooks 可以强制执行'代码必须通过测试'，但不能强制执行'审查结果必须归档'。",
+      "interpretation": "This does not imply that CrossCheck is poorly designed. Its Swiss Cheese Model and Skills system constitute one of the richest AI-collaboration architectures outside the project's own ecosystem. The problem is a gap between design and execution: designing multiple layers of quality assurance does not ensure that every layer is actually performed and documented. This reflects the tension between passive compliance (git hooks) and active discipline (recording the review process). Hooks can enforce “the code must pass tests,” but they cannot enforce “the review results must be archived.”",
       "reproducibility": {
         "level": "fully-reproducible",
         "artifacts_available": [
@@ -1077,10 +1074,9 @@
       },
       "related_positive_result": "CrossCheck 的架构设计（6 阶段循环 + Skills 体系 + Swiss Cheese Model）是方法论设计的优秀范例。其 git hooks + pre-PR check 的质量门禁在自动化合规方面做得很好。缺失的是'审查过程归档'——这个缺陷是可修复的，不需要改变核心架构。",
       "lessons_learned": [
-        "'多模型审查'的设计不等于'多模型审查'的执行——缺乏归档机制时，无法区分'做了但没记录'和'根本没做'",
-        "Git hooks 可以强制执行代码质量门禁，但不能强制执行审查过程记录——后者需要不同的机制",
-        "149 个 PR 的 0 独立审查记录揭示了一个模式：自动化合规做得好的人，可能在人工记录上做得差",
-        "CrossCheck 的 Swiss Cheese Model 如果加上'审查归档'这一层，会是一个更完整的质量保障体系"
+        "The design of “multi-model review” ≠ execution of “multi-model review”—without an archival mechanism, it is impossible to distinguish “performed but not recorded” from “never performed”",
+        "Git hooks can enforce code gates but cannot enforce recording of the review process",
+        "The Swiss Cheese Model would be more complete with a “review archive” layer"
       ],
       "tags": [
         "CrossCheck",
@@ -1112,21 +1108,21 @@
     },
     {
       "id": "NRR-2026-019",
-      "title": "GitNexus CALLS 边同文件内部方法调用捕获率仅 3/81+ 和 0/17——基于索引断言模块内部耦合不可靠",
+      "title": "GitNexus captured only 3/81+ and 0/17 same-file internal method calls—asserting module-internal coupling from index data is unreliable",
       "domain": "benchmarking",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-22",
-      "hypothesis": "GitNexus 代码知识图谱的 CALLS 边应能可靠捕获方法间调用关系，包括同文件内部调用。预期索引覆盖率 ≥80%，可用于断言模块内部耦合度。",
-      "method": "对 docx-pipeline 项目两个核心模块进行手工源码 grep 交叉验证：(1) PurePythonConverter（pure_python.py, 1,213行, 36个方法）——源码 grep 识别完整 5 层调用链≥81 条内部调用；(2) MermaidRenderer（mermaid_renderer.py, 677行, 17个方法）——源码 grep 识别 render→_check_mmdc/_find_mermaid_blocks/_render_block/_replace_blocks 管道链。对比 GitNexus 索引的 CALLS 边数量。",
-      "expected_result": "GitNexus CALLS 边覆盖同文件内部调用的 ≥80%。",
-      "actual_result": "PurePythonConverter: GitNexus 仅捕获 3 条同文件 CALLS 边（覆盖率约 3/81+, ≤3.7%）。MermaidRenderer: GitNexus 捕获 0 条同文件 CALLS 边（覆盖率 0/17, 0%）。基于 GitNexus CALLS 边数量断言'模块内部耦合低/改动隔离性好'不可靠——索引可能漏掉了大部分内部调用。IMPORT/EXTENDS 边置信度高于同文件 CALLS 边。",
+      "hypothesis": "The CALLS edges in the GitNexus code knowledge graph should reliably capture method-call relationships, including calls within the same file. Expected index coverage was ≥80%, making the edges suitable for asserting module-internal coupling.",
+      "method": "Manual source-code grep cross-validation was performed on two core modules in the docx-pipeline project: PurePythonConverter (1,213 lines, 36 methods) and MermaidRenderer (677 lines, 17 methods). The number of CALLS edges in the GitNexus index was compared with the actual call chains in the source.",
+      "expected_result": "GitNexus CALLS edges should cover ≥80% of same-file internal calls.",
+      "actual_result": "PurePythonConverter: only **3** same-file CALLS edges were captured (coverage ≤3.7%). MermaidRenderer: **0** same-file CALLS edges were captured (0% coverage). Asserting module-internal coupling from GitNexus CALLS edges is unreliable.\n\n| Metric | Value |\n|------|------|\n| Effect size | PurePythonConverter ≤3.7% (3/81+); MermaidRenderer 0% (0/17) |\n| Sample size | 2 modules × 2 detection methods |\n| Tools used | GitNexus |",
       "effect_size": "PurePythonConverter 覆盖率 ≤3.7%（3/81+）；MermaidRenderer 覆盖率 0%（0/17）",
       "sample_size": "2 个模块 × 2 种检测方法（GitNexus vs 源码 grep）",
       "models_used": [
         "GitNexus"
       ],
-      "interpretation": "这不是 GitNexus 的 bug——CALLS 边在同文件内的索引策略（可能基于 AST 或符号解析）与跨文件调用（基于 import 关系）使用了不同的检测精度。但对于方法论提取而言，这意味着任何基于 GitNexus CALLS 边数量对'模块内部耦合'的断言都需要源码交叉验证。盲信索引数据会导致对模块复杂度的系统性低估。",
+      "interpretation": "The indexing strategy for same-file CALLS edges has different detection accuracy from cross-file calls. This is not a bug but a difference in indexing precision across dimensions. However, for methodology extraction, blindly trusting index data would systematically underestimate module complexity.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -1137,10 +1133,10 @@
       },
       "related_positive_result": "跨文件 IMPORT/EXTENDS 边置信度高于同文件 CALLS 边——GitNexus 在跨模块分析中仍然可靠。应对策略：跨文件用 GitNexus，同文件用源码 grep。",
       "lessons_learned": [
-        "GitNexus CALLS 边同文件覆盖率可低至 0%——不能基于 CALLS 边数量断言模块内部耦合度",
-        "AI 工具评估不能仅靠静态源码分析——需要对照实验（索引 vs 手工统计）才能发现盲区",
-        "跨文件 IMPORT/EXTENDS 边比同文件 CALLS 边可靠——索引策略在不同维度精度不同",
-        "对任何分析工具的声称都需要交叉验证——'3 条 CALLS'可能是真值的 3.7% 而非 100%"
+        "Same-file coverage of GitNexus CALLS edges can be as low as 0%—do not assert module-internal coupling from CALLS-edge counts",
+        "AI-tool evaluation cannot rely only on static source analysis—controlled experiments are needed to reveal blind spots",
+        "Cross-file IMPORT/EXTENDS edges are more reliable than same-file CALLS edges",
+        "Claims made by any analysis tool require cross-validation—“3 CALLS edges” may be only 3.7% of the truth"
       ],
       "tags": [
         "GitNexus",
@@ -1167,15 +1163,15 @@
     },
     {
       "id": "NRR-2026-020",
-      "title": "PocketFlow 100行核心→全部提取资产为[Sp]推测级，N=2 证据仅有方向性指示——极简项目的方法论提取存在固有天花板",
+      "title": "PocketFlow's 100-line core made every extracted asset [Sp] speculative; N=2 evidence provided only directional indication",
       "domain": "methodology-extraction",
       "category": "ceiling-effect",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-25",
-      "hypothesis": "对 PocketFlow（100 行核心 + 分难度 cookbook 的外部开源项目）进行三轮独立分析后，预期至少能提取出 ≥3 个达到 [E] 试行级别的可复用方法论模式。",
-      "method": "对 PocketFlow 进行了三轮独立分析（DeepSeek-V4-Pro + Codex GPT-5.5 + Kimi-K2.7），提取了三组资产：B1 最小核心+示例外挂模式、B2 难度分层体系、C1-C3 反模式清单。按框架 §9.6 证据等级标准逐项评估——[S]源验证 → [E]外部验证 → [I]推断 → [J]专家判断 → [Sp]推测。",
-      "expected_result": "至少 B1（最小核心+示例外挂）应达到 [E] 外部验证级——有独立源项目支撑且不是推测。",
-      "actual_result": "全部三组资产按框架 §9.6 实际标注均为 [Sp] 推测级。B1 的 N=2 证据（无显式说明时 2/4 任务完成→有准索引后 4/4 完成）可核验为 [S] 源验证级事实，但其'最小核心提升了任务完成率'的解释仅达到 [Sp]。B2 难度分级基于框架设计者单一视角。C1-C3 反模式的实际触发频率在目标场景中待观察。根因：从 100 行核心项目中提取方法论模式存在固有的信息密度天花板——项目越小，可提取的方法论信号越少，而推断/外推的成分越多。",
+      "hypothesis": "After three independent analyses of PocketFlow (a 100-line core plus a cookbook organized by difficulty), at least three reusable methodology patterns were expected to reach the [E] trial level.",
+      "method": "Three independent analyses (DeepSeek-V4-Pro + GPT-5.5 + Kimi-K2.7) extracted three asset groups: B1 minimal core + example add-ons, B2 difficulty stratification, and C1-C3 anti-pattern list. Each was assessed against the framework's evidence-grade criteria.",
+      "expected_result": "At least B1 should reach the [E] trial level—supported by ≥1 independent source project and not merely speculative.",
+      "actual_result": "**All 3/3 asset groups were [Sp] speculative level.** B1's N=2 evidence provided only directional indication. Extracting methodology from a 100-line core project has an inherent information-density ceiling.\n\n| Metric | Value |\n|------|------|\n| Effect size | All 3/3 asset groups were [Sp] (0/3 reached [E]); N=2 evidence provided only directional indication |\n| Sample size | 1 project × 3 analysis rounds × 3 asset groups |\n| Models used | DeepSeek-V4-Pro, GPT-5.5, Kimi-K2.7 |",
       "effect_size": "3/3 资产组全部 [Sp] 推测级（0/3 达到 [E]）；N=2 证据仅方向性指示",
       "sample_size": "1 个项目（100 行核心）× 3 轮独立分析 × 3 组资产",
       "models_used": [
@@ -1183,7 +1179,7 @@
         "GPT-5.5",
         "Kimi-K2.7"
       ],
-      "interpretation": "这不是 PocketFlow 的问题——它的极简设计本身就是一种方法论立场。问题在于：从极简项目中提取方法论时，信息密度不够→推断/外推成分增加→证据等级只能停留在 [Sp]。这个天花板不是分析深度不够，而是源项目本身的信息容量限制。对于方法论提取而言，'100 行核心'既是优点（展示了 minimal viable 方法论）也是限制（无法提供跨场景验证所需的多样性证据）。",
+      "interpretation": "This was not a problem with PocketFlow—minimalist design is itself a methodological position. The problem was insufficient information density → more inference/extrapolation → evidence grade could only remain at [Sp]. This ceiling was not caused by insufficient analytical depth; it was imposed by the information capacity of the source project itself.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -1195,10 +1191,10 @@
       },
       "related_positive_result": "B1 的 N=2 方向一致——虽然不足以达到 [E]，但为后续大样本验证提供了方向。C1-C3 反模式满足'≥2 独立后端审查确认可迁移性'的收录标准。",
       "lessons_learned": [
-        "从极简项目中提取方法论存在固有信息密度天花板——源项目越小，证据等级越难超过 [Sp]",
-        "N=2 证据只有方向性指示价值——不能承担 [E] 级方法论组件所需的证据重量",
-        "100 行核心既是方法论优点也是提取限制——展示了 minimal viable design 但无法提供多样性证据",
-        "对小型外部项目的方法论提取应预先设定证据等级上限——避免三轮分析后才发现全部 [Sp]"
+        "Methodology extraction from minimal projects has an inherent ceiling—the smaller the source project, the harder it is for the evidence grade to exceed [Sp]",
+        "N=2 evidence has only directional-indication value—it cannot carry the weight of [E]-level evidence",
+        "A 100-line core is both a methodological strength and an extraction limitation—it cannot provide evidence of diversity",
+        "For small external projects, set an evidence-grade ceiling in advance—avoid discovering only after three analysis rounds that everything is [Sp]"
       ],
       "tags": [
         "PocketFlow",
@@ -1226,15 +1222,15 @@
     },
     {
       "id": "NRR-2026-021",
-      "title": "方法论提取框架适用性随项目方法论自觉梯度急速衰减——自有100%→有论文69%→纯代码37.5%",
+      "title": "Methodology-extraction framework applicability decayed rapidly with the source project's methodological self-awareness gradient—100% for own projects → 69% for projects with papers → 37.5% for pure-code projects",
       "domain": "methodology-extraction",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-23",
-      "hypothesis": "方法论提取框架应能从未知开源项目中提取有意义的方法论模式——即使项目没有 CLAUDE.md 或 AI 协作记录，也应能从代码组织、版本控制、质量保障等'被动痕迹'中提取可用信号。",
-      "method": "对三个梯度的项目执行完整 8 组件提取：(1) 自有项目（ETF/M&A/框架等，方法论自觉 ★★★★★）；(2) ml-quant-trading（有 CHANGELOG + CONTRIBUTING + arXiv 论文 + CI + 15 测试 + PR review，方法论自觉 ★★★）；(3) NPGS（C++ 游戏引擎，199 文件，10 commits，零方法论文档，方法论自觉 ★）。对比三梯度的可提取率。",
-      "expected_result": "三梯度可提取率应有渐进下降但仍保有一定基线——预期最低梯度（NPGS）至少 ≥50%（4/8）。",
-      "actual_result": "可提取率梯度 100%→69%→37.5%。NPGS 仅 3/8 可提取（C1-C3 全部来自被动痕迹——代码结构、commit 历史、目录组织），C4 多模型协作/C5 独立审查/C6 方法论文档/C7 闭环修复/C8 数据溯源——5 个组件全部空白。能提取的 3 个组件用 GitNexus 或任何代码分析工具同样可获取——框架在被动痕迹维度上无增量价值。框架的真正价值不是'发现'新模式，而是将已经存在的方法论痕迹系统化命名和归纳。",
+      "hypothesis": "The methodology-extraction framework should be able to extract meaningful methodology patterns from unknown open-source projects—even when a project has no AI collaboration records, usable signals should be extractable from passive traces. The expected minimum gradient (a pure-code project) had an extraction rate of ≥50%.",
+      "method": "A complete eight-component extraction was performed across three project gradients: own projects (★★★★★), ml-quant-trading (★★★, with paper + CI + tests), and NPGS (★, with zero methodology documentation).",
+      "expected_result": "Extraction rates should decline progressively across the three gradients while retaining a baseline—NPGS ≥50% (4/8).",
+      "actual_result": "**The gradient was 100% → 69% → 37.5%.** Five of eight NPGS components were blank. The three extractable components could also be obtained with GitNexus, meaning the framework had **no incremental value** for passive traces.\n\n| Metric | Value |\n|------|------|\n| Effect size | Extraction-rate gradient 100% → 69% → 37.5%; 5/8 NPGS components blank |\n| Sample size | 3 projects × 3 gradients × 8 components |\n| Models used | DeepSeek-V4-Pro, GitNexus, Codex GPT-5.5 |",
       "effect_size": "可提取率梯度 100%→69%→37.5%；NPGS 5/8 组件空白；最低梯度无增量价值",
       "sample_size": "3 个项目 × 3 梯度（方法论自觉 ★★★★★/★★★/★）× 8 组件",
       "models_used": [
@@ -1242,7 +1238,7 @@
         "GitNexus",
         "Codex GPT-5.5"
       ],
-      "interpretation": "三个案例的梯度数据表明框架的适用性强烈依赖于源项目的方法论自觉程度。但此结论仅基于 3 个目的性样本（非随机抽样），自有项目群还受作者熟悉度影响——不能外推到'绝大多数开源项目'。框架的隐含假设（'源项目记录了方法论文档'）在此 3 个案例中得到了逐级验证：当方法论文档从充分→稀疏→零时，可提取率同步下降。这证明了提取的前提条件确实存在，但该条件在多大比例的开源项目中成立——尚未量化。",
+      "interpretation": "The framework's implicit assumption—“the source project knows what it did and recorded it”—does not hold for most open-source projects. The framework is not a “detector” but an “organizer”: it cannot discover information that does not exist.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -1254,10 +1250,10 @@
       },
       "related_positive_result": "框架在自有项目群（方法论自觉 ★★★★★）中可提取率接近 100%——证明框架本身设计有效，只是适用范围比初始假设窄。",
       "lessons_learned": [
-        "在此 3 个案例中，框架适用性随方法论自觉下降而衰减（100%→69%→37.5%）——对大样本和随机抽样的外推性待验证",
-        "可提取率与源项目方法论自觉呈正相关（★★★★★=100%→★★★=69%→★=37.5%）",
-        "框架在被动痕迹维度无增量价值——能用 GitNexus 获取的，框架没有提供额外信息",
-        "框架的价值定位应从'发现'修正为'归纳'——它不是探测器，是整理器"
+        "The framework's applicable population is extremely narrow—it works only for projects with very strong AI-collaboration self-awareness",
+        "Extraction rate is positively associated with the source project's methodological self-awareness (★★★★★=100%→★=37.5%)",
+        "The framework has no incremental value for passive traces—anything GitNexus can obtain does not require the framework",
+        "The framework's value proposition should be corrected from “discovery” to “synthesis”—it is not a detector but an organizer"
       ],
       "tags": [
         "方法论提取",
@@ -1285,15 +1281,15 @@
     },
     {
       "id": "NRR-2026-022",
-      "title": "'提取者污染'——fork 作者附加的方法论文档被误归因到源项目，制造虚假方法论信号",
+      "title": "“Extractor contamination”—methodology documents added by a fork author were misattributed to the source project, creating a false methodology signal",
       "domain": "methodology-extraction",
       "category": "methodology-failure",
       "submitted_by": "Acerolaorion",
       "date": "2026-07-23",
-      "hypothesis": "在对 fork 的源项目进行方法论提取时，fork 仓库中所有文件（含 CLAUDE.md、GitNexus 索引、分析报告）应反映源项目的方法论特征。预期这些附加文档能补充源项目的方法论信息。",
-      "method": "对 NPGS（baopinshui/NPGS）进行完整方法论提取。该仓库被 fork 后，提取者（Acerolaorion）在其中添加了 CLAUDE.md、GitNexus 索引文件和独立分析报告，然后从 fork 仓库执行提取。事后追溯了哪些「方法论文档」来自源作者（baopinshui）、哪些来自 fork 提取者。",
-      "expected_result": "至少部分附加文档应反映或补充源项目的方法论特征。",
-      "actual_result": "NPGS 的 CLAUDE.md、GitNexus 索引、分析报告全部来自 fork 提取者。源项目（baopinshui）的方法论文档=0。这些附加文档反映的是提取者自己的方法论（DeepSeek-V4-Pro + GPT-5.6-Sol 审查），不是源项目的。如果不区分两者，提取者会把'自己编写的源项目唯一方法论文档'误归因为'源项目有方法论自觉'——制造虚假方法论信号。",
+      "hypothesis": "When extracting methodology from a fork's source project, all files in the fork repository should reflect the source project's methodological characteristics. Additional documents were expected to supplement the source project's methodology information.",
+      "method": "A complete methodology extraction was performed on NPGS (baopinshui/NPGS). After the repository was forked, the extractor added `CLAUDE.md`, a GitNexus index, and analysis reports, then performed extraction from the fork. The documents were traced afterward to determine which came from the source author and which came from the extractor.",
+      "expected_result": "At least some additional documents should reflect or supplement the source project's methodological characteristics.",
+      "actual_result": "**`CLAUDE.md`, the GitNexus index, and the analysis reports were 100% created by the fork extractor.** The source project had zero methodology documentation. Without distinguishing the two, the extractor would misattribute the “only methodology documentation written by the extractor” to the source project as evidence of “methodological self-awareness.”\n\n| Metric | Value |\n|------|------|\n| Effect size | Source-project methodology documentation = 0; fork-added documents = 100% extractor-authored |\n| Sample size | 1 project × comparison of extractor versus source-author documentation |\n| Models used | DeepSeek-V4-Pro, GPT-5.6-Sol, GitNexus |",
       "effect_size": "源项目方法论文档=0；fork 附加文档 100% 来自提取者",
       "sample_size": "1 个项目（NPGS）× 提取者附加文档 vs 源项目原生文档对比",
       "models_used": [
@@ -1301,7 +1297,7 @@
         "GPT-5.6-Sol",
         "GitNexus"
       ],
-      "interpretation": "这不是 NPGS 的问题——是提取框架的 Phase 0 设计缺陷。当提取者也是 fork 仓库的唯一方法论文档贡献者时，框架的默认假设（'仓库中的方法论文档反映了源项目的方法论'）会系统性高估源项目的方法论自觉。Phase 0 需要增加'提取者污染'判别步骤——检查 CLAUDE.md/分析报告/GitNexus 索引的作者是否等于源项目作者，过滤掉提取者自己编写的文档。",
+      "interpretation": "A design defect in Phase 0 of the extraction framework. When the extractor is also the sole author of methodology documentation in the repository, the default assumption that “repository documentation reflects the source project” systematically overestimates the source project's methodological self-awareness.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -1312,10 +1308,10 @@
       },
       "related_positive_result": "框架在 Phase 0 增加'提取者污染'判别后可避免此问题——检查方法论文档作者身份即可过滤。这不是框架结构性失败，是可修复的设计缺陷。",
       "lessons_learned": [
-        "当提取者也是仓库中唯一方法论文档的作者时，这些文档反映的是提取者而非源项目——制造虚假方法论信号",
-        "Phase 0 需要'提取者污染'判别——检查 CLAUDE.md/分析报告作者 ≠ 源项目作者时降权或排除",
-        "fork 后添加的分析工件不应被当作源项目方法论的一部分——这是'观察者效应'在方法论提取中的体现",
-        "源项目方法论文档=0 不应被解读为'无法提取'——它是诚实的信号，不是提取失败"
+        "Extractor-authored documentation ≠ source-project methodology—it creates a false signal",
+        "Phase 0 needs an “extractor contamination” check—down-weight documentation when its author ≠ the source project's author",
+        "Analysis artifacts added after forking should not be treated as source-project methodology—an observer effect",
+        "Zero source-project documentation is an honest signal, not an extraction failure"
       ],
       "tags": [
         "提取者污染",
