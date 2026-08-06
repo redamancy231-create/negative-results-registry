@@ -5,7 +5,7 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 <!-- AUTO_GENERATED: entries_badge -->
-[![Entries](https://img.shields.io/badge/Entries-23-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
+[![Entries](https://img.shields.io/badge/Entries-24-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
 <!-- AUTO_GENERATED_END -->
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](../README.md)
@@ -175,7 +175,7 @@ negative-results-registry/
 ## 條目概覽
 
 <!-- AUTO_GENERATED: summary_line -->
-目前已收錄 **23 個條目**，涵蓋 10 個領域 × 5 種類型（Schema 共 12 領域 × 9 類型），來自 7 個自有公開專案 + 8 個外部來源（學術論文 + 開源專案）：
+目前已收錄 **24 個條目**，涵蓋 10 個領域 × 5 種類型（Schema 共 12 領域 × 9 類型），來自 8 個自有公開專案 + 8 個外部來源（學術論文 + 開源專案）：
 <!-- AUTO_GENERATED_END -->
 
 <!-- AUTO_GENERATED: entry_table -->
@@ -204,6 +204,7 @@ negative-results-registry/
 | NRR-2026-021 | NPGS | 方法論提取 | 方法失敗 |
 | NRR-2026-022 | NPGS | 方法論提取 | 方法失敗 |
 | NRR-2026-023 | etf-pattern-match-pyo3 | 基準測試 | 假設遭證偽 |
+| NRR-2026-024 | factor-cuda | 基準測試 | 天花板效應 |
 <!-- AUTO_GENERATED_END -->
 
 ---

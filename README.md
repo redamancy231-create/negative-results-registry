@@ -5,7 +5,7 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![CI](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/redamancy231-create/negative-results-registry/actions/workflows/ci.yml)
 <!-- AUTO_GENERATED: entries_badge -->
-[![Entries](https://img.shields.io/badge/Entries-23-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
+[![Entries](https://img.shields.io/badge/Entries-24-brightgreen.svg)](https://redamancy231-create.github.io/negative-results-registry/)
 <!-- AUTO_GENERATED_END -->
 
 [![中文](https://img.shields.io/badge/lang-中文-red)](./)
@@ -175,7 +175,7 @@ negative-results-registry/
 ## 条目概览
 
 <!-- AUTO_GENERATED: summary_line -->
-当前已收录 **23 个条目**，覆盖 10 个领域 × 5 种类型（Schema 共 12 领域 × 9 类型），来自 7 个自有公开项目 + 8 个外部来源（学术论文 + 开源项目）：
+当前已收录 **24 个条目**，覆盖 10 个领域 × 5 种类型（Schema 共 12 领域 × 9 类型），来自 8 个自有公开项目 + 8 个外部来源（学术论文 + 开源项目）：
 <!-- AUTO_GENERATED_END -->
 
 <!-- AUTO_GENERATED: entry_table -->
@@ -204,6 +204,7 @@ negative-results-registry/
 | NRR-2026-021 | NPGS | 方法论提取 | 方法失败 |
 | NRR-2026-022 | NPGS | 方法论提取 | 方法失败 |
 | NRR-2026-023 | etf-pattern-match-pyo3 | 基准测试 | 假设被证伪 |
+| NRR-2026-024 | factor-cuda | 基准测试 | 天花板效应 |
 <!-- AUTO_GENERATED_END -->
 
 ---

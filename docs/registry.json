@@ -2,8 +2,8 @@
   "metadata": {
     "title": "AI协作阴性结果登记册 · 聚合索引",
     "version": "0.1.0",
-    "last_updated": "2026-07-29",
-    "total_entries": 23,
+    "last_updated": "2026-08-06",
+    "total_entries": 24,
     "generation_model": "DeepSeek-V4-Pro (via Claude Code CLI)"
   },
   "entries": [
@@ -1409,6 +1409,77 @@
       "source_authors": "redamancy231-create",
       "analyst": "Acerolaorion",
       "source_project_url": "https://github.com/redamancy231-create/etf-pattern-match-pyo3"
+    },
+    {
+      "id": "NRR-2026-024",
+      "title": "CUDA 因子截面加速端到端 ~3.0×，未达预注册 ≥5× 目标（FP64 硬件天花板 + 传输开销主导；≥2× 最低可接受已达成）",
+      "domain": "benchmarking",
+      "category": "ceiling-effect",
+      "submitted_by": "redamancy231-create",
+      "source_project": "factor-cuda",
+      "source_authors": "redamancy231-create",
+      "analyst": "redamancy231-create",
+      "source_project_url": "https://github.com/redamancy231-create/factor-cuda",
+      "date": "2026-08-06",
+      "hypothesis": "预注册（CLAUDE.md「PoC 决策表」：NRR 阈值 ≥5×、最低可接受 ≥2×；PLAN.md §九）：在 RTX 4060 Laptop GPU（sm_89）上，fc 适配器（pybind11 + CUDA）于固定 corpus_synth_v1（T=1218×N=5000×F=12）最小参数扫描流水（parameter_scan→逐因子 rolling_ic→factor_corr+IC 归并，verdict_scope 排除 stock_corr）相对最佳免费替代（qgplearn 未安装→min(numpy,cupy)，同数据同 mask 同语义，含 H2D 与归并）端到端加速比 ≥5×。",
+      "method": "预注册锚点：CLAUDE.md PoC 决策表（≥5× NRR 阈值 / ≥2× 最低）与 PLAN.md §九。端到端：benchmarks/poc4_e2e_v1.py（F∈{4,8,12} 最小参数扫描流水，GPU 臂 pybind11 绑定，numpy/cupy 臂 backends.py，对称 reps，verdict_scope 排除 stock_corr，best_free=min(numpy,cupy) 运行时记录）；Phase 4 新增 fresh 轮 + 跨 run 稳定性门。单算子（产品层）：benchmarks/phase4_bench_v1.py——binding 级（含 H2D 传输 + D2H，与 e2e 同层）vs numpy/cupy 最佳免费替代，median + bootstrap 95% CI(1000, seed=0) + CV，warm 3+20 采样，逐块 nvidia-smi 热采样，corpus_synth_v1 全量。复现性：双 corpus（synth+real）经 corpus_loader_v1 校验 data_sha256（fail-closed）；流水两 run 输出哈希逐位相等；git HEAD 钉扎 + 证据 self-hash；corpus_real_v1（N=93）仅正确性/确定性锚点，不产 perf。证据：benchmarks/results/phase4_bench_v1.{json,md} + poc4_e2e_v1.json + acceptance_v1.json。",
+      "expected_result": "假设成立：F=12 端到端加速比 ≥5×（相对 best-free，含传输与归并）；单算子 ≥2×；float64 聚合类（rolling_ic/factor_corr）预期贡献主要加速。预注册失败判据：<2× → STOP；≥2× 且 <5× → 记负结果 NRR-2026-024。",
+      "actual_result": "E2E F=12 端到端加速比 ~3.03–3.20×（committed poc4_e2e_v1.json 3.0353×；Phase 4 fresh 3.198×，跨 run |Δmedian|≈5% 稳定）。≥2× 最低可接受达成（PASS），≥5× 预注册目标未达成。单算子（binding 级含传输，corpus_synth_v1 全量，vs best-free=min(numpy,cupy)）：cs_rank ~1.8×（低于产品层 2× 下限）、parameter_scan(G=4) ~2.3×、rolling_ic ~2.0×、factor_corr ~13×（≥5× PASS）、stock_corr general N=500 ~3.3× / N=2000 ~2.5×。组件级负结果：e2e 分操作 ic_stack（IC 归并）加速比 ~0.72× 劣于基线，显式暴露不埋入聚合 PASS。关键层差异：早期验收 below_5x（cs_rank 3.01×/parameter_scan 3.02×/rolling_ic 3.14×）为 kernel-resident（GPU 纯计算无传输）口径，产品实际支付（binding 含传输）更低，cs_rank 甚至 <2×。corpus_real_v1（N=93）仅正确性+确定性锚点（流水两 run 输出 hash 逐位相等），不产 perf。",
+      "effect_size": "E2E F=12 speedup 3.03–3.20× vs 预注册 5×（达成 ~60%，≥2× 下限达成）；单算子产品层 1.6–15×（6 项）；factor_corr ~15× 阳性对照。",
+      "sample_size": "corpus_synth_v1 T=1218×N=5000×F=12；单算子 warm3+20 采样 + bootstrap CI(1000)；e2e F∈{4,8,12} reps + fresh 轮。corpus_real_v1 T=1212×N=93×F=3 仅锚点。qgplearn 缺失→best-free=min(numpy,cupy)。",
+      "models_used": [
+        "DeepSeek-V4-Flash (via Claude Code CLI)"
+      ],
+      "interpretation": "预注册 ≥5× 端到端目标未达成（~3.0×），≥2× 最低可接受达成。归因分机制不作单一概括：①FP64 硬件天花板（主因，仅解释 float64 聚合操作）——RTX 4060 Laptop FP64≈FP32/64（官方架构特性物理上限），rolling_ic ~2.0×、stock_corr general ~2.5–3.3× 与 factor_corr 一般归约受限；②launch/传输/占用开销（解释 float32 操作 + 产品层缺口）——cs_rank ~1.8×、parameter_scan ~2.3× 的 <2× 缺口机制为 per-call H2D/D2H 传输 + kernel launch + 小面板占用，不可归因 FP64；③阳性对照证明非普遍低效——同证据集、同 corpus_synth_v1 非退化面板上 factor_corr ~13×（≥5× PASS），同一批内核可达 ≥5×，below_5x 是负载相关而非普遍内核低效；④kernel-resident 口径高估用户侧——早期验收 below_5x 为 GPU 纯计算口径，产品实际支付（binding 含传输）更低，性能声明必须标注传输口径；⑤适配层 Python 开销——fc 适配器对 factor_corr 的契约强制 f32→f64 Python astype（~1s/调用，相对绑定内部 forcecast upcast 慢 ~266%），产品 Python 层有可优化空间，非绑定缺陷。未验证的替代解释（更高 FP64 吞吐 GPU、FP32 聚合路径、kernel 调优）标为未验证假设而非可行性声明。结论限定于 RTX 4060 Laptop + 固定 corpus（synth_v1 规模；real_v1 仅正确性）+ 排除 stock_corr 的 E2E 口径，不推广至其他 GPU 或 FP64 不占主导的工作负载。",
+      "reproducibility": {
+        "level": "partially-reproducible",
+        "artifacts_available": [
+          "data",
+          "code",
+          "logs",
+          "analysis-script",
+          "raw-output"
+        ],
+        "notes": "corpus manifest 已提交（real data_sha256=FB23D9E1CC81401EBB7C439BFDB514F5FC9A0C2C57BA1AA363852B398388504F；synth 由 loader 运行时确认）；流水输出两 run 哈希逐位相等；证据文件 self-hash + git HEAD 钉扎。qgplearn 基线臂未安装，best-free=min(numpy,cupy) 为替代，故 level 为 partially-reproducible（非 fully）。作用域：同机同 commit 同 corpus → 输出位级 + 计时 CI-overlap；异机计时不可搬移。环境 Python 3.12.7 / numpy 2.4.4 / cupy 14.1.1 / CUDA 13.3 / RTX 4060 Laptop。"
+      },
+      "related_positive_result": "同证据集阳性对照（不掩盖缺口）：corpus_synth_v1 全量（非退化面板、同 corpus）上 factor_corr ~13×（≥5× PASS）证明同一批内核可达 ≥5×，把 below_5x 隔离为负载/硬件相关而非普遍低效。stock_corr fast 路径（全有效退化-mask 合成面板特例）5–12× 须与 general 口径并排，不单独用作内核能力证据。",
+      "lessons_learned": [
+        "预注册双阈值（≥2× 最低 / ≥5× 目标）使 ~3.0× 成为无歧义裁决：下限达成、目标未达 → 如实记负，不得把已记录缺口包装为成功",
+        "消费级 GPU（RTX 40 系）FP64≈FP32/64 是 float64 聚合工作负载的硬天花板——设 ≥5× 目标前先查设备 FP64 规格，或为聚合内核设计 FP32 路径",
+        "性能声明必须标注传输口径：kernel-resident（GPU 纯计算）与 binding-含传输（用户实际支付）可差 2–3×（cs_rank 3.01× vs 1.8×）——未标注口径即误导",
+        "硬件天花板归因须分机制 + 同证据集阳性对照锚定：FP64 天花板只解释 float64 操作；float32 的 <2× 归因 launch/传输/占用；factor_corr ~13× 证明内核可超 5×",
+        "E2E 判定口径运行前声明并沿用（verdict_scope 排除 stock_corr）；组件级负结果（ic_stack 0.72×）显式暴露，不埋入聚合 PASS"
+      ],
+      "tags": [
+        "factor-cuda",
+        "CUDA",
+        "GPU",
+        "benchmark",
+        "preregistered",
+        "FP64-ceiling",
+        "RTX-4060",
+        "speedup",
+        "negative-result",
+        "ceiling-effect"
+      ],
+      "links": [
+        {
+          "label": "factor-cuda 仓库",
+          "url": "https://github.com/redamancy231-create/factor-cuda"
+        },
+        {
+          "label": "Phase 4 benchmark 证据 phase4_bench_v1.json",
+          "url": "https://github.com/redamancy231-create/factor-cuda/blob/main/benchmarks/results/phase4_bench_v1.json"
+        },
+        {
+          "label": "端到端证据 poc4_e2e_v1.json",
+          "url": "https://github.com/redamancy231-create/factor-cuda/blob/main/benchmarks/results/poc4_e2e_v1.json"
+        },
+        {
+          "label": "negative-results-registry 仓库",
+          "url": "https://github.com/redamancy231-create/negative-results-registry"
+        }
+      ]
     }
   ],
   "stats": {
@@ -1422,17 +1493,17 @@
       "code-review": 2,
       "multi-model-collaboration": 4,
       "workflow-orchestration": 1,
-      "benchmarking": 2
+      "benchmarking": 3
     },
     "by_category": {
       "null-result": 3,
       "methodology-failure": 14,
-      "ceiling-effect": 4,
+      "ceiling-effect": 5,
       "abandoned-dead-end": 1,
       "hypothesis-falsified": 1
     },
     "by_year": {
-      "2026": 23
+      "2026": 24
     },
     "models_used": {
       "GPT-5.5": 14,
@@ -1463,7 +1534,8 @@
       "MSVC 19.51": 1,
       "pyo3 0.23.5": 1,
       "cupy 14.1.1": 1,
-      "RTX 4060 Laptop GPU": 1
+      "RTX 4060 Laptop GPU": 1,
+      "DeepSeek-V4-Flash (via Claude Code CLI)": 1
     }
   }
 }
