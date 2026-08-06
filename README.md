@@ -204,7 +204,7 @@ negative-results-registry/
 | NRR-2026-021 | NPGS | 方法论提取 | 方法失败 |
 | NRR-2026-022 | NPGS | 方法论提取 | 方法失败 |
 | NRR-2026-023 | etf-pattern-match-pyo3 | 基准测试 | 假设被证伪 |
-| NRR-2026-024 | factor-cuda | 基准测试 | 天花板效应 |
+| NRR-2026-024 | factor-cuda | 基准测试 | 假设被证伪 |
 <!-- AUTO_GENERATED_END -->
 
 ---

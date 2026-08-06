@@ -204,7 +204,7 @@ The registry currently contains **24 entries** spanning 10 domains × 5 types (o
 | NRR-2026-021 | NPGS | Methodology Extraction | Methodology Failure |
 | NRR-2026-022 | NPGS | Methodology Extraction | Methodology Failure |
 | NRR-2026-023 | etf-pattern-match-pyo3 | Benchmarking | Hypothesis Falsified |
-| NRR-2026-024 | factor-cuda | Benchmarking | Ceiling Effect |
+| NRR-2026-024 | factor-cuda | Benchmarking | Hypothesis Falsified |
 <!-- AUTO_GENERATED_END -->
 
 ---

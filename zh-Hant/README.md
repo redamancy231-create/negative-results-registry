@@ -204,7 +204,7 @@ negative-results-registry/
 | NRR-2026-021 | NPGS | 方法論提取 | 方法失敗 |
 | NRR-2026-022 | NPGS | 方法論提取 | 方法失敗 |
 | NRR-2026-023 | etf-pattern-match-pyo3 | 基準測試 | 假設遭證偽 |
-| NRR-2026-024 | factor-cuda | 基準測試 | 天花板效應 |
+| NRR-2026-024 | factor-cuda | 基準測試 | 假設遭證偽 |
 <!-- AUTO_GENERATED_END -->
 
 ---

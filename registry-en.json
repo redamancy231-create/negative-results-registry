@@ -1408,25 +1408,25 @@
     },
     {
       "id": "NRR-2026-024",
-      "title": "CUDA cross-sectional factor acceleration reaches ~3.0× end-to-end, missing the preregistered ≥5× target (FP64 hardware ceiling + transfer overhead dominant; ≥2× minimum acceptable met)",
+      "title": "CUDA cross-sectional factor acceleration reaches 3.04× end-to-end, failing the preregistered ≥5× target (≥2× minimum acceptable met)",
       "domain": "benchmarking",
-      "category": "ceiling-effect",
+      "category": "hypothesis-falsified",
       "submitted_by": "redamancy231-create",
       "source_project": "factor-cuda",
       "source_authors": "redamancy231-create",
       "analyst": "redamancy231-create",
       "source_project_url": "https://github.com/redamancy231-create/factor-cuda",
       "date": "2026-08-06",
-      "hypothesis": "预注册（CLAUDE.md「PoC 决策表」：NRR 阈值 ≥5×、最低可接受 ≥2×；PLAN.md §九）：在 RTX 4060 Laptop GPU（sm_89）上，fc 适配器（pybind11 + CUDA）于固定 corpus_synth_v1（T=1218×N=5000×F=12）最小参数扫描流水（parameter_scan→逐因子 rolling_ic→factor_corr+IC 归并，verdict_scope 排除 stock_corr）相对最佳免费替代（qgplearn 未安装→min(numpy,cupy)，同数据同 mask 同语义，含 H2D 与归并）端到端加速比 ≥5×。",
-      "method": "Preregistration anchor: CLAUDE.md PoC decision table (≥5× NRR threshold / ≥2× minimum) and PLAN.md §9. End-to-end: benchmarks/poc4_e2e_v1.py (F∈{4,8,12} minimal parameter-scan pipeline, GPU arm via pybind bindings, numpy/cupy arms via benchmarks/backends.py, symmetric reps, verdict_scope excludes stock_corr, best_free=min(numpy,cupy) recorded at runtime); Phase 4 added a fresh round + cross-run stability gate. Single-op (product layer): benchmarks/phase4_bench_v1.py — binding level (includes H2D transfer + D2H, same layer as e2e) vs numpy/cupy best-free, median + bootstrap 95% CI (1000 resamples, seed=0) + CV, warm 3 + 20 samples, per-block nvidia-smi thermal sampling, corpus_synth_v1 full. Reproducibility: both corpora verified via corpus_loader_v1 (data_sha256 fail-closed); pipeline outputs bitwise-identical across two runs; git HEAD pinned + evidence self-hash; corpus_real_v1 (N=93) correctness/determinism anchor only, produces no perf numbers. Evidence: benchmarks/results/phase4_bench_v1.{json,md} + poc4_e2e_v1.json + acceptance_v1.json.",
-      "expected_result": "假设成立：F=12 端到端加速比 ≥5×（相对 best-free，含传输与归并）；单算子 ≥2×；float64 聚合类（rolling_ic/factor_corr）预期贡献主要加速。预注册失败判据：<2× → STOP；≥2× 且 <5× → 记负结果 NRR-2026-024。",
-      "actual_result": "E2E F=12 end-to-end speedup ~3.03–3.20× (committed poc4_e2e_v1.json records 3.0353×; Phase 4 fresh round 3.198× / 3.141× across runs, cross-run |Δmedian| ≈ 2–5% stable). The ≥2× minimum acceptable was met (PASS); the ≥5× preregistered target was NOT met. Single-op (binding level incl. transfer, corpus_synth_v1 full, vs best-free=min(numpy,cupy)): cs_rank ~1.6× (below the 2× product-level minimum), parameter_scan(G=4) ~2.2×, rolling_ic ~2.1×, factor_corr ~15× (≥5× PASS), stock_corr general N=500 ~2.1× / N=2000 ~2.6×. Component-level negative: the e2e per-op ic_stack (IC merge) is ~0.72× — worse than baseline — surfaced explicitly, never buried in the aggregate PASS. Key layer finding: the earlier acceptance below_5x numbers (cs_rank 3.01×/parameter_scan 3.02×/rolling_ic 3.14×) were kernel-resident (GPU compute only, transfers excluded); the user-facing product (binding incl. transfer) is lower, with cs_rank below 2×. corpus_real_v1 (N=93) correctness + bitwise-determinism anchor only (pipeline outputs bitwise-identical across runs), no perf numbers.",
-      "effect_size": "E2E F=12 speedup 3.03–3.20× vs 预注册 5×（达成 ~60%，≥2× 下限达成）；单算子产品层 1.6–15×（6 项）；factor_corr ~15× 阳性对照。",
-      "sample_size": "corpus_synth_v1 T=1218×N=5000×F=12；单算子 warm3+20 采样 + bootstrap CI(1000)；e2e F∈{4,8,12} reps + fresh 轮。corpus_real_v1 T=1212×N=93×F=3 仅锚点。qgplearn 缺失→best-free=min(numpy,cupy)。",
+      "hypothesis": "预注册（CLAUDE.md「PoC 决策表」：NRR 阈值 ≥5×、最低可接受 ≥2×；PLAN.md §九）：在 RTX 4060 Laptop GPU（sm_89）上，fc 加速器（pybind11 + CUDA 绑定，binding 级含传输）于固定 corpus_synth_v1（T=1218×N=5000×F=12）最小参数扫描流水（parameter_scan→逐因子 rolling_ic→factor_corr+IC 归并，verdict_scope 排除 stock_corr）相对最佳免费替代（qgplearn 未安装→min(numpy,cupy)，同数据同 mask 同语义，含 H2D 与归并）端到端加速比 ≥5×。",
+      "method": "Preregistration anchor: CLAUDE.md PoC decision table (≥5× NRR threshold / ≥2× minimum) and PLAN.md §9. End-to-end (primary criterion): benchmarks/poc4_e2e_v1.py + benchmarks/phase4_bench_v1.py — minimal parameter-scan pipeline, GPU arm via pybind bindings (factor_cuda_pybind/factor_corr_pybind), numpy/cupy arms via benchmarks/backends.py, symmetric reps + Phase 4 fresh round (ARM ORDER ROTATED + thermal sampling + bootstrap CI), best_free=min(numpy,cupy) recorded at runtime, verdict_scope excludes stock_corr; DECISION STATISTIC = min-of-run-medians (worst case across fresh rounds). Single-op (product-layer supplement): phase4_bench_v1.py binding level (incl. H2D/D2H) vs numpy/cupy, median + bootstrap 95% CI + CV, warm 3 + 20 samples (raw persisted); adapter overhead measured separately (fc adapter vs raw binding). Reproducibility: both corpora verified via corpus_loader_v1 (data_sha256 fail-closed); pipeline outputs bitwise-identical across two runs; G6 evidence self-hash real gate (missing/dirty source FAILs); git HEAD pinned; corpus_real_v1 (N=93) correctness/determinism anchor only. Evidence: benchmarks/results/phase4_bench_v1.{json,md} + poc4_e2e_v1.json + acceptance_v1.json.",
+      "expected_result": "假设成立：F=12 端到端加速比 ≥5×（相对 best-free，含传输与归并）；单算子 ≥2×。预注册失败判据：<2× → STOP；≥2× 且 <5× → 记负结果 NRR-2026-024。",
+      "actual_result": "E2E F=12 end-to-end speedup 3.035–3.046× (committed poc4_e2e_v1.json 3.0353×; Phase 4 fresh round 3.046×, arm order rotated eliminating the fixed-order thermal bias; cross-run delta 0.34% stable). The ≥2× minimum acceptable was met (PASS-partial); the ≥5× preregistered target was NOT met (hypothesis falsified). Single-op (binding level incl. transfer, corpus_synth_v1 full, vs best-free): all ops below 5× except factor_corr ~12–15× (≥5×, binding level); cs_rank/parameter_scan/rolling_ic/stock_corr general observed in the 1.6–3.8× range. ⚠️ CROSS-SESSION VARIANCE DISCLOSED: single-op medians on this RTX 4060 Laptop vary up to ~2× across sessions (e.g. cs_rank 1.6×→3.1×, cupy baseline 69ms→218ms); per-op boundary claims (e.g. cs_rank <2×) are NOT cross-session stable and are indicative only; the E2E criterion (preregistered decision) is stable. Component-level negative surfaced: e2e per-op ic_stack (IC merge) ~0.72× worse than baseline, never buried. Key layer finding: earlier acceptance below_5x (cs_rank 3.01×/parameter_scan 3.02×/rolling_ic 3.14×) were kernel-resident (GPU compute only, transfers excluded); user-facing (binding incl. transfer) is lower; adapter factor_corr f32→f64 Python upcast adds +178%~+266% (product-level factor_corr ~3.98× <5×; binding 12–15×). corpus_real_v1 (N=93) correctness + bitwise-determinism anchor only.",
+      "effect_size": "E2E F=12 speedup 3.035–3.046× vs 预注册 5×（达成 ~61%，≥2× 达成）；factor_corr 12–15×（binding）；其余 1.6–3.8×。",
+      "sample_size": "corpus_synth_v1 T=1218×N=5000×F=12；e2e F∈{4,8,12} reps+fresh 轮（6/arm，臂序轮转）+CI；单算子 warm3+20+CI。real_v1 T=1212×N=93×F=3 锚点。qgplearn 缺→min(numpy,cupy)。",
       "models_used": [
         "DeepSeek-V4-Flash (via Claude Code CLI)"
       ],
-      "interpretation": "The preregistered ≥5× end-to-end target was not met (~3.0×); the ≥2× minimum was met. Attribution is per-mechanism, not a single blanket cause: ① FP64 hardware ceiling (primary, explains ONLY the float64 aggregation ops) — RTX 4060 Laptop FP64 ≈ FP32/64 (official architectural limit); rolling_ic ~2.1×, stock_corr general ~2.1–2.6×, and factor_corr reductions are limited. ② Launch/transfer/occupancy overhead (explains the float32 ops + the product-level gap) — cs_rank ~1.6× and parameter_scan ~2.2× are NOT explained by the FP64 ceiling; mechanism is per-call H2D/D2H transfer + kernel launch + small-panel occupancy. ③ Positive control proves kernels are not universally inefficient — on the same evidence set, same corpus_synth_v1 non-degenerate panel, factor_corr ~13–15× (≥5× PASS) shows the same kernels CAN exceed 5×; below_5x is workload/hardware-related, not universal kernel inefficiency. ④ Kernel-resident reporting overstates the user side — the acceptance below_5x numbers were GPU-compute-only; the product (incl. transfer) pays more. Perf claims must state the transfer layer. ⑤ Adapter Python overhead — the fc adapter performs a contract-mandated f32→f64 Python upcast (~1 s/call, ~+178% vs the binding's faster internal forcecast upcast); a product Python-layer optimization opportunity, not a binding defect. Untested alternative explanations (higher-FP64 GPU, FP32 aggregation path, kernel tuning) are labeled UNTESTED HYPOTHESES, not feasibility claims. Conclusion is bounded to RTX 4060 Laptop + fixed corpus (synth_v1 scale; real_v1 correctness only) + the stock_corr-excluded E2E scope; not generalized to other GPUs or workloads not dominated by FP64.",
+      "interpretation": "The preregistered ≥5× end-to-end target was not met (3.04×); the ≥2× minimum was met. Attribution is per-mechanism, each labeled CANDIDATE rather than confirmed: ① FP64 hardware ceiling (candidate, no FP32-aggregation confirmatory experiment run) — RTX 4060 Laptop FP64 ≈ FP32/64 may cap the float64 aggregation ops (rolling_ic/factor_corr reductions/stock_corr general), BUT the same-evidence factor_corr (float64) reaches 12–15×, weakening the ceiling as the main cause. ② Launch/transfer/occupancy overhead (candidate) — explains the float32 ops (cs_rank/parameter_scan) and the product-level transfer cost. ③ Positive control (binding level) proves kernels CAN reach ≥5× — factor_corr 12–15× on the same non-degenerate corpus_synth_v1 panel; below_5x is workload/layer-related, not universal kernel inefficiency. ④ Kernel-resident reporting overstates the user side — the acceptance numbers were GPU-compute-only; the product (incl. transfer) pays more. ⑤ Adapter Python overhead — the contract-mandated f32→f64 Python upcast (factor_corr +178%~+266%) drops the PRODUCT-level factor_corr to ~3.98× <5×; a product-layer optimization opportunity, not a binding defect. Cross-session variance: single-op medians vary ~2× on this machine, so per-op boundary claims are not decision inputs; the decision rests on the stable E2E. Untested alternative explanations (higher-FP64 GPU, FP32 aggregation path, kernel tuning) are labeled UNTESTED HYPOTHESES. Conclusion bounded to RTX 4060 Laptop + fixed corpus + the stock_corr-excluded E2E scope.",
       "reproducibility": {
         "level": "partially-reproducible",
         "artifacts_available": [
@@ -1436,15 +1436,15 @@
           "analysis-script",
           "raw-output"
         ],
-        "notes": "corpus manifest 已提交（real data_sha256=FB23D9E1CC81401EBB7C439BFDB514F5FC9A0C2C57BA1AA363852B398388504F；synth 由 loader 运行时确认）；流水输出两 run 哈希逐位相等；证据文件 self-hash + git HEAD 钉扎。qgplearn 基线臂未安装，best-free=min(numpy,cupy) 为替代，故 level 为 partially-reproducible（非 fully）。作用域：同机同 commit 同 corpus → 输出位级 + 计时 CI-overlap；异机计时不可搬移。环境 Python 3.12.7 / numpy 2.4.4 / cupy 14.1.1 / CUDA 13.3 / RTX 4060 Laptop。"
+        "notes": "corpus manifest 已提交（real data_sha256=FB23D9E1CC81401EBB7C439BFDB514F5FC9A0C2C57BA1AA363852B398388504F；synth 由 loader 运行时确认）；流水输出两 run 哈希逐位相等；G6 证据 self-hash 实门（11 源文件，0 mismatch）；git HEAD 钉扎。qgplearn 基线臂未安装，best-free=min(numpy,cupy) 为替代，故 level 为 partially-reproducible（非 fully）。作用域：同机同 commit 同 corpus → 输出位级确定性；计时跨会话/异机不可搬移（本机单算子跨会话波动 ~2×，已披露）。环境 Python 3.12.7 / numpy 2.4.4 / cupy 14.1.1 / CUDA 13.3 / RTX 4060 Laptop。"
       },
-      "related_positive_result": "同证据集阳性对照（不掩盖缺口）：corpus_synth_v1 全量（非退化面板、同 corpus）上 factor_corr ~13×（≥5× PASS）证明同一批内核可达 ≥5×，把 below_5x 隔离为负载/硬件相关而非普遍低效。stock_corr fast 路径（全有效退化-mask 合成面板特例）5–12× 须与 general 口径并排，不单独用作内核能力证据。",
+      "related_positive_result": "同证据集阳性对照（binding 级）：corpus_synth_v1 全量（非退化面板、同 corpus）上 factor_corr 12–15×（≥5× PASS）证明同一批内核可达 ≥5×，把 below_5x 隔离为负载/层相关而非普遍低效；但产品适配层 factor_corr ~3.98×（Python upcast 开销），阳性对照须限定 binding 级。stock_corr fast 路径（全有效退化-mask 合成面板特例）5–12× 须与 general 口径并排，不单独用作内核能力证据。",
       "lessons_learned": [
-        "预注册双阈值（≥2× 最低 / ≥5× 目标）使 ~3.0× 成为无歧义裁决：下限达成、目标未达 → 如实记负，不得把已记录缺口包装为成功",
-        "消费级 GPU（RTX 40 系）FP64≈FP32/64 是 float64 聚合工作负载的硬天花板——设 ≥5× 目标前先查设备 FP64 规格，或为聚合内核设计 FP32 路径",
-        "性能声明必须标注传输口径：kernel-resident（GPU 纯计算）与 binding-含传输（用户实际支付）可差 2–3×（cs_rank 3.01× vs 1.8×）——未标注口径即误导",
-        "硬件天花板归因须分机制 + 同证据集阳性对照锚定：FP64 天花板只解释 float64 操作；float32 的 <2× 归因 launch/传输/占用；factor_corr ~13× 证明内核可超 5×",
-        "E2E 判定口径运行前声明并沿用（verdict_scope 排除 stock_corr）；组件级负结果（ic_stack 0.72×）显式暴露，不埋入聚合 PASS"
+        "预注册双阈值（≥2× 最低 / ≥5× 目标）使 3.04× 成为无歧义裁决：下限达成、目标未达 → 如实记负，不得把已记录缺口包装为成功",
+        "消费级 GPU（RTX 40 系）性能方差大——单算子加速比跨会话可波动 ~2×（cs_rank 1.6×→3.1×），预注册决策须基于稳健的端到端判据而非波动大的单算子边界",
+        "性能声明必须标注层与传输口径：kernel-resident（GPU 纯计算）、binding 含传输（用户支付）、适配层（产品）三层可差 2–3×；同一操作不同口径给出不同边界结论",
+        "『≥5× 可达』须分机制锚定：binding 级 factor_corr 12–15× 证明内核可超 5×，但产品适配层 f32→f64 Python upcast 开销把产品层降至 ~3.98×——产品层与内核层分别报告",
+        "E2E 判定口径运行前声明并沿用（verdict_scope 排除 stock_corr）；组件级负结果（ic_stack 0.72×）显式暴露，不埋入聚合 PASS；benchmark 须臂序轮转 + 热采样防固定臂序偏置"
       ],
       "tags": [
         "factor-cuda",
@@ -1456,19 +1456,19 @@
         "RTX-4060",
         "speedup",
         "negative-result",
-        "ceiling-effect"
+        "hypothesis-falsified"
       ],
       "links": [
         {
-          "label": "factor-cuda 仓库",
+          "label": "factor-cuda 仓库（VERIFY-AT-PUBLISH: 尚无 origin remote，URL 为投影）",
           "url": "https://github.com/redamancy231-create/factor-cuda"
         },
         {
-          "label": "Phase 4 benchmark 证据 phase4_bench_v1.json",
+          "label": "Phase 4 benchmark 证据 phase4_bench_v1.json（VERIFY-AT-PUBLISH）",
           "url": "https://github.com/redamancy231-create/factor-cuda/blob/main/benchmarks/results/phase4_bench_v1.json"
         },
         {
-          "label": "端到端证据 poc4_e2e_v1.json",
+          "label": "端到端证据 poc4_e2e_v1.json（VERIFY-AT-PUBLISH）",
           "url": "https://github.com/redamancy231-create/factor-cuda/blob/main/benchmarks/results/poc4_e2e_v1.json"
         },
         {
@@ -1494,9 +1494,9 @@
     "by_category": {
       "null-result": 3,
       "methodology-failure": 14,
-      "ceiling-effect": 5,
+      "ceiling-effect": 4,
       "abandoned-dead-end": 1,
-      "hypothesis-falsified": 1
+      "hypothesis-falsified": 2
     },
     "by_year": {
       "2026": 24
