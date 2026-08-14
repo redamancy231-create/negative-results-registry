@@ -1406,7 +1406,7 @@
         }
       ],
       "source_project": "etf-pattern-match-pyo3",
-      "source_authors": "redamancy231-create",
+      "source_authors": "Acerolaorion",
       "analyst": "Acerolaorion",
       "source_project_url": "https://github.com/redamancy231-create/etf-pattern-match-pyo3"
     },
@@ -1415,10 +1415,10 @@
       "title": "CUDA 因子截面加速端到端 ~2.9-3.0×，未达预注册 ≥5× 目标（≥2× 最低可接受已达成）",
       "domain": "benchmarking",
       "category": "hypothesis-falsified",
-      "submitted_by": "redamancy231-create",
+      "submitted_by": "Acerolaorion",
       "source_project": "factor-cuda",
-      "source_authors": "redamancy231-create",
-      "analyst": "redamancy231-create",
+      "source_authors": "Acerolaorion",
+      "analyst": "Acerolaorion",
       "source_project_url": "https://github.com/redamancy231-create/factor-cuda",
       "date": "2026-08-06",
       "hypothesis": "预注册（CLAUDE.md「PoC 决策表」：NRR 阈值 ≥5×、最低可接受 ≥2×；PLAN.md §九）：在 RTX 4060 Laptop GPU（sm_89）上，fc 加速器（pybind11 + CUDA 绑定，binding 级含传输）于固定 corpus_synth_v1（T=1218×N=5000×F=12）最小参数扫描流水（parameter_scan→逐因子 rolling_ic→factor_corr+IC 归并，verdict_scope 排除 stock_corr）相对最佳免费替代（qgplearn 未安装→min(numpy,cupy)，同数据同 mask 同语义，含 H2D 与归并）端到端加速比 ≥5×。",

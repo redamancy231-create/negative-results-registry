@@ -175,7 +175,7 @@ negative-results-registry/
 ## 条目概览
 
 <!-- AUTO_GENERATED: summary_line -->
-当前已收录 **24 个条目**，覆盖 10 个领域 × 5 种类型（Schema 共 12 领域 × 9 类型），来自 8 个自有公开项目 + 8 个外部来源（学术论文 + 开源项目）：
+当前已收录 **24 个条目**，覆盖 10 个领域 × 5 种类型（Schema 共 12 领域 × 9 类型），来自 9 个自有公开项目 + 7 个外部来源（学术论文 + 开源项目）：
 <!-- AUTO_GENERATED_END -->
 
 <!-- AUTO_GENERATED: entry_table -->

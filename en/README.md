@@ -175,7 +175,7 @@ negative-results-registry/
 ## Entry Overview
 
 <!-- AUTO_GENERATED: summary_line -->
-The registry currently contains **24 entries** spanning 10 domains × 5 types (out of a 12-domain × 9-type schema), drawn from 8 of our own public projects + 8 external sources (academic papers + open-source projects):
+The registry currently contains **24 entries** spanning 10 domains × 5 types (out of a 12-domain × 9-type schema), drawn from 9 of our own public projects + 7 external sources (academic papers + open-source projects):
 <!-- AUTO_GENERATED_END -->
 
 <!-- AUTO_GENERATED: entry_table -->

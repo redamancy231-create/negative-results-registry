@@ -175,7 +175,7 @@ negative-results-registry/
 ## 條目概覽
 
 <!-- AUTO_GENERATED: summary_line -->
-目前已收錄 **24 個條目**，涵蓋 10 個領域 × 5 種類型（Schema 共 12 領域 × 9 類型），來自 8 個自有公開專案 + 8 個外部來源（學術論文 + 開源專案）：
+目前已收錄 **24 個條目**，涵蓋 10 個領域 × 5 種類型（Schema 共 12 領域 × 9 類型），來自 9 個自有公開專案 + 7 個外部來源（學術論文 + 開源專案）：
 <!-- AUTO_GENERATED_END -->
 
 <!-- AUTO_GENERATED: entry_table -->
