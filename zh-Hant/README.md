@@ -251,3 +251,5 @@ CC BY 4.0。條目內容的著作權歸提交者所有，提交即表示同意�
 
 *生成模型：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-07-25*
 *翻譯模型：GPT-5.6-Sol (via Codex CLI) · 2026-07-25*
+
+*本次編輯：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-08-14*

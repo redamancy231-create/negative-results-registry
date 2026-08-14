@@ -74,3 +74,5 @@ factor-cuda, CUDA, GPU, benchmark, preregistered, FP64-ceiling, RTX-4060, speedu
 - [Phase 4 benchmark 證據 phase4_bench_v1.json](https://github.com/redamancy231-create/factor-cuda/blob/main/benchmarks/results/phase4_bench_v1.json)（**VERIFY-AT-PUBLISH**）
 - [端到端證據 poc4_e2e_v1.json](https://github.com/redamancy231-create/factor-cuda/blob/main/benchmarks/results/poc4_e2e_v1.json)（**VERIFY-AT-PUBLISH**）
 - [negative-results-registry 儲存庫](https://github.com/redamancy231-create/negative-results-registry)
+
+*本次編輯：DeepSeek-V4-Pro (via Claude Code CLI) · 2026-08-14*
